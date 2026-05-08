@@ -1,0 +1,158 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@import "tailwindcss";
+
+@theme {
+  /* 브랜드 컬러 (Figma Swatch: #00F5A0) */
+  --color-primary: #00F5A0;
+  --color-dark: #181818;
+  --color-gray: #757575;
+  --color-gray-light: #9E9E9E;
+  --color-gray-subtle: #F8F8F8;
+
+  /* 폰트 */
+  --font-family-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* 타이포그래피 (Figma Type Styles) */
+  --font-size-display-1: 80px;
+  --line-height-display-1: 88px;
+  --letter-spacing-display-1: -2px;
+
+  --font-size-display-2: 48px;
+  --line-height-display-2: 56px;
+  --letter-spacing-display-2: -1px;
+
+  --font-size-heading-1: 32px;
+  --line-height-heading-1: 40px;
+  --letter-spacing-heading-1: -0.5px;
+
+  --font-size-heading-2: 24px;
+  --line-height-heading-2: 32px;
+  --letter-spacing-heading-2: -0.25px;
+
+  --font-size-heading-3: 18px;
+  --line-height-heading-3: 26px;
+  --letter-spacing-heading-3: -0.25px;
+
+  --font-size-body-1: 16px;
+  --line-height-body-1: 24px;
+
+  --font-size-body-2: 14px;
+  --line-height-body-2: 20px;
+
+  --font-size-button: 14px;
+  --line-height-button: 16px;
+  --letter-spacing-button: 1.5px;
+
+  --font-size-label-1: 14px;
+  --line-height-label-1: 16px;
+  --letter-spacing-label-1: 1px;
+
+  --font-size-label-2: 12px;
+  --line-height-label-2: 16px;
+  --letter-spacing-label-2: 1px;
+
+  --font-size-caption: 10px;
+  --line-height-caption: 14px;
+  --letter-spacing-caption: 0.25px;
+
+  --font-size-nav-label: 10px;
+  --line-height-nav-label: 14px;
+  --letter-spacing-nav-label: 0.25px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  background-color: #ffffff;
+  color: #181818;
+}
+
+/* Tailwind v4 커스텀 유틸리티 */
+@utility text-display-1 {
+  font-size: var(--font-size-display-1);
+  line-height: var(--line-height-display-1);
+  letter-spacing: var(--letter-spacing-display-1);
+  font-weight: 700;
+}
+
+@utility text-display-2 {
+  font-size: var(--font-size-display-2);
+  line-height: var(--line-height-display-2);
+  letter-spacing: var(--letter-spacing-display-2);
+  font-weight: 700;
+}
+
+@utility text-heading-1 {
+  font-size: var(--font-size-heading-1);
+  line-height: var(--line-height-heading-1);
+  letter-spacing: var(--letter-spacing-heading-1);
+  font-weight: 700;
+}
+
+@utility text-heading-2 {
+  font-size: var(--font-size-heading-2);
+  line-height: var(--line-height-heading-2);
+  letter-spacing: var(--letter-spacing-heading-2);
+  font-weight: 700;
+}
+
+@utility text-heading-3 {
+  font-size: var(--font-size-heading-3);
+  line-height: var(--line-height-heading-3);
+  letter-spacing: var(--letter-spacing-heading-3);
+  font-weight: 700;
+}
+
+@utility text-body-1 {
+  font-size: var(--font-size-body-1);
+  line-height: var(--line-height-body-1);
+  font-weight: 700;
+}
+
+@utility text-body-2 {
+  font-size: var(--font-size-body-2);
+  line-height: var(--line-height-body-2);
+  font-weight: 500;
+}
+
+@utility text-button {
+  font-size: var(--font-size-button);
+  line-height: var(--line-height-button);
+  letter-spacing: var(--letter-spacing-button);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+@utility text-label-1 {
+  font-size: var(--font-size-label-1);
+  line-height: var(--line-height-label-1);
+  letter-spacing: var(--letter-spacing-label-1);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+@utility text-label-2 {
+  font-size: var(--font-size-label-2);
+  line-height: var(--line-height-label-2);
+  letter-spacing: var(--letter-spacing-label-2);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+@utility text-caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  letter-spacing: var(--letter-spacing-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+@utility text-nav-label {
+  font-size: var(--font-size-nav-label);
+  line-height: var(--line-height-nav-label);
+  letter-spacing: var(--letter-spacing-nav-label);
+  font-weight: 400;
+}

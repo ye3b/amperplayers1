@@ -1,0 +1,15 @@
+import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
+
+export async function DELETE() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const userId = (session.user as { id: string }).id
+
+  // Cascade 설정으로 연관 데이터 자동 삭제
+  await prisma.user.delete({ where: { id: userId } })
+
+  return NextResponse.json({ ok: true })
+}

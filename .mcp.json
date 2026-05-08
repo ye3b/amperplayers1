@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "Figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${FIGMA_API_KEY}"
+      }
+    }
+  }
+}
