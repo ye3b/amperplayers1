@@ -20,7 +20,7 @@ interface UserSport { sport: string; level: string }
 interface Product {
   id: string; name: string; price: number; grade: string | null
   score: number | null; images: string; likes: number
-  discount: number | null; location: string | null; createdAt: Date
+  discount: number | null; location: string | null; createdAt: Date; status: string
 }
 
 interface Props {
@@ -29,15 +29,19 @@ interface Props {
     image: string | null; createdAt: Date; sports: UserSport[]
   }
   activeProducts: Product[]
+  soldProducts: Product[]
+  hiddenProducts: Product[]
   soldCount: number
   trustScore: number
 }
 
 type Tab = 'products' | 'reviews' | 'info'
+type ProductFilter = 'active' | 'sold' | 'hidden'
 
-export default function StoreClient({ user, activeProducts, soldCount, trustScore }: Props) {
+export default function StoreClient({ user, activeProducts, soldProducts, hiddenProducts, soldCount, trustScore }: Props) {
   const router = useRouter()
   const [tab, setTab] = useState<Tab>('products')
+  const [productFilter, setProductFilter] = useState<ProductFilter>('active')
 
   const displayName = user.name ?? user.username ?? '플레이어'
   const topSport = user.sports[0]
@@ -124,17 +128,45 @@ export default function StoreClient({ user, activeProducts, soldCount, trustScor
 
       {/* 판매상품 */}
       {tab === 'products' && (
-        <div className="px-4 pt-4 pb-24">
-          {activeProducts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <Icon name="box" size={36} className="text-[#E8E8E8] mb-3" />
-              <p className="text-[13px] text-[#9E9E9E]">판매 중인 상품이 없어요</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {activeProducts.map((p) => <ProductCard key={p.id} product={p} />)}
-            </div>
-          )}
+        <div className="pb-24">
+          {/* 상태 필터 탭 */}
+          <div className="flex gap-2 px-4 pt-4 pb-3">
+            {([
+              { key: 'active', label: '판매중', count: activeProducts.length },
+              { key: 'sold',   label: '거래완료', count: soldProducts.length },
+              { key: 'hidden', label: '숨김',   count: hiddenProducts.length },
+            ] as { key: ProductFilter; label: string; count: number }[]).map(({ key, label, count }) => (
+              <button
+                key={key}
+                onClick={() => setProductFilter(key)}
+                className={`flex items-center gap-1 h-[34px] px-4 rounded-full text-[13px] font-semibold transition-colors
+                  ${productFilter === key
+                    ? 'bg-[#181818] text-white'
+                    : 'bg-[#F5F5F5] text-[#9E9E9E]'}`}
+              >
+                {label}
+                <span className={`text-[12px] ${productFilter === key ? 'text-white/70' : 'text-[#C8C8C8]'}`}>
+                  {count}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* 상품 목록 */}
+          {(() => {
+            const products = productFilter === 'active' ? activeProducts : productFilter === 'sold' ? soldProducts : hiddenProducts
+            const emptyMsg = productFilter === 'active' ? '판매 중인 상품이 없어요' : productFilter === 'sold' ? '거래완료 상품이 없어요' : '숨긴 상품이 없어요'
+            return products.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <Icon name="box" size={36} className="text-[#E8E8E8] mb-3" />
+                <p className="text-[13px] text-[#9E9E9E]">{emptyMsg}</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3 px-4">
+                {products.map((p) => <ProductCard key={p.id} product={p} />)}
+              </div>
+            )
+          })()}
         </div>
       )}
 

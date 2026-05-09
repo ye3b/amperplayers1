@@ -7,7 +7,12 @@ export default async function StorePage() {
   const session = await getServerSession(authOptions)
   const userId = (session!.user as { id: string }).id
 
-  const [user, activeProducts, soldCount] = await Promise.all([
+  const productSelect = {
+    id: true, name: true, price: true, grade: true,
+    score: true, images: true, likes: true, discount: true, location: true, createdAt: true, status: true,
+  }
+
+  const [user, activeProducts, soldProducts, hiddenProducts] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -22,13 +27,20 @@ export default async function StorePage() {
     prisma.product.findMany({
       where: { userId, status: 'active' },
       orderBy: { createdAt: 'desc' },
-      select: {
-        id: true, name: true, price: true, grade: true,
-        score: true, images: true, likes: true, discount: true, location: true, createdAt: true,
-      },
+      select: productSelect,
     }),
-    prisma.product.count({ where: { userId, status: 'sold' } }),
+    prisma.product.findMany({
+      where: { userId, status: 'sold' },
+      orderBy: { createdAt: 'desc' },
+      select: productSelect,
+    }),
+    prisma.product.findMany({
+      where: { userId, status: 'hidden' },
+      orderBy: { createdAt: 'desc' },
+      select: productSelect,
+    }),
   ])
+  const soldCount = soldProducts.length
 
   const completedOrders = await prisma.order.count({ where: { sellerId: userId, status: 'delivered' } })
   const totalOrders = await prisma.order.count({ where: { sellerId: userId } })
@@ -38,6 +50,8 @@ export default async function StorePage() {
     <StoreClient
       user={user!}
       activeProducts={activeProducts}
+      soldProducts={soldProducts}
+      hiddenProducts={hiddenProducts}
       soldCount={soldCount}
       trustScore={trustScore}
     />
