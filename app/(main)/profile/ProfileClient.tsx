@@ -244,17 +244,19 @@ export default function ProfileClient({
       {mainTab === 'sell' && (
         <>
           {/* 판매 서브탭 */}
-          <div className="mx-[13px] flex">
+          <div className="mx-[13px] flex gap-2 pt-3 pb-1">
             {SELL_TABS.map((t) => {
               const active = sellTab === t.key
+              const count = sellProducts[t.key].length
               return (
                 <button
                   key={t.key}
                   onClick={() => setSellTab(t.key)}
-                  className={`flex-1 py-[8px] text-[12px] leading-[20px] transition-colors
-                    ${active ? 'font-bold text-[#181818] border-b-2 border-[#181818]' : 'font-medium text-[#9E9E9E] border-b border-[#EFEFEF]'}`}
+                  className={`flex items-center gap-1 h-[34px] px-4 rounded-full text-[13px] font-semibold transition-colors
+                    ${active ? 'bg-[#181818] text-white' : 'bg-[#F5F5F5] text-[#9E9E9E]'}`}
                 >
                   {t.label}
+                  <span className={`text-[12px] ${active ? 'text-white/60' : 'text-[#C8C8C8]'}`}>{count}</span>
                 </button>
               )
             })}
