@@ -42,70 +42,72 @@ function validateBirth(birth: string, genderDigit: string): string | null {
 }
 
 export async function POST(req: Request) {
-  const body = await req.json()
-  const { name, birth, genderDigit, phone } = body
-
-  // ── 입력 검증 ──────────────────────────────────────────
-  if (!name?.trim() || name.trim().length < 2) {
-    return NextResponse.json({ error: '이름을 올바르게 입력해주세요.' }, { status: 400 })
-  }
-
-  const birthError = validateBirth((birth ?? '').replace(/\./g, ''), genderDigit ?? '')
-  if (birthError) return NextResponse.json({ error: birthError }, { status: 400 })
-
-  let rawPhone: string
   try {
-    rawPhone = normalizePhone(phone ?? '')
-  } catch {
-    return NextResponse.json({ error: '올바른 휴대폰 번호를 입력해주세요.' }, { status: 400 })
-  }
+    const body = await req.json()
+    const { name, birth, genderDigit, phone } = body
 
-  // ── 이미 가입된 번호인지 확인 ──────────────────────────
-  const existingUser = await prisma.user.findUnique({ where: { phone: rawPhone } })
-  if (existingUser) {
-    return NextResponse.json({ error: '이미 가입된 휴대폰 번호입니다.' }, { status: 409 })
-  }
+    // ── 입력 검증 ──────────────────────────────────────────
+    if (!name?.trim() || name.trim().length < 2) {
+      return NextResponse.json({ error: '이름을 올바르게 입력해주세요.' }, { status: 400 })
+    }
 
-  // ── 재발송 쿨다운 ──────────────────────────────────────
-  const cooldownId = `cd:${rawPhone}`
-  const cooldown = await prisma.verificationToken.findFirst({
-    where: { identifier: cooldownId, expires: { gt: new Date() } },
-  })
-  if (cooldown) {
-    const secs = Math.ceil((cooldown.expires.getTime() - Date.now()) / 1000)
-    return NextResponse.json({ error: `${secs}초 후에 재발송할 수 있습니다.` }, { status: 429 })
-  }
+    const birthError = validateBirth((birth ?? '').replace(/\./g, ''), genderDigit ?? '')
+    if (birthError) return NextResponse.json({ error: birthError }, { status: 400 })
 
-  // ── 기존 토큰 정리 + 새 OTP 발급 ──────────────────────
-  const code    = String(randomInt(100000, 999999))
-  const expires = new Date(Date.now() + OTP_TTL_MS)
-  const cdExp   = new Date(Date.now() + COOLDOWN_MS)
+    let rawPhone: string
+    try {
+      rawPhone = normalizePhone(phone ?? '')
+    } catch {
+      return NextResponse.json({ error: '올바른 휴대폰 번호를 입력해주세요.' }, { status: 400 })
+    }
 
-  await prisma.verificationToken.deleteMany({
-    where: { identifier: { in: [`otp:${rawPhone}`, cooldownId] } },
-  })
-  await prisma.verificationToken.createMany({
-    data: [
-      { identifier: `otp:${rawPhone}`, token: sha256(code), expires },
-      { identifier: cooldownId,         token: 'cd',         expires: cdExp },
-    ],
-  })
+    // ── 이미 가입된 번호인지 확인 ──────────────────────────
+    const existingUser = await prisma.user.findUnique({ where: { phone: rawPhone } })
+    if (existingUser) {
+      return NextResponse.json({ error: '이미 가입된 휴대폰 번호입니다.' }, { status: 409 })
+    }
 
-  // ── SMS 발송 ───────────────────────────────────────────
-  try {
-    await sendSMS(rawPhone, `[Players] 인증번호: ${code}\n3분 이내 입력해주세요.`)
-  } catch (err) {
-    // 발송 실패 시 토큰 삭제 후 에러 반환
+    // ── 재발송 쿨다운 ──────────────────────────────────────
+    const cooldownId = `cd:${rawPhone}`
+    const cooldown = await prisma.verificationToken.findFirst({
+      where: { identifier: cooldownId, expires: { gt: new Date() } },
+    })
+    if (cooldown) {
+      const secs = Math.ceil((cooldown.expires.getTime() - Date.now()) / 1000)
+      return NextResponse.json({ error: `${secs}초 후에 재발송할 수 있습니다.` }, { status: 429 })
+    }
+
+    // ── 기존 토큰 정리 + 새 OTP 발급 ──────────────────────
+    const code    = String(randomInt(100000, 999999))
+    const expires = new Date(Date.now() + OTP_TTL_MS)
+    const cdExp   = new Date(Date.now() + COOLDOWN_MS)
+
     await prisma.verificationToken.deleteMany({
       where: { identifier: { in: [`otp:${rawPhone}`, cooldownId] } },
     })
-    const msg = err instanceof Error ? err.message : String(err)
-    console.error('[send-sms]', msg)
-    return NextResponse.json(
-      { error: `SMS 발송 실패: ${msg}` },
-      { status: 500 },
-    )
-  }
+    await prisma.verificationToken.createMany({
+      data: [
+        { identifier: `otp:${rawPhone}`, token: sha256(code), expires },
+        { identifier: cooldownId,         token: sha256('cd:' + rawPhone), expires: cdExp },
+      ],
+    })
 
-  return NextResponse.json({ ok: true })
+    // ── SMS 발송 ───────────────────────────────────────────
+    try {
+      await sendSMS(rawPhone, `[Players] 인증번호: ${code}\n3분 이내 입력해주세요.`)
+    } catch (err) {
+      await prisma.verificationToken.deleteMany({
+        where: { identifier: { in: [`otp:${rawPhone}`, cooldownId] } },
+      })
+      const msg = err instanceof Error ? err.message : String(err)
+      console.error('[send-sms]', msg)
+      return NextResponse.json({ error: `SMS 발송 실패: ${msg}` }, { status: 500 })
+    }
+
+    return NextResponse.json({ ok: true })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('[send-sms] unexpected error:', msg)
+    return NextResponse.json({ error: '서버 오류가 발생했습니다.' }, { status: 500 })
+  }
 }

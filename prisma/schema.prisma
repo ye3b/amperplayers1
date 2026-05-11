@@ -3,45 +3,44 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(cuid())
-  username            String?   @unique
-  email               String?   @unique
-  emailVerified       DateTime?
-  phone               String?   @unique
-  password            String?
-  name                String?
-  image               String?
-  onboardingCompleted Boolean   @default(false)
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-
-  accounts              Account[]
-  sessions              Session[]
-  sports                UserSport[]
-  products              Product[]
-  chatAsBuyer           Chat[]    @relation("ChatBuyer")
-  chatAsSeller          Chat[]    @relation("ChatSeller")
-  messagesSent          Message[] @relation("MessageSender")
-  ordersAsBuyer         Order[]   @relation("OrderBuyer")
-  ordersAsSeller        Order[]   @relation("OrderSeller")
-  pushSubscriptions     PushSubscription[]
-  notificationSettings  NotificationSettings?
-  shippingAddresses     ShippingAddress[]
-  bankAccounts          BankAccount[]
-  paymentMethods        PaymentMethod[]
-  wishlists             Wishlist[]
-  cartItems             CartItem[]
+  id                   String                @id @default(cuid())
+  username             String?               @unique
+  email                String?               @unique
+  emailVerified        DateTime?
+  phone                String?               @unique
+  password             String?
+  name                 String?
+  image                String?
+  onboardingCompleted  Boolean               @default(false)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  accounts             Account[]
+  bankAccounts         BankAccount[]
+  cartItems            CartItem[]
+  chatAsBuyer          Chat[]                @relation("ChatBuyer")
+  chatAsSeller         Chat[]                @relation("ChatSeller")
+  messagesSent         Message[]             @relation("MessageSender")
+  notificationSettings NotificationSettings?
+  ordersAsBuyer        Order[]               @relation("OrderBuyer")
+  ordersAsSeller       Order[]               @relation("OrderSeller")
+  paymentMethods       PaymentMethod[]
+  products             Product[]
+  pushSubscriptions    PushSubscription[]
+  sessions             Session[]
+  shippingAddresses    ShippingAddress[]
+  sports               UserSport[]
+  wishlists            Wishlist[]
 }
 
 model ShippingAddress {
   id            String   @id @default(cuid())
   userId        String
-  label         String   // 집, 회사, 기타
+  label         String
   recipient     String
   phone         String
   zipCode       String
@@ -49,8 +48,7 @@ model ShippingAddress {
   addressDetail String?
   isDefault     Boolean  @default(false)
   createdAt     DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model BankAccount {
@@ -61,21 +59,19 @@ model BankAccount {
   accountHolder String
   isDefault     Boolean  @default(false)
   createdAt     DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PaymentMethod {
   id          String   @id @default(cuid())
   userId      String
-  type        String   // kakao | toss | naver | card
+  type        String
   alias       String
-  billingKey  String?  // Toss 빌링키 or KakaoPay SID
-  customerKey String?  // Toss customerKey
+  billingKey  String?
+  customerKey String?
   isDefault   Boolean  @default(false)
   createdAt   DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PushSubscription {
@@ -85,8 +81,7 @@ model PushSubscription {
   p256dh    String
   auth      String
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model NotificationSettings {
@@ -97,8 +92,7 @@ model NotificationSettings {
   wishlist    Boolean @default(true)
   newProduct  Boolean @default(false)
   marketing   Boolean @default(false)
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Account {
@@ -114,8 +108,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -125,17 +118,15 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserSport {
   id     String @id @default(cuid())
   userId String
-  sport  String // soccer, basketball 등
-  level  String // beginner, amateur, pro
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sport  String
+  level  String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, sport])
 }
@@ -156,40 +147,39 @@ model SearchLog {
 
 model SportClickLog {
   id        String   @id @default(cuid())
-  sport     String   // soccer, baseball 등
+  sport     String
   createdAt DateTime @default(now())
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  userId      String
-  name        String
-  description String?
-  price       Int
-  sport       String   // soccer, basketball 등
-  productType String?  // 용품 종류 탭 ID: shoes, ball, uniform, glove, bat 등
-  metadata    String?  // JSON: 종목별 상세 정보 (brand, model, sizeMM, studType 등)
-  level       String?  // beginner, amateur, pro — null이면 모든 레벨 대상
-  grade       String?  // S, A, B, C, F (AI 진단 등급)
-  score       Int?
-  discount    Int?
-  location    String?
-  images      String   @default("[]") // JSON 배열 (Cloudinary URL)
-  status      String   @default("active") // active, sold, hidden
-  likes       Int      @default(0)
-  allowOffer  Boolean  @default(true)   // 가격 제안 허용 여부
-  shippingType String? // included | separate
-  shippingFeeType String? // prepaid | cod (shippingType=separate 일 때)
-  shippingFee  Int?    // 배송비 금액
-  allowMeetup Boolean  @default(true)   // 직거래 허용 여부
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  chats     Chat[]
-  orders    Order[]
-  wishlists Wishlist[]
-  cartItems CartItem[]
+  id              String     @id @default(cuid())
+  userId          String
+  name            String
+  description     String?
+  price           Int
+  sport           String
+  productType     String?
+  metadata        String?
+  level           String?
+  grade           String?
+  score           Int?
+  discount        Int?
+  location        String?
+  images          String     @default("[]")
+  status          String     @default("active")
+  likes           Int        @default(0)
+  allowOffer      Boolean    @default(true)
+  shippingType    String?
+  shippingFeeType String?
+  shippingFee     Int?
+  allowMeetup     Boolean    @default(true)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  cartItems       CartItem[]
+  chats           Chat[]
+  orders          Order[]
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wishlists       Wishlist[]
 }
 
 model Wishlist {
@@ -197,9 +187,8 @@ model Wishlist {
   userId    String
   productId String
   createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -209,9 +198,8 @@ model CartItem {
   userId    String
   productId String
   createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -223,12 +211,11 @@ model Chat {
   productId String
   buyerId   String
   sellerId  String
-
-  product  Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  buyer    User      @relation("ChatBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
-  seller   User      @relation("ChatSeller", fields: [sellerId], references: [id], onDelete: Cascade)
-  messages Message[]
-  order    Order?
+  buyer     User      @relation("ChatBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  seller    User      @relation("ChatSeller", fields: [sellerId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  order     Order?
 
   @@unique([productId, buyerId])
 }
@@ -236,37 +223,35 @@ model Chat {
 model Message {
   id        String   @id @default(cuid())
   content   String
-  type      String   @default("text") // text | system_payment | system_preparing | system_shipped
-  metadata  String?  // JSON: 시스템 메시지 부가 데이터
+  type      String   @default("text")
+  metadata  String?
   createdAt DateTime @default(now())
   chatId    String
-  senderId  String?  // 시스템 메시지는 null
-
-  chat   Chat  @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  sender User? @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId  String?
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender    User?    @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 model Order {
-  id              String    @id @default(cuid())
-  chatId          String    @unique
-  productId       String
-  buyerId         String
-  sellerId        String
-  status          String    @default("paid") // paid | preparing | shipped | delivered | cancelled
-  shippingMethod  String?
-  buyerNote       String?
-  trackingNumber  String?
-  trackingCarrier String?
-  refundDeadline  DateTime?
-  shippingSnapshot String?   // JSON: 주문 시점 배송지 스냅샷
-  paidAt          DateTime  @default(now())
-  preparingAt     DateTime?
-  shippedAt       DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  chat    Chat    @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  buyer   User    @relation("OrderBuyer", fields: [buyerId], references: [id])
-  seller  User    @relation("OrderSeller", fields: [sellerId], references: [id])
+  id               String    @id @default(cuid())
+  chatId           String    @unique
+  productId        String
+  buyerId          String
+  sellerId         String
+  status           String    @default("paid")
+  shippingMethod   String?
+  buyerNote        String?
+  trackingNumber   String?
+  trackingCarrier  String?
+  refundDeadline   DateTime?
+  shippingSnapshot String?
+  paidAt           DateTime  @default(now())
+  preparingAt      DateTime?
+  shippedAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  buyer            User      @relation("OrderBuyer", fields: [buyerId], references: [id])
+  chat             Chat      @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  product          Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  seller           User      @relation("OrderSeller", fields: [sellerId], references: [id])
 }

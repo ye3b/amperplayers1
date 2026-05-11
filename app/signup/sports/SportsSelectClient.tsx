@@ -49,7 +49,10 @@ export default function SportsSelectClient() {
     router.push(`/signup/level?sports=${ids}`)
   }
 
-  const canSkip = true
+  const handleSkip = async () => {
+    await fetch('/api/user/preferences', { method: 'DELETE' })
+    router.replace('/')
+  }
 
   return (
     <div className="min-h-screen max-w-[390px] mx-auto flex flex-col bg-white">
@@ -65,14 +68,12 @@ export default function SportsSelectClient() {
               />
             ))}
           </div>
-          {canSkip && (
-            <button
-              onClick={() => router.replace('/')}
-              className="text-[13px] font-medium text-[#9E9E9E]"
-            >
-              건너뛰기
-            </button>
-          )}
+          <button
+            onClick={handleSkip}
+            className="text-[13px] font-medium text-[#9E9E9E]"
+          >
+            건너뛰기
+          </button>
         </div>
 
         <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-[#181818] mb-2">

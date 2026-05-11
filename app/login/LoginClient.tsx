@@ -32,7 +32,7 @@ export default function LoginClient() {
 
   const handleOAuth = async (provider: 'google' | 'apple' | 'kakao') => {
     setLoading(provider)
-    await signIn(provider, { callbackUrl: '/' })
+    await signIn(provider, { callbackUrl: '/auth/callback' })
   }
 
   return (

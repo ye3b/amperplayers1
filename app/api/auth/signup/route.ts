@@ -10,6 +10,7 @@ function sha256(s: string) {
 }
 
 export async function POST(req: Request) {
+  try {
   const { username, password, phone, verifiedToken } = await req.json()
 
   // ── 기본 입력 검증 ──────────────────────────────────────
@@ -55,4 +56,9 @@ export async function POST(req: Request) {
   await prisma.user.create({ data: { username, password: hashed, phone } })
 
   return NextResponse.json({ ok: true }, { status: 201 })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('[signup] unexpected error:', msg)
+    return NextResponse.json({ error: '서버 오류가 발생했습니다.' }, { status: 500 })
+  }
 }

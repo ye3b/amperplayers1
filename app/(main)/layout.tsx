@@ -19,7 +19,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   })
 
   // 온보딩 미완료 → 종목 선택
-  if (!user?.onboardingCompleted) redirect('/onboarding/sports')
+  if (!user?.onboardingCompleted) redirect('/signup/sports')
 
   return (
     <>

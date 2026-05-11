@@ -67,11 +67,20 @@ export default function LevelSelectClient() {
 
   const allSelected = sportIds.length > 0 && sportIds.every((id) => levels[id])
 
+  const handleSkip = async () => {
+    await fetch('/api/user/preferences', { method: 'DELETE' })
+    router.replace('/')
+  }
+
   const handleDone = async () => {
     if (!allSelected || saving) return
     setSaving(true)
-    // TODO: API로 종목별 숙련도 저장
-    await new Promise((r) => setTimeout(r, 600))
+    const sports = sportIds.map((id) => ({ sport: id, level: levels[id] }))
+    await fetch('/api/user/preferences', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sports }),
+    })
     setSaving(false)
     router.replace('/')
   }
@@ -90,7 +99,7 @@ export default function LevelSelectClient() {
             ))}
           </div>
           <button
-            onClick={() => router.replace('/')}
+            onClick={handleSkip}
             className="text-[13px] font-medium text-[#9E9E9E]"
           >
             건너뛰기

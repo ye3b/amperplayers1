@@ -173,50 +173,53 @@ export default function SignupVerifyClient() {
     setOtpError('')
     setVerifying(true)
 
-    // 1. OTP 검증
-    const vRes = await fetch('/api/auth/verify-sms', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone: rawPhone, otp: otp.join('') }),
-    })
-    const vData = await vRes.json()
+    try {
+      // 1. OTP 검증
+      const vRes = await fetch('/api/auth/verify-sms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: rawPhone, otp: otp.join('') }),
+      })
+      const vData = await vRes.json()
 
-    if (!vRes.ok) {
-      setVerifying(false)
-      setOtpError(vData.error || '인증에 실패했습니다.')
-      return
-    }
+      if (!vRes.ok) {
+        setOtpError(vData.error || '인증에 실패했습니다.')
+        return
+      }
 
-    // 2. 계정 생성
-    const sRes = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+      // 2. 계정 생성
+      const sRes = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: draft.username,
+          password: draft.password,
+          phone: vData.phone,
+          verifiedToken: vData.verifiedToken,
+        }),
+      })
+      const sData = await sRes.json()
+
+      if (!sRes.ok) {
+        setOtpError(sData.error || '회원가입에 실패했습니다. 처음부터 다시 시도해주세요.')
+        return
+      }
+
+      // 3. 자동 로그인
+      const loginResult = await signIn('credentials', {
         username: draft.username,
         password: draft.password,
-        phone: vData.phone,
-        verifiedToken: vData.verifiedToken,
-      }),
-    })
-    const sData = await sRes.json()
+        redirect: false,
+      })
+      sessionStorage.removeItem('signup_draft')
 
-    if (!sRes.ok) {
+      if (loginResult?.error) { router.push('/login') }
+      else { router.push('/'); router.refresh() }
+    } catch {
+      setOtpError('네트워크 오류가 발생했습니다. 다시 시도해주세요.')
+    } finally {
       setVerifying(false)
-      setOtpError(sData.error || '회원가입에 실패했습니다. 처음부터 다시 시도해주세요.')
-      return
     }
-
-    // 3. 자동 로그인
-    const loginResult = await signIn('credentials', {
-      username: draft.username,
-      password: draft.password,
-      redirect: false,
-    })
-    sessionStorage.removeItem('signup_draft')
-    setVerifying(false)
-
-    if (loginResult?.error) { router.push('/login') }
-    else { router.push('/'); router.refresh() }
   }
 
   if (!draft) return null

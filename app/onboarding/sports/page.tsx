@@ -1,5 +1,10 @@
+import { Suspense } from 'react'
 import OnboardingSportsClient from './OnboardingSportsClient'
 
 export default function OnboardingSportsPage() {
-  return <OnboardingSportsClient />
+  return (
+    <Suspense>
+      <OnboardingSportsClient />
+    </Suspense>
+  )
 }
