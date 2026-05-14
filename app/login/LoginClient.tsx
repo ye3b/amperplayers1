@@ -40,13 +40,11 @@ export default function LoginClient() {
       <div className="flex-1 flex flex-col items-center justify-center px-6 pb-8">
 
         {/* 로고 */}
-        <div className="w-[88px] h-[88px] rounded-[24px] bg-[#181818] flex flex-col items-center justify-center gap-1 mb-8">
-          <span className="text-[12px] leading-none font-bold text-[#00F5A0] tracking-[-0.5px] uppercase">Players</span>
-          <div className="flex gap-[2px]">
-            {['⚽', '🏀', '🎾', '⛷️'].map((e) => (
-              <span key={e} className="text-[8px] leading-none">{e}</span>
-            ))}
-          </div>
+        <div className="mb-8">
+          <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="88" height="88" fill="#0E0E0E"/>
+            <path d="M36.1808 17.7532C51.1501 9.42686 64.7995 8.28619 70.6641 11.6969C73.7797 13.2317 78.8009 18.1773 76.3455 26.7039C73.3004 37.2784 60.3949 49.2142 43.1706 59.1053V35.4945C44.4569 34.8999 45.7625 34.2482 47.0726 33.541C58.1137 27.5811 65.3332 19.972 63.1976 16.5458C61.0616 13.1197 50.3789 15.1736 39.3376 21.1336C28.2963 27.0936 21.0771 34.7026 23.213 38.1288C24.7748 40.634 30.9058 40.2086 38.4055 37.4693L37.9065 38.0775C17.056 63.7024 30.1182 73.6866 39.3376 75.477C-4.01548 87.0397 10.2551 57.5128 30.2592 42.5341C22.1391 46.2952 16.3753 44.9386 15.0581 42.141C11.7545 36.9986 21.2115 26.0797 36.1808 17.7532Z" fill="#00F5A0"/>
+          </svg>
         </div>
 
         <h1 className="text-[28px] font-bold tracking-[-0.5px] text-[#181818] text-center mb-1">
