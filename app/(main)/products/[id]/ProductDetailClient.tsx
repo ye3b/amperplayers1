@@ -213,6 +213,16 @@ interface Seller {
   dealCount?: number | null
 }
 
+interface Review {
+  id: string
+  authorName: string | null
+  authorImage: string | null
+  rating: number
+  content: string | null
+  createdAt: Date
+}
+
+
 interface Product {
   id: string
   name: string
@@ -256,6 +266,7 @@ export default function ProductDetailClient({
   similarProducts = [],
   popularProducts = [],
   sellerProducts = [],
+  reviews = [],
 }: {
   product: Product
   seller: Seller | null
@@ -264,6 +275,7 @@ export default function ProductDetailClient({
   similarProducts?: MiniProduct[]
   popularProducts?: MiniProduct[]
   sellerProducts?: MiniProduct[]
+  reviews?: Review[]
 }) {
   const router = useRouter()
   const images: string[] = JSON.parse(product.images)
@@ -273,6 +285,7 @@ export default function ProductDetailClient({
   const [inCart, setInCart] = useState(initialInCart)
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null)
   const [chatLoading, setChatLoading] = useState(false)
+  const [touchStartX, setTouchStartX] = useState<number | null>(null)
   const [shareOpen, setShareOpen] = useState(false)
   const [offerOpen, setOfferOpen] = useState(false)
   const [buyOpen, setBuyOpen] = useState(false)
@@ -525,7 +538,22 @@ export default function ProductDetailClient({
       </div>
 
       {/* 이미지 슬라이더 */}
-      <div className="relative w-full aspect-square bg-[#F7F7F7] mt-[52px]">
+      <div
+  className="relative w-full aspect-square bg-[#F7F7F7] mt-[52px]"
+  onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
+  onTouchEnd={(e) => {
+    if (touchStartX === null) return
+    const diff = touchStartX - e.changedTouches[0].clientX
+    if (diff > 50) {
+      // 왼쪽으로 스와이프 → 다음 이미지
+      setCurrentImg((i) => Math.min(images.length - 1, i + 1))
+    } else if (diff < -50) {
+      // 오른쪽으로 스와이프 → 이전 이미지
+      setCurrentImg((i) => Math.max(0, i - 1))
+    }
+    setTouchStartX(null)
+  }}
+>
         {images.length > 0 ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -556,6 +584,14 @@ export default function ProductDetailClient({
             <div className="w-16 h-16 rounded-full bg-[#E8E8E8]" />
           </div>
         )}
+
+        {product.status === 'sold' && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-none z-10">
+            <span className="px-5 py-2 rounded-full bg-white text-[14px] font-black text-[#181818] tracking-tight">
+              판매완료
+            </span>
+          </div>
+         )}
 
         {product.grade && product.score != null && (
           <div className="absolute top-3 left-3">
@@ -695,6 +731,9 @@ export default function ProductDetailClient({
           </p>
         )}
 
+        {/* 후기 섹션 */}
+        <ReviewSection reviews={reviews} />
+
         <div className="h-px bg-[#F0F0F0] my-5" />
 
         {/* 상점 정보 */}
@@ -775,11 +814,11 @@ export default function ProductDetailClient({
             <Icon name={liked ? 'heart-filled' : 'heart'} size={22} className={liked ? 'text-[#FF4444]' : 'text-[#9E9E9E]'} />
             <span className="text-[10px] text-[#9E9E9E]">{likesCount}</span>
           </button>
-
+   
           {/* 채팅 */}
           <button
             onClick={handleChat}
-            disabled={chatLoading}
+            disabled={chatLoading || product.status === 'sold'}
             className="w-[44px] h-[44px] shrink-0 rounded-xl border border-[#E0E0E0] flex items-center justify-center disabled:opacity-50"
           >
             <Icon name="message-circle" size={20} className="text-[#181818]" />
@@ -795,12 +834,14 @@ export default function ProductDetailClient({
             <Icon name="bag-04" size={20} className={inCart ? 'text-white' : 'text-[#181818]'} />
           </button>
 
+        
           {/* 구매하기 */}
           <button
             onClick={() => setBuyOpen(true)}
-            className="flex-1 bg-[#181818] text-white rounded-xl h-[44px] text-[14px] font-bold"
+            disabled={product.status === 'sold'}
+            className="flex-1 bg-[#181818] text-white rounded-xl h-[44px] text-[14px] font-bold disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            구매하기
+            {product.status === 'sold' ? '판매완료' : '구매하기'}
           </button>
         </div>
       </div>
@@ -859,6 +900,155 @@ function MiniProductSection({ title, products }: { title: string; products: Mini
           )
         })}
       </div>
+      )}
+    </div>
+  )
+}
+
+
+function ReviewSection({ reviews }: { reviews: Review[] }) {
+  const [expanded, setExpanded] = useState(false)
+
+  // 평균 별점 계산
+  const avgRating = reviews.length > 0
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : 0
+
+  // 별점별 개수
+  const ratingCounts = [5, 4, 3, 2, 1].map((star) => ({
+    star,
+    count: reviews.filter((r) => r.rating === star).length,
+  }))
+
+  // 펼치기 전엔 3개만 표시
+  const visibleReviews = expanded ? reviews : reviews.slice(0, 3)
+
+  return (
+    <div className="mb-0">
+      {/* 헤더 */}
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-[14px] font-bold text-[#181818]">
+          후기
+          {reviews.length > 0 && (
+            <span className="ml-1.5 text-[#9E9E9E] font-normal">{reviews.length}</span>
+          )}
+        </p>
+      </div>
+
+      {reviews.length === 0 ? (
+        <div className="py-8 flex flex-col items-center gap-2">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#D0D0D0" strokeWidth="1.5" strokeLinecap="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          <p className="text-[13px] text-[#C0C0C0]">아직 후기가 없어요</p>
+        </div>
+      ) : (
+        <>
+          {/* 별점 요약 */}
+          <div className="flex gap-5 p-4 bg-[#F7F7F7] rounded-2xl mb-4">
+            {/* 평균 점수 */}
+            <div className="flex flex-col items-center justify-center w-[70px] shrink-0">
+              <span className="text-[32px] font-black text-[#181818] leading-none">
+                {avgRating.toFixed(1)}
+              </span>
+              <div className="flex gap-0.5 mt-1.5">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <svg key={s} width="10" height="10" viewBox="0 0 24 24"
+                    fill={s <= Math.round(avgRating) ? '#FBBF24' : '#E0E0E0'}>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                ))}
+              </div>
+              <span className="text-[11px] text-[#9E9E9E] mt-1">{reviews.length}개 후기</span>
+            </div>
+
+            {/* 별점 바 */}
+            <div className="flex-1 flex flex-col gap-1.5 justify-center">
+              {ratingCounts.map(({ star, count }) => (
+                <div key={star} className="flex items-center gap-2">
+                  <span className="text-[11px] text-[#9E9E9E] w-[8px]">{star}</span>
+                  <div className="flex-1 h-[5px] rounded-full bg-[#E8E8E8] overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-[#FBBF24]"
+                      style={{ width: reviews.length > 0 ? `${(count / reviews.length) * 100}%` : '0%' }}
+                    />
+                  </div>
+                  <span className="text-[11px] text-[#9E9E9E] w-[16px] text-right">{count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 후기 목록 */}
+          <div className="flex flex-col gap-5">
+            {visibleReviews.map((review) => (
+              <div key={review.id} className="flex flex-col gap-2">
+                {/* 작성자 정보 */}
+                <div className="flex items-center gap-2.5">
+                  {review.authorImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={review.authorImage}
+                      alt={review.authorName ?? ''}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-[#E8E8E8] flex items-center justify-center">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BDBDBD" strokeWidth="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                      </svg>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-[13px] font-semibold text-[#181818]">
+                      {review.authorName ?? '익명'}
+                    </p>
+                    <div className="flex items-center gap-1.5">
+                      {/* 별점 */}
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <svg key={s} width="10" height="10" viewBox="0 0 24 24"
+                            fill={s <= review.rating ? '#FBBF24' : '#E0E0E0'}>
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          </svg>
+                        ))}
+                      </div>
+                      <span className="text-[11px] text-[#B0B0B0]">
+                        {new Date(review.createdAt).toLocaleDateString('ko-KR', {
+                          year: 'numeric', month: 'long', day: 'numeric',
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 후기 내용 */}
+                {review.content && (
+                  <p className="text-[13px] text-[#444] leading-relaxed pl-[42px]">
+                    {review.content}
+                  </p>
+                )}
+
+                <div className="h-px bg-[#F5F5F5] mt-1" />
+              </div>
+            ))}
+          </div>
+
+          {/* 더보기 버튼 */}
+          {reviews.length > 3 && (
+            <button
+              onClick={() => setExpanded((p) => !p)}
+              className="w-full mt-3 py-3 rounded-xl border border-[#E8E8E8] text-[13px] font-semibold text-[#555] flex items-center justify-center gap-1"
+            >
+              {expanded ? '접기' : `후기 ${reviews.length - 3}개 더 보기`}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                style={{ transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+          )}
+        </>
       )}
     </div>
   )

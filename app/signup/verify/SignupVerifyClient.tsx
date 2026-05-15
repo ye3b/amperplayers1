@@ -1,5 +1,8 @@
 'use client'
 
+import TermsModal from './TermsModal'
+import { TERMS_DATA } from './terms-data'
+import type { TermsItem } from './terms-data'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
@@ -9,56 +12,41 @@ type ConsentMap = Record<string, boolean>
 
 const CARRIERS = ['SKT', 'KT', 'LG U+', 'SKT 알뜰', 'KT 알뜰', 'LG 알뜰']
 
-const CONSENT_ITEMS = [
-  { id: 'terms',     label: 'Players 이용약관',                             required: true },
-  { id: 'identity',  label: '휴대폰 본인확인서비스',                         required: true },
-  { id: 'location',  label: '위치정보 이용약관 동의',                        required: true },
-  { id: 'marketing', label: '마케팅 목적 개인정보 수집 및 이용 동의',         required: false },
-  { id: 'ad',        label: '광고성 정보 수신 동의',                          required: false,
-    sub: ['앱 푸시', 'Players 채팅', '카카오톡', 'SMS'] },
-  { id: 'custom',    label: '맞춤형 광고 노출을 위한 개인정보 활용 동의',     required: false },
-]
-
 export default function SignupVerifyClient() {
   const router = useRouter()
   const [draft, setDraft] = useState<{ username: string; password: string } | null>(null)
   const [step, setStep] = useState<Step>('info')
 
-  // 드래프트 확인 (sessionStorage는 클라이언트에서만 접근 가능)
   useEffect(() => {
     const raw = sessionStorage.getItem('signup_draft')
     if (!raw) { router.replace('/signup'); return }
     setDraft(JSON.parse(raw))
   }, [router])
 
-  // 정보 입력 필드
   const [name, setName]               = useState('')
   const [birth, setBirth]             = useState('')
   const [genderDigit, setGenderDigit] = useState('')
   const [carrier, setCarrier]         = useState('')
   const [phone, setPhone]             = useState('')
-  const [consents, setConsents]       = useState<ConsentMap>(
-    Object.fromEntries(CONSENT_ITEMS.map((i) => [i.id, false]))
+  const [consents, setConsents] = useState<ConsentMap>(
+    Object.fromEntries(TERMS_DATA.map((i) => [i.id, false]))
   )
-  const [infoError, setInfoError]     = useState('')
-  const [sending, setSending]         = useState(false)
+  const [infoError, setInfoError] = useState('')
+  const [sending, setSending]     = useState(false)
 
-  // OTP 필드
-  const [otp, setOtp]           = useState(['', '', '', '', '', ''])
-  const [otpError, setOtpError] = useState('')
+  const [otp, setOtp]             = useState(['', '', '', '', '', ''])
+  const [otpError, setOtpError]   = useState('')
   const [verifying, setVerifying] = useState(false)
   const [countdown, setCountdown] = useState(0)
-  const otpRefs = useRef<(HTMLInputElement | null)[]>([])
+  const otpRefs  = useRef<(HTMLInputElement | null)[]>([])
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // rawPhone: 하이픈 제거
   const rawPhone = phone.replace(/-/g, '')
-
-  // 필수 동의 완료 여부
-  const requiredAll = CONSENT_ITEMS.filter((i) => i.required).every((i) => consents[i.id])
-  const allChecked  = CONSENT_ITEMS.every((i) => consents[i.id])
-
   const rawBirth = birth.replace(/\./g, '')
+
+  const requiredAll = TERMS_DATA.filter((i) => i.required).every((i) => consents[i.id])
+  const allChecked  = TERMS_DATA.every((i) => consents[i.id])
+
   const formValid =
     name.trim().length >= 2 &&
     rawBirth.length === 6 &&
@@ -67,7 +55,6 @@ export default function SignupVerifyClient() {
     rawPhone.length === 11 && rawPhone.startsWith('01') &&
     requiredAll
 
-  // 타이머
   const startTimer = (seconds: number) => {
     if (timerRef.current) clearInterval(timerRef.current)
     setCountdown(seconds)
@@ -81,7 +68,6 @@ export default function SignupVerifyClient() {
 
   useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current) }, [])
 
-  // 포맷터
   const formatPhone = (val: string) => {
     const d = val.replace(/\D/g, '').slice(0, 11)
     if (d.length <= 3) return d
@@ -97,14 +83,13 @@ export default function SignupVerifyClient() {
   const formatCountdown = (s: number) =>
     `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 
-  // 동의 토글
+  // ✅ CONSENT_ITEMS → TERMS_DATA 로 수정됨
   const toggleAll = () => {
     const next = !allChecked
-    setConsents(Object.fromEntries(CONSENT_ITEMS.map((i) => [i.id, next])))
+    setConsents(Object.fromEntries(TERMS_DATA.map((i) => [i.id, next])))
   }
   const toggleOne = (id: string) => setConsents((p) => ({ ...p, [id]: !p[id] }))
 
-  // OTP 입력 핸들러
   const handleOtpChange = (idx: number, val: string) => {
     const digit = val.replace(/\D/g, '').slice(-1)
     const next = [...otp]; next[idx] = digit; setOtp(next)
@@ -119,39 +104,10 @@ export default function SignupVerifyClient() {
     e.preventDefault()
   }
 
-  // 인증번호 발송
   const handleSend = async () => {
     if (!formValid || sending) return
     setInfoError('')
     setSending(true)
-
-    const res = await fetch('/api/auth/send-sms', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: name.trim(),
-        birth: rawBirth,
-        genderDigit,
-        carrier,
-        phone: rawPhone,
-      }),
-    })
-    const data = await res.json()
-    setSending(false)
-
-    if (!res.ok) { setInfoError(data.error || 'SMS 발송에 실패했습니다.'); return }
-
-    setStep('otp')
-    setOtp(['', '', '', '', '', ''])
-    startTimer(180)
-    setTimeout(() => otpRefs.current[0]?.focus(), 100)
-  }
-
-  // 재발송
-  const handleResend = async () => {
-    setOtpError('')
-    setSending(true)
-
     const res = await fetch('/api/auth/send-sms', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -159,35 +115,42 @@ export default function SignupVerifyClient() {
     })
     const data = await res.json()
     setSending(false)
-
-    if (!res.ok) { setOtpError(data.error || '재발송에 실패했습니다.'); return }
-
+    if (!res.ok) { setInfoError(data.error || 'SMS 발송에 실패했습니다.'); return }
+    setStep('otp')
     setOtp(['', '', '', '', '', ''])
     startTimer(180)
     setTimeout(() => otpRefs.current[0]?.focus(), 100)
   }
 
-  // OTP 인증 + 계정 생성
+  const handleResend = async () => {
+    setOtpError('')
+    setSending(true)
+    const res = await fetch('/api/auth/send-sms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name.trim(), birth: rawBirth, genderDigit, carrier, phone: rawPhone }),
+    })
+    const data = await res.json()
+    setSending(false)
+    if (!res.ok) { setOtpError(data.error || '재발송에 실패했습니다.'); return }
+    setOtp(['', '', '', '', '', ''])
+    startTimer(180)
+    setTimeout(() => otpRefs.current[0]?.focus(), 100)
+  }
+
   const handleVerify = async () => {
     if (!draft || otp.join('').length !== 6 || countdown === 0) return
     setOtpError('')
     setVerifying(true)
-
     try {
-      // 1. OTP 검증
       const vRes = await fetch('/api/auth/verify-sms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: rawPhone, otp: otp.join('') }),
       })
       const vData = await vRes.json()
+      if (!vRes.ok) { setOtpError(vData.error || '인증에 실패했습니다.'); return }
 
-      if (!vRes.ok) {
-        setOtpError(vData.error || '인증에 실패했습니다.')
-        return
-      }
-
-      // 2. 계정 생성
       const sRes = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -199,13 +162,8 @@ export default function SignupVerifyClient() {
         }),
       })
       const sData = await sRes.json()
+      if (!sRes.ok) { setOtpError(sData.error || '회원가입에 실패했습니다. 처음부터 다시 시도해주세요.'); return }
 
-      if (!sRes.ok) {
-        setOtpError(sData.error || '회원가입에 실패했습니다. 처음부터 다시 시도해주세요.')
-        return
-      }
-
-      // 3. 자동 로그인
       const loginResult = await signIn('credentials', {
         username: draft.username,
         password: draft.password,
@@ -226,7 +184,6 @@ export default function SignupVerifyClient() {
 
   return (
     <div className="min-h-screen max-w-[390px] mx-auto flex flex-col bg-white">
-      {/* 상단 바 */}
       <div className="flex items-center px-5 pt-14 pb-2">
         <button
           onClick={() => step === 'otp' ? setStep('info') : router.back()}
@@ -350,7 +307,10 @@ function InfoStep({
         />
       </Field>
 
-      <ConsentSection consents={consents} allChecked={allChecked} onToggleAll={onToggleAll} onToggleOne={onToggleOne} />
+      <ConsentSection
+        consents={consents} allChecked={allChecked}
+        onToggleAll={onToggleAll} onToggleOne={onToggleOne}
+      />
 
       {error && (
         <p className="text-[13px] text-red-500 text-center mb-3">{error}</p>
@@ -446,8 +406,7 @@ function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
   consents: ConsentMap; allChecked: boolean
   onToggleAll: () => void; onToggleOne: (id: string) => void
 }) {
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
-  const toggle = (id: string) => setExpanded((p) => ({ ...p, [id]: !p[id] }))
+  const [openItem, setOpenItem] = useState<TermsItem | null>(null)
 
   return (
     <div className="mb-6">
@@ -458,11 +417,15 @@ function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
         <CheckMark checked={allChecked} size="lg" />
         <span className="text-[16px] font-bold text-[#181818]">전체동의</span>
       </button>
+
       <div className="flex flex-col">
-        {CONSENT_ITEMS.map((item) => (
+        {TERMS_DATA.map((item) => (
           <div key={item.id}>
             <div className="flex items-center py-3 border-b border-[#F5F5F5]">
-              <button onClick={() => onToggleOne(item.id)} className="flex items-center gap-2.5 flex-1 text-left">
+              <button
+                onClick={() => onToggleOne(item.id)}
+                className="flex items-center gap-2.5 flex-1 text-left"
+              >
                 <CheckMark checked={consents[item.id]} />
                 <span className="text-[14px] text-[#181818] leading-[20px]">
                   {item.label}
@@ -471,13 +434,17 @@ function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
                   </span>
                 </span>
               </button>
-              <button onClick={() => toggle(item.id)} className="w-8 h-8 flex items-center justify-center text-[#B0B0B0] ml-1">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                  style={{ transform: expanded[item.id] ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
-                  <path d="M6 9l6 6 6-6" />
+              <button
+                onClick={() => setOpenItem(item)}
+                className="w-8 h-8 flex items-center justify-center text-[#B0B0B0] ml-1"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M9 18l6-6-6-6" />
                 </svg>
               </button>
             </div>
+
             {item.sub && consents[item.id] && (
               <div className="flex gap-4 px-2 py-2.5 border-b border-[#F5F5F5]">
                 {item.sub.map((s) => (
@@ -491,12 +458,48 @@ function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
           </div>
         ))}
       </div>
-      <button className="w-full flex items-center justify-between py-4 border-t border-[#F0F0F0] mt-1">
+
+      <button
+        onClick={() => setOpenItem({
+          id: 'privacy_info',
+          label: '',
+          title: '개인정보 수집 및 이용 안내',
+          required: false,
+          content: `수집 항목
+필수: 이름, 생년월일, 성별, 휴대폰번호, 아이디, 암호화된 비밀번호
+선택: 프로필 사진, 관심 스포츠 종목, 실력 정보
+
+수집 목적
+- 회원 식별 및 서비스 제공
+- 본인확인 및 부정이용 방지
+- 거래 진행 및 정산 처리
+- 고객 문의 응대
+
+보유 기간
+회원 탈퇴 시까지 보관 후 즉시 파기합니다.
+단, 관련 법령에 의해 보존이 필요한 경우 해당 기간 동안 보존합니다.
+
+- 계약 또는 청약철회 기록: 5년
+- 대금결제 및 재화 공급 기록: 5년
+- 소비자 불만 및 분쟁처리 기록: 3년
+- 접속 로그: 3개월`,
+        })}
+        className="w-full flex items-center justify-between py-4 border-t border-[#F0F0F0] mt-1"
+      >
         <span className="text-[13px] text-[#9E9E9E]">개인정보 수집 및 이용 안내</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B0B0B0" strokeWidth="2" strokeLinecap="round">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="#B0B0B0" strokeWidth="2" strokeLinecap="round">
           <path d="M9 18l6-6-6-6" />
         </svg>
       </button>
+
+      {openItem && (
+        <TermsModal
+          title={openItem.title}
+          content={openItem.content}
+          onClose={() => setOpenItem(null)}
+        />
+      )}
     </div>
   )
 }
