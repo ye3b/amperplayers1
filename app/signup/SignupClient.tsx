@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { trackEvent } from '@/lib/amplitude'
 
 type CheckState = 'idle' | 'checking' | 'available' | 'taken' | 'invalid'
 
@@ -58,6 +59,7 @@ export default function SignupClient() {
     }
 
     // 본인인증 후 계정 생성에 사용할 정보를 세션에 임시 저장
+    trackEvent('Signup Step Completed', { step: 'credentials' })
     sessionStorage.setItem('signup_draft', JSON.stringify({ username, password }))
     router.push('/signup/verify')
   }
