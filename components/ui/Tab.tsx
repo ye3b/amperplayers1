@@ -33,8 +33,8 @@ export default function Tab({ items, value, onChange }: TabProps) {
             className={`
               flex items-center gap-1 px-3 py-2 rounded-[80px] transition-colors
               ${isSelected
-                ? 'bg-dark text-[#F8F8F8]'
-                : 'bg-[#F8F8F8] text-gray'
+                ? 'bg-neutral-900 text-[#F8F8F8]'
+                : 'bg-[#F8F8F8] text-neutral-400'
               }
             `}
           >
