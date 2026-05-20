@@ -3,7 +3,6 @@
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { trackEvent } from '@/lib/amplitude'
 
 export default function LoginClient() {
   const router = useRouter()
@@ -25,10 +24,8 @@ export default function LoginClient() {
 
     if (result?.error) {
       setCredError('아이디 또는 비밀번호가 올바르지 않습니다.')
-      trackEvent('Login Failed', { method: 'credentials' })
     } else {
-      trackEvent('Login Completed', { method: 'credentials' })
-      router.push('/')
+router.push('/')
       router.refresh()
     }
   }

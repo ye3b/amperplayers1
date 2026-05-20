@@ -3,7 +3,6 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
-import { trackEvent } from '@/lib/amplitude'
 
 type CheckState = 'idle' | 'checking' | 'available' | 'taken' | 'invalid'
 
@@ -77,8 +76,7 @@ export default function SignupClient() {
     setLoading(false)
     if (loginResult?.error) { setError('로그인에 실패했습니다. 다시 시도해주세요.'); return }
 
-    trackEvent('Signup Step Completed', { step: 'credentials' })
-    router.push('/signup/sports')
+router.push('/signup/sports')
   }
 
   const inputBorder = (state: CheckState) => {
