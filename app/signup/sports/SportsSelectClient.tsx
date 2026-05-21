@@ -64,22 +64,22 @@ export default function SportsSelectClient() {
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className={`h-[3px] rounded-full transition-all ${s === 2 ? 'w-6 bg-[#181818]' : 'w-3 bg-[#E0E0E0]'}`}
+                className={`h-[3px] rounded-full transition-all ${s === 2 ? 'w-6 bg-neutral-900' : 'w-3 bg-neutral-200'}`}
               />
             ))}
           </div>
           <button
             onClick={handleSkip}
-            className="text-[13px] font-medium text-[#9E9E9E]"
+            className="text-[13px] font-medium text-neutral-400"
           >
             건너뛰기
           </button>
         </div>
 
-        <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-[#181818] mb-2">
+        <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-neutral-900 mb-2">
           관심 종목을<br />선택해주세요
         </h1>
-        <p className="text-[14px] leading-[22px] text-[#9E9E9E] font-medium">
+        <p className="text-[14px] leading-[22px] text-neutral-400 font-medium">
           맞춤 상품을 추천해드릴게요
           {selected.size > 0 && (
             <span className="ml-2 text-[#00C77A] font-semibold">{selected.size}개 선택됨</span>
@@ -100,8 +100,8 @@ export default function SportsSelectClient() {
                   relative flex flex-col items-center justify-center gap-2
                   h-[100px] rounded-2xl border-2 transition-all active:scale-[0.96]
                   ${isSelected
-                    ? 'border-[#181818] bg-[#181818]'
-                    : 'border-[#F0F0F0] bg-[#FAFAFA]'}
+                    ? 'border-neutral-900 bg-neutral-900'
+                    : 'border-neutral-100 bg-neutral-50'}
                 `}
               >
                 {/* 선택 체크 */}
@@ -114,7 +114,7 @@ export default function SportsSelectClient() {
                   </span>
                 )}
                 <span className="text-[28px] leading-none">{sport.emoji}</span>
-                <span className={`text-[13px] font-semibold leading-none ${isSelected ? 'text-white' : 'text-[#757575]'}`}>
+                <span className={`text-[13px] font-semibold leading-none ${isSelected ? 'text-white' : 'text-neutral-500'}`}>
                   {sport.label}
                 </span>
               </button>
@@ -124,15 +124,15 @@ export default function SportsSelectClient() {
       </div>
 
       {/* 하단 버튼 */}
-      <div className="px-5 pb-12 pt-4 border-t border-[#F5F5F5]">
+      <div className="px-5 pb-12 pt-4 border-t border-neutral-100">
         <button
           onClick={handleDone}
           disabled={selected.size < MIN_SELECT || saving}
           className={`
             w-full h-[56px] rounded-xl text-[15px] font-bold tracking-[-0.25px] transition-all active:scale-[0.98]
             ${selected.size >= MIN_SELECT && !saving
-              ? 'bg-[#181818] text-[#00F5A0]'
-              : 'bg-[#F0F0F0] text-[#C8C8C8]'}
+              ? 'bg-neutral-900 text-primary'
+              : 'bg-neutral-100 text-neutral-300'}
           `}
         >
           {saving

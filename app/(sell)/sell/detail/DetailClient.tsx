@@ -55,14 +55,14 @@ export default function DetailClient() {
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* 헤더 */}
       <div className="flex-shrink-0 px-5 pt-2 pb-4">
-        <h1 className="text-[24px] font-bold tracking-[-0.5px] text-[#181818] mb-1">
+        <h1 className="text-[24px] font-bold tracking-[-0.5px] text-neutral-900 mb-1">
           {SPORT_LABELS[sport] ?? sport} 용품 정보
         </h1>
-        <p className="text-[14px] text-[#9E9E9E]">판매할 제품 카테고리를 선택하세요</p>
+        <p className="text-[14px] text-neutral-400">판매할 제품 카테고리를 선택하세요</p>
       </div>
 
       {/* 탭 바 */}
-      <div className="flex-shrink-0 border-b border-[#F0F0F0]">
+      <div className="flex-shrink-0 border-b border-neutral-100">
         <div className="flex overflow-x-auto scrollbar-hide px-5 gap-1">
           {tabs.map((tab) => {
             const isActive = tab.id === activeTabId
@@ -71,7 +71,7 @@ export default function DetailClient() {
                 key={tab.id}
                 onClick={() => setActiveTabId(tab.id)}
                 className={`flex-shrink-0 pb-3 px-3 text-[14px] font-semibold border-b-2 transition-colors
-                  ${isActive ? 'border-[#181818] text-[#181818]' : 'border-transparent text-[#9E9E9E]'}`}
+                  ${isActive ? 'border-neutral-900 text-neutral-900' : 'border-transparent text-neutral-400'}`}
               >
                 {tab.label}
               </button>
@@ -95,10 +95,10 @@ export default function DetailClient() {
       </div>
 
       {/* 다음 버튼 */}
-      <div className="flex-shrink-0 px-5 pb-12 pt-4 border-t border-[#F5F5F5]">
+      <div className="flex-shrink-0 px-5 pb-12 pt-4 border-t border-neutral-100">
         <button
           onClick={handleNext}
-          className="w-full h-[56px] rounded-xl bg-[#181818] text-[#00F5A0] text-[15px] font-bold tracking-[-0.25px] active:scale-[0.98] transition-all"
+          className="w-full h-[56px] rounded-xl bg-neutral-900 text-primary text-[15px] font-bold tracking-[-0.25px] active:scale-[0.98] transition-all"
         >
           다음
         </button>
@@ -120,9 +120,9 @@ function FieldRenderer({
 
   return (
     <div>
-      <label className="block text-[14px] font-semibold text-[#181818] mb-2.5">
+      <label className="block text-[14px] font-semibold text-neutral-900 mb-2.5">
         {field.label}
-        {isRequired && <span className="text-[#FF4444] ml-0.5">*</span>}
+        {isRequired && <span className="text-error ml-0.5">*</span>}
       </label>
 
       {field.type === 'text' && (
@@ -131,7 +131,7 @@ function FieldRenderer({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={field.placeholder}
-          className="w-full h-[48px] bg-[#F5F5F5] rounded-xl px-4 text-[15px] text-[#181818] placeholder:text-[#C8C8C8] focus:outline-none focus:ring-2 focus:ring-[#181818]/20"
+          className="w-full h-[48px] bg-neutral-100 rounded-xl px-4 text-[15px] text-neutral-900 placeholder:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/20"
         />
       )}
 
@@ -142,10 +142,10 @@ function FieldRenderer({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={field.placeholder}
-            className="flex-1 h-[48px] bg-[#F5F5F5] rounded-xl px-4 text-[15px] text-[#181818] placeholder:text-[#C8C8C8] focus:outline-none focus:ring-2 focus:ring-[#181818]/20"
+            className="flex-1 h-[48px] bg-neutral-100 rounded-xl px-4 text-[15px] text-neutral-900 placeholder:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/20"
           />
           {field.unit && (
-            <span className="text-[14px] font-semibold text-[#9E9E9E]">{field.unit}</span>
+            <span className="text-[14px] font-semibold text-neutral-400">{field.unit}</span>
           )}
         </div>
       )}
@@ -157,7 +157,7 @@ function FieldRenderer({
               key={opt}
               onClick={() => onChange(value === opt ? '' : opt)}
               className={`h-[36px] px-4 rounded-full text-[13px] font-medium transition-colors
-                ${value === opt ? 'bg-[#181818] text-white' : 'bg-[#F5F5F5] text-[#757575]'}`}
+                ${value === opt ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-500'}`}
             >
               {opt}
             </button>
@@ -170,7 +170,7 @@ function FieldRenderer({
           <select
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full h-[48px] bg-[#F5F5F5] rounded-xl px-4 pr-10 text-[15px] text-[#181818] focus:outline-none focus:ring-2 focus:ring-[#181818]/20 appearance-none"
+            className="w-full h-[48px] bg-neutral-100 rounded-xl px-4 pr-10 text-[15px] text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/20 appearance-none"
           >
             <option value="">선택하세요</option>
             {field.options.map((opt) => (
@@ -194,7 +194,7 @@ function FieldRenderer({
                 key={opt}
                 onClick={() => onToggleMulti(opt)}
                 className={`h-[36px] px-4 rounded-full text-[13px] font-medium transition-colors
-                  ${selected ? 'bg-[#181818] text-white' : 'bg-[#F5F5F5] text-[#757575]'}`}
+                  ${selected ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-500'}`}
               >
                 {opt}
               </button>
@@ -206,11 +206,11 @@ function FieldRenderer({
       {field.type === 'slider' && (
         <div>
           <div className="flex justify-between items-center mb-3">
-            <span className="text-[12px] text-[#9E9E9E]">{field.min}{field.unit}</span>
-            <span className="text-[20px] font-bold text-[#181818]">
-              {value || '50'}<span className="text-[14px] text-[#9E9E9E] ml-0.5">{field.unit}</span>
+            <span className="text-[12px] text-neutral-400">{field.min}{field.unit}</span>
+            <span className="text-[20px] font-bold text-neutral-900">
+              {value || '50'}<span className="text-[14px] text-neutral-400 ml-0.5">{field.unit}</span>
             </span>
-            <span className="text-[12px] text-[#9E9E9E]">{field.max}{field.unit}</span>
+            <span className="text-[12px] text-neutral-400">{field.max}{field.unit}</span>
           </div>
           <input
             type="range"
@@ -219,11 +219,11 @@ function FieldRenderer({
             step={field.step}
             value={value || '50'}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full h-[4px] rounded-full appearance-none cursor-pointer accent-[#181818] bg-[#F0F0F0]"
+            className="w-full h-[4px] rounded-full appearance-none cursor-pointer accent-neutral-900 bg-neutral-100"
           />
           <div className="flex justify-between mt-1.5">
-            <span className="text-[11px] text-[#C8C8C8]">아직 안 됨</span>
-            <span className="text-[11px] text-[#C8C8C8]">완전히 됨</span>
+            <span className="text-[11px] text-neutral-300">아직 안 됨</span>
+            <span className="text-[11px] text-neutral-300">완전히 됨</span>
           </div>
         </div>
       )}

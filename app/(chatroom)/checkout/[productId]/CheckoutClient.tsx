@@ -164,25 +164,25 @@ export default function CheckoutClient({
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] flex flex-col items-center">
+    <div className="min-h-screen bg-neutral-100 flex flex-col items-center">
       <div className="w-full max-w-[390px] bg-white shadow-[0_0_40px_rgba(0,0,0,0.10)] flex flex-col min-h-screen">
-        <div className="sticky top-0 z-10 bg-white flex items-center gap-2 px-3 py-3 border-b border-[#F0F0F0]">
+        <div className="sticky top-0 z-10 bg-white flex items-center gap-2 px-3 py-3 border-b border-neutral-100">
           <button onClick={() => router.back()} className="w-10 h-10 flex items-center justify-center -ml-1">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#181818" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
-          <span className="text-[16px] font-bold text-[#181818] tracking-[-0.3px]">주문/결제</span>
+          <span className="text-[16px] font-bold text-neutral-900 tracking-[-0.3px]">주문/결제</span>
         </div>
 
         <div className="flex-1">
 
         {/* 상품 정보 */}
-        <section className="px-4 py-4 border-b border-[#F0F0F0]">
-          <p className="text-[12px] font-bold text-[#9E9E9E] mb-3">상품 정보</p>
+        <section className="px-4 py-4 border-b border-neutral-100">
+          <p className="text-[12px] font-bold text-neutral-400 mb-3">상품 정보</p>
           <div className="flex gap-3 items-start">
             {thumbnail ? (
               <img src={thumbnail} alt={product.name} className="w-16 h-16 rounded-xl object-cover shrink-0" />
             ) : (
-              <div className="w-16 h-16 rounded-xl bg-[#F0F0F0] shrink-0" />
+              <div className="w-16 h-16 rounded-xl bg-neutral-100 shrink-0" />
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
@@ -194,13 +194,13 @@ export default function CheckoutClient({
                     {product.grade}급
                   </span>
                 )}
-                <p className="text-[13px] font-semibold text-[#181818] truncate">{product.name}</p>
+                <p className="text-[13px] font-semibold text-neutral-900 truncate">{product.name}</p>
               </div>
               <div className="flex items-baseline gap-1.5">
                 {product.discount && product.discount > 0 && (
-                  <span className="text-[12px] text-[#FF4444] font-bold">{product.discount}%</span>
+                  <span className="text-[12px] text-error font-bold">{product.discount}%</span>
                 )}
-                <span className="text-[15px] font-bold text-[#181818]">
+                <span className="text-[15px] font-bold text-neutral-900">
                   {discountedPrice.toLocaleString()}원
                 </span>
                 {product.discount && product.discount > 0 && (
@@ -212,12 +212,12 @@ export default function CheckoutClient({
         </section>
 
         {/* 배송지 */}
-        <section className="px-4 py-4 border-b border-[#F0F0F0]">
+        <section className="px-4 py-4 border-b border-neutral-100">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[12px] font-bold text-[#9E9E9E]">배송지</p>
+            <p className="text-[12px] font-bold text-neutral-400">배송지</p>
             <button
               onClick={() => { setShowAddrForm(true); setAddrForm(EMPTY_FORM); setAddrError('') }}
-              className="text-[12px] font-semibold text-[#181818]"
+              className="text-[12px] font-semibold text-neutral-900"
             >
               + 추가
             </button>
@@ -225,10 +225,10 @@ export default function CheckoutClient({
 
           {loadingData ? (
             <div className="flex justify-center py-4">
-              <div className="w-4 h-4 border-2 border-[#181818] border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-neutral-900 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : addresses.length === 0 ? (
-            <p className="text-[13px] text-[#9E9E9E] text-center py-3">등록된 배송지가 없어요</p>
+            <p className="text-[13px] text-neutral-400 text-center py-3">등록된 배송지가 없어요</p>
           ) : (
             <div className="flex flex-col gap-2">
               {addresses.map((a) => (
@@ -236,23 +236,23 @@ export default function CheckoutClient({
                   key={a.id}
                   onClick={() => setSelectedAddressId(a.id)}
                   className={`flex items-start gap-3 p-3 rounded-xl border-2 text-left transition-colors ${
-                    selectedAddressId === a.id ? 'border-[#181818] bg-[#F7F7F7]' : 'border-[#F0F0F0]'
+                    selectedAddressId === a.id ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-100'
                   }`}
                 >
                   <div className={`w-4 h-4 mt-0.5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                    selectedAddressId === a.id ? 'border-[#181818]' : 'border-[#BDBDBD]'
+                    selectedAddressId === a.id ? 'border-neutral-900' : 'border-[#BDBDBD]'
                   }`}>
-                    {selectedAddressId === a.id && <div className="w-2 h-2 rounded-full bg-[#181818]" />}
+                    {selectedAddressId === a.id && <div className="w-2 h-2 rounded-full bg-neutral-900" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
-                      <span className="text-[13px] font-bold text-[#181818]">{a.label}</span>
+                      <span className="text-[13px] font-bold text-neutral-900">{a.label}</span>
                       {a.isDefault && (
-                        <span className="px-1.5 py-0.5 bg-[#181818] rounded text-[9px] font-bold text-white leading-none">기본</span>
+                        <span className="px-1.5 py-0.5 bg-neutral-900 rounded text-[9px] font-bold text-white leading-none">기본</span>
                       )}
                     </div>
-                    <p className="text-[12px] font-semibold text-[#181818]">{a.recipient} · {a.phone}</p>
-                    <p className="text-[11px] text-[#757575] mt-0.5">
+                    <p className="text-[12px] font-semibold text-neutral-900">{a.recipient} · {a.phone}</p>
+                    <p className="text-[11px] text-neutral-500 mt-0.5">
                       ({a.zipCode}) {a.address}
                       {a.addressDetail && ` ${a.addressDetail}`}
                     </p>
@@ -264,25 +264,25 @@ export default function CheckoutClient({
         </section>
 
         {/* 거래 방법 */}
-        <section className="px-4 py-4 border-b border-[#F0F0F0]">
-          <p className="text-[12px] font-bold text-[#9E9E9E] mb-3">거래 방법</p>
+        <section className="px-4 py-4 border-b border-neutral-100">
+          <p className="text-[12px] font-bold text-neutral-400 mb-3">거래 방법</p>
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1.5 rounded-full bg-[#F3F3F3] text-[12px] font-bold text-[#181818]">
+            <span className="px-3 py-1.5 rounded-full bg-[#F3F3F3] text-[12px] font-bold text-neutral-900">
               {shippingMethod === 'prepaid' ? '선불' : '착불'}
             </span>
-            <span className="text-[12px] text-[#9E9E9E]">
+            <span className="text-[12px] text-neutral-400">
               {shippingMethod === 'prepaid' ? '구매자가 배송비를 부담해요' : '판매자가 배송비를 부담해요'}
             </span>
           </div>
         </section>
 
         {/* 결제수단 */}
-        <section className="px-4 py-4 border-b border-[#F0F0F0]">
+        <section className="px-4 py-4 border-b border-neutral-100">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[12px] font-bold text-[#9E9E9E]">결제수단</p>
+            <p className="text-[12px] font-bold text-neutral-400">결제수단</p>
             <button
               onClick={() => router.push('/profile/account/payment')}
-              className="text-[12px] font-semibold text-[#181818]"
+              className="text-[12px] font-semibold text-neutral-900"
             >
               관리 →
             </button>
@@ -290,14 +290,14 @@ export default function CheckoutClient({
 
           {loadingData ? (
             <div className="flex justify-center py-4">
-              <div className="w-4 h-4 border-2 border-[#181818] border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-neutral-900 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : paymentMethods.length === 0 ? (
             <div className="text-center py-3">
-              <p className="text-[13px] text-[#9E9E9E] mb-2">등록된 결제수단이 없어요</p>
+              <p className="text-[13px] text-neutral-400 mb-2">등록된 결제수단이 없어요</p>
               <button
                 onClick={() => router.push('/profile/account/payment')}
-                className="text-[13px] font-bold text-[#181818] underline"
+                className="text-[13px] font-bold text-neutral-900 underline"
               >
                 결제수단 추가하기
               </button>
@@ -309,19 +309,19 @@ export default function CheckoutClient({
                   key={m.id}
                   onClick={() => setSelectedPaymentId(m.id)}
                   className={`flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-colors ${
-                    selectedPaymentId === m.id ? 'border-[#181818] bg-[#F7F7F7]' : 'border-[#F0F0F0]'
+                    selectedPaymentId === m.id ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-100'
                   }`}
                 >
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                    selectedPaymentId === m.id ? 'border-[#181818]' : 'border-[#BDBDBD]'
+                    selectedPaymentId === m.id ? 'border-neutral-900' : 'border-[#BDBDBD]'
                   }`}>
-                    {selectedPaymentId === m.id && <div className="w-2 h-2 rounded-full bg-[#181818]" />}
+                    {selectedPaymentId === m.id && <div className="w-2 h-2 rounded-full bg-neutral-900" />}
                   </div>
                   <span className="text-[16px]">{METHOD_ICON[m.type] ?? '💳'}</span>
                   <div className="flex-1">
-                    <span className="text-[13px] font-semibold text-[#181818]">{m.alias}</span>
+                    <span className="text-[13px] font-semibold text-neutral-900">{m.alias}</span>
                     {m.isDefault && (
-                      <span className="ml-2 px-1.5 py-0.5 bg-[#181818] rounded text-[9px] font-bold text-white leading-none">기본</span>
+                      <span className="ml-2 px-1.5 py-0.5 bg-neutral-900 rounded text-[9px] font-bold text-white leading-none">기본</span>
                     )}
                   </div>
                 </button>
@@ -331,16 +331,16 @@ export default function CheckoutClient({
         </section>
 
         {/* 결제금액 */}
-        <section className="px-4 py-4 border-b border-[#F0F0F0]">
-          <p className="text-[12px] font-bold text-[#9E9E9E] mb-3">결제금액</p>
+        <section className="px-4 py-4 border-b border-neutral-100">
+          <p className="text-[12px] font-bold text-neutral-400 mb-3">결제금액</p>
           <div className="flex flex-col gap-2.5">
             <div className="flex justify-between items-center">
-              <span className="text-[13px] text-[#555]">상품 금액</span>
-              <span className="text-[13px] text-[#181818]">{discountedPrice.toLocaleString()}원</span>
+              <span className="text-[13px] text-neutral-500">상품 금액</span>
+              <span className="text-[13px] text-neutral-900">{discountedPrice.toLocaleString()}원</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-[13px] text-[#555]">배송비</span>
-              <span className="text-[13px] text-[#181818]">
+              <span className="text-[13px] text-neutral-500">배송비</span>
+              <span className="text-[13px] text-neutral-900">
                 {shippingMethod === 'cod'
                   ? '착불'
                   : product.shippingType === 'included'
@@ -350,10 +350,10 @@ export default function CheckoutClient({
                   : `${shippingFee.toLocaleString()}원`}
               </span>
             </div>
-            <div className="h-px bg-[#F0F0F0]" />
+            <div className="h-px bg-neutral-100" />
             <div className="flex justify-between items-center">
-              <span className="text-[14px] font-bold text-[#181818]">총 결제금액</span>
-              <span className="text-[16px] font-bold text-[#181818]">{totalAmount.toLocaleString()}원</span>
+              <span className="text-[14px] font-bold text-neutral-900">총 결제금액</span>
+              <span className="text-[16px] font-bold text-neutral-900">{totalAmount.toLocaleString()}원</span>
             </div>
           </div>
         </section>
@@ -361,12 +361,12 @@ export default function CheckoutClient({
         </div>
 
         {/* 결제하기 버튼 */}
-        <div className="sticky bottom-0 bg-white border-t border-[#F0F0F0] px-4 py-4">
-          {error && <p className="text-[12px] text-[#FF4444] text-center mb-2">{error}</p>}
+        <div className="sticky bottom-0 bg-white border-t border-neutral-100 px-4 py-4">
+          {error && <p className="text-[12px] text-error text-center mb-2">{error}</p>}
           <button
             onClick={handlePay}
             disabled={paying || loadingData}
-            className="w-full h-[52px] bg-[#181818] text-white rounded-2xl text-[15px] font-bold disabled:opacity-40 transition-opacity"
+            className="w-full h-[52px] bg-neutral-900 text-white rounded-2xl text-[15px] font-bold disabled:opacity-40 transition-opacity"
           >
             {paying ? '결제 중...' : `${totalAmount.toLocaleString()}원 결제하기`}
           </button>
@@ -379,10 +379,10 @@ export default function CheckoutClient({
           <div className="absolute inset-0 bg-black/40" onClick={() => setShowAddrForm(false)} />
           <div className="relative w-full max-w-[390px] bg-white rounded-t-[20px] px-5 pt-5 pb-10 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-[16px] font-bold text-[#181818]">배송지 추가</h2>
+              <h2 className="text-[16px] font-bold text-neutral-900">배송지 추가</h2>
               <button
                 onClick={() => setShowAddrForm(false)}
-                className="text-[20px] text-[#9E9E9E] leading-none"
+                className="text-[20px] text-neutral-400 leading-none"
               >
                 ✕
               </button>
@@ -400,20 +400,20 @@ export default function CheckoutClient({
                 <div
                   onClick={() => setAddrForm(p => ({ ...p, isDefault: !p.isDefault }))}
                   className={`w-[18px] h-[18px] rounded-[4px] border-2 flex items-center justify-center transition-colors
-                    ${addrForm.isDefault ? 'bg-[#181818] border-[#181818]' : 'border-[#D0D0D0]'}`}
+                    ${addrForm.isDefault ? 'bg-neutral-900 border-neutral-900' : 'border-[#D0D0D0]'}`}
                 >
                   {addrForm.isDefault && <span className="text-white text-[10px] font-bold">✓</span>}
                 </div>
-                <span className="text-[13px] font-medium text-[#181818]">기본 배송지로 설정</span>
+                <span className="text-[13px] font-medium text-neutral-900">기본 배송지로 설정</span>
               </label>
             </div>
 
-            {addrError && <p className="text-[12px] text-[#FF4444] mt-3">{addrError}</p>}
+            {addrError && <p className="text-[12px] text-error mt-3">{addrError}</p>}
 
             <button
               onClick={handleAddAddr}
               disabled={addrSaving}
-              className="w-full h-[52px] rounded-xl bg-[#181818] text-[14px] font-bold text-white mt-5 disabled:opacity-50"
+              className="w-full h-[52px] rounded-xl bg-neutral-900 text-[14px] font-bold text-white mt-5 disabled:opacity-50"
             >
               {addrSaving ? '저장 중...' : '저장하기'}
             </button>
@@ -432,15 +432,15 @@ function AddrField({
 }) {
   return (
     <div>
-      <label className="block text-[11px] font-semibold text-[#9E9E9E] mb-1.5">
-        {label}{required && <span className="text-[#FF4444] ml-0.5">*</span>}
+      <label className="block text-[11px] font-semibold text-neutral-400 mb-1.5">
+        {label}{required && <span className="text-error ml-0.5">*</span>}
       </label>
       <input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full h-[46px] rounded-[10px] border border-[#E8E8E8] px-3.5 text-[14px] text-[#181818] placeholder:text-[#C8C8C8] outline-none focus:border-[#181818]"
+        className="w-full h-[46px] rounded-[10px] border border-neutral-200 px-3.5 text-[14px] text-neutral-900 placeholder:text-neutral-300 outline-none focus:border-neutral-900"
       />
     </div>
   )

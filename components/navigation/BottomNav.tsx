@@ -27,7 +27,7 @@ export default function BottomNav() {
             <Link
               key="add"
               href={item.href}
-              className="flex-shrink-0 w-14 h-14 bg-dark rounded-full flex items-center justify-center -mt-2"
+              className="flex-shrink-0 w-14 h-14 bg-neutral-900 rounded-full flex items-center justify-center -mt-2"
             >
               <Icon name="circle-plus" size={24} className="text-white" />
             </Link>
@@ -44,7 +44,7 @@ export default function BottomNav() {
             <Icon
               name={item.icon}
               size={24}
-              className={isActive ? 'text-dark' : 'text-gray-light'}
+              className={isActive ? 'text-neutral-900' : 'text-neutral-400'}
             />
             <span
               className="text-[10px] leading-[14px] tracking-[0.25px] font-normal"

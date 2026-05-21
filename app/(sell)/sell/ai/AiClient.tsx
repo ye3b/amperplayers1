@@ -79,11 +79,11 @@ async function compressImage(file: File): Promise<{ data: string; mediaType: str
 // ─────────────────────────────────────────────
 function InfoRow({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="flex items-start justify-between gap-3 py-3 border-b border-[#F5F5F5] last:border-none">
-      <span className="text-[13px] text-[#9E9E9E] flex-shrink-0">{label}</span>
+    <div className="flex items-start justify-between gap-3 py-3 border-b border-neutral-100 last:border-none">
+      <span className="text-[13px] text-neutral-400 flex-shrink-0">{label}</span>
       <span
         className={`text-[13px] text-right leading-[20px] break-keep ${
-          highlight ? 'font-bold text-[#181818]' : 'font-medium text-[#383838]'
+          highlight ? 'font-bold text-neutral-900' : 'font-medium text-neutral-700'
         }`}
       >
         {value}
@@ -112,7 +112,7 @@ function AnalyzingView({ thumbs }: { thumbs: string[] }) {
           {thumbs.slice(0, 3).map((url, i) => (
             <div
               key={i}
-              className="w-[72px] h-[72px] rounded-xl overflow-hidden bg-[#F5F5F5] flex-shrink-0"
+              className="w-[72px] h-[72px] rounded-xl overflow-hidden bg-neutral-100 flex-shrink-0"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={url} alt="" className="w-full h-full object-cover" />
@@ -123,9 +123,9 @@ function AnalyzingView({ thumbs }: { thumbs: string[] }) {
 
       {/* 스캔 아이콘 */}
       <div className="relative w-20 h-20 flex items-center justify-center">
-        <div className="absolute inset-0 rounded-full border-4 border-[#F0F0F0]" />
+        <div className="absolute inset-0 rounded-full border-4 border-neutral-100" />
         <div
-          className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#181818] animate-spin"
+          className="absolute inset-0 rounded-full border-4 border-transparent border-t-neutral-900 animate-spin"
           style={{ animationDuration: '1s' }}
         />
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
@@ -140,8 +140,8 @@ function AnalyzingView({ thumbs }: { thumbs: string[] }) {
       </div>
 
       <div>
-        <p className="text-[17px] font-bold text-[#181818] mb-1">AI 상태 분석 중</p>
-        <p className="text-[13px] text-[#9E9E9E] min-h-[20px] transition-all">{steps[step]}…</p>
+        <p className="text-[17px] font-bold text-neutral-900 mb-1">AI 상태 분석 중</p>
+        <p className="text-[13px] text-neutral-400 min-h-[20px] transition-all">{steps[step]}…</p>
       </div>
     </div>
   )
@@ -299,19 +299,19 @@ export default function AiClient() {
   if (status === 'error') {
     return (
       <div className="flex-1 flex flex-col items-center justify-center px-8 text-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-[#FEF2F2] flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-error-light flex items-center justify-center">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="9" stroke="#EF4444" strokeWidth="1.5" />
             <path d="M12 8v4M12 16h.01" stroke="#EF4444" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </div>
         <div>
-          <p className="text-[16px] font-bold text-[#181818] mb-1">분석에 실패했어요</p>
-          <p className="text-[13px] text-[#9E9E9E]">{errorMsg}</p>
+          <p className="text-[16px] font-bold text-neutral-900 mb-1">분석에 실패했어요</p>
+          <p className="text-[13px] text-neutral-400">{errorMsg}</p>
         </div>
         <button
           onClick={() => router.back()}
-          className="mt-2 h-[44px] px-8 rounded-[9px] bg-[#181818] text-white text-[14px] font-bold"
+          className="mt-2 h-[44px] px-8 rounded-[9px] bg-neutral-900 text-white text-[14px] font-bold"
         >
           다시 시도
         </button>
@@ -342,14 +342,14 @@ export default function AiClient() {
           </div>
 
           <div className="flex-1">
-            <p className="text-[18px] font-black text-[#181818]">{grade.label}</p>
+            <p className="text-[18px] font-black text-neutral-900">{grade.label}</p>
             <p className="text-[13px] font-medium" style={{ color: grade.color }}>{grade.desc}</p>
 
             {/* 점수 바 */}
             <div className="mt-2">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] text-[#9E9E9E]">상태 점수</span>
-                <span className="text-[13px] font-black text-[#181818]">{result.score}점</span>
+                <span className="text-[11px] text-neutral-400">상태 점수</span>
+                <span className="text-[13px] font-black text-neutral-900">{result.score}점</span>
               </div>
               <div className="h-[5px] rounded-full bg-white/70">
                 <div
@@ -362,7 +362,7 @@ export default function AiClient() {
         </div>
 
         {/* 분석 상세 */}
-        <div className="bg-[#F8F8F8] rounded-2xl px-4 py-1 mb-5">
+        <div className="bg-neutral-50 rounded-2xl px-4 py-1 mb-5">
           <InfoRow label="사용감 정도" value={result.usage} highlight />
           <InfoRow label="손상 여부" value={result.damage} highlight />
           <InfoRow label="주요 손상 부위" value={result.damageParts} />
@@ -375,7 +375,7 @@ export default function AiClient() {
         </div>
 
         {/* 종합 코멘트 */}
-        <div className="rounded-2xl border border-[#E8E8E8] px-4 py-4 mb-4">
+        <div className="rounded-2xl border border-neutral-200 px-4 py-4 mb-4">
           <div className="flex items-center gap-1.5 mb-2">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path
@@ -386,9 +386,9 @@ export default function AiClient() {
                 strokeLinecap="round"
               />
             </svg>
-            <span className="text-[12px] font-bold text-[#181818]">AI 종합 코멘트</span>
+            <span className="text-[12px] font-bold text-neutral-900">AI 종합 코멘트</span>
           </div>
-          <p className="text-[13px] text-[#383838] leading-[20px] whitespace-pre-line break-keep">
+          <p className="text-[13px] text-neutral-700 leading-[20px] whitespace-pre-line break-keep">
             {result.comment}
           </p>
         </div>
@@ -400,7 +400,7 @@ export default function AiClient() {
             <line x1="7" y1="6.5" x2="7" y2="10" stroke="#C8C8C8" strokeWidth="1" strokeLinecap="round" />
             <circle cx="7" cy="4.5" r="0.5" fill="#C8C8C8" />
           </svg>
-          <p className="text-[11px] text-[#C8C8C8] leading-[16px]">
+          <p className="text-[11px] text-neutral-300 leading-[16px]">
             AI 분석은 사진을 기반으로 하며 실제 상태와 다를 수 있습니다.
             등급은 상품 설명에 참고용으로 표시됩니다.
           </p>
@@ -408,14 +408,14 @@ export default function AiClient() {
       </div>
 
       {/* 하단 버튼 */}
-      <div className="flex-shrink-0 px-[17px] pb-6 pt-3 border-t border-[#F5F5F5] flex flex-col gap-3">
+      <div className="flex-shrink-0 px-[17px] pb-6 pt-3 border-t border-neutral-100 flex flex-col gap-3">
 
         {/* 상품명 */}
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="상품명 *"
-          className="w-full h-[44px] px-4 rounded-[9px] border border-[#E8E8E8] text-[14px] text-[#181818] placeholder:text-[#BDBDBD] outline-none focus:border-[#181818]"
+          className="w-full h-[44px] px-4 rounded-[9px] border border-neutral-200 text-[14px] text-neutral-900 placeholder:text-[#BDBDBD] outline-none focus:border-neutral-900"
         />
 
         {/* 가격 */}
@@ -425,9 +425,9 @@ export default function AiClient() {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="판매 가격 *"
-            className="w-full h-[44px] px-4 pr-8 rounded-[9px] border border-[#E8E8E8] text-[14px] text-[#181818] placeholder:text-[#BDBDBD] outline-none focus:border-[#181818]"
+            className="w-full h-[44px] px-4 pr-8 rounded-[9px] border border-neutral-200 text-[14px] text-neutral-900 placeholder:text-[#BDBDBD] outline-none focus:border-neutral-900"
           />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[13px] text-[#9E9E9E]">원</span>
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[13px] text-neutral-400">원</span>
         </div>
 
         {/* 대상 레벨 */}
@@ -440,8 +440,8 @@ export default function AiClient() {
               )}
               className={`flex-1 h-[36px] rounded-[9px] text-[12px] font-semibold border transition-colors ${
                 levels.includes(opt.value)
-                  ? 'bg-[#181818] text-white border-[#181818]'
-                  : 'bg-white text-[#555] border-[#E8E8E8]'
+                  ? 'bg-neutral-900 text-white border-neutral-900'
+                  : 'bg-white text-neutral-500 border-neutral-200'
               }`}
             >
               {opt.label}
@@ -455,7 +455,7 @@ export default function AiClient() {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="상품 설명 (선택)"
           rows={3}
-          className="w-full px-4 py-3 rounded-[9px] border border-[#E8E8E8] text-[14px] text-[#181818] placeholder:text-[#BDBDBD] outline-none focus:border-[#181818] resize-none"
+          className="w-full px-4 py-3 rounded-[9px] border border-neutral-200 text-[14px] text-neutral-900 placeholder:text-[#BDBDBD] outline-none focus:border-neutral-900 resize-none"
         />
 
         {/* 거래 설정 */}
@@ -463,7 +463,7 @@ export default function AiClient() {
 
           {/* 가격 제안 */}
           <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-[#181818]">가격 제안 받기</span>
+            <span className="text-[13px] font-semibold text-neutral-900">가격 제안 받기</span>
             <div className="flex gap-1.5">
               {(['허용', '불가'] as const).map((label) => {
                 const val = label === '허용'
@@ -472,7 +472,7 @@ export default function AiClient() {
                     key={label}
                     onClick={() => setAllowOffer(val)}
                     className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors ${
-                      allowOffer === val ? 'bg-[#181818] text-white border-[#181818]' : 'bg-white text-[#555] border-[#E8E8E8]'
+                      allowOffer === val ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white text-neutral-500 border-neutral-200'
                     }`}
                   >
                     {label}
@@ -484,7 +484,7 @@ export default function AiClient() {
 
           {/* 직거래 */}
           <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-[#181818]">직거래</span>
+            <span className="text-[13px] font-semibold text-neutral-900">직거래</span>
             <div className="flex gap-1.5">
               {(['가능', '불가'] as const).map((label) => {
                 const val = label === '가능'
@@ -493,7 +493,7 @@ export default function AiClient() {
                     key={label}
                     onClick={() => setAllowMeetup(val)}
                     className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors ${
-                      allowMeetup === val ? 'bg-[#181818] text-white border-[#181818]' : 'bg-white text-[#555] border-[#E8E8E8]'
+                      allowMeetup === val ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white text-neutral-500 border-neutral-200'
                     }`}
                   >
                     {label}
@@ -506,14 +506,14 @@ export default function AiClient() {
           {/* 택배비 */}
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <span className="text-[13px] font-semibold text-[#181818]">택배비</span>
+              <span className="text-[13px] font-semibold text-neutral-900">택배비</span>
               <div className="flex gap-1.5">
                 {([['included', '배송비 포함'], ['separate', '배송비 별도']] as const).map(([val, label]) => (
                   <button
                     key={val}
                     onClick={() => { setShippingType(val); setShippingFeeType(''); setShippingFee('') }}
                     className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors ${
-                      shippingType === val ? 'bg-[#181818] text-white border-[#181818]' : 'bg-white text-[#555] border-[#E8E8E8]'
+                      shippingType === val ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white text-neutral-500 border-neutral-200'
                     }`}
                   >
                     {label}
@@ -531,7 +531,7 @@ export default function AiClient() {
                       key={val}
                       onClick={() => setShippingFeeType(val)}
                       className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors ${
-                        shippingFeeType === val ? 'bg-[#181818] text-white border-[#181818]' : 'bg-white text-[#555] border-[#E8E8E8]'
+                        shippingFeeType === val ? 'bg-neutral-900 text-white border-neutral-900' : 'bg-white text-neutral-500 border-neutral-200'
                       }`}
                     >
                       {label}
@@ -544,9 +544,9 @@ export default function AiClient() {
                     value={shippingFee}
                     onChange={(e) => setShippingFee(e.target.value)}
                     placeholder="배송비 금액"
-                    className="w-full h-[40px] px-4 pr-8 rounded-[9px] border border-[#E8E8E8] text-[13px] text-[#181818] placeholder:text-[#BDBDBD] outline-none focus:border-[#181818]"
+                    className="w-full h-[40px] px-4 pr-8 rounded-[9px] border border-neutral-200 text-[13px] text-neutral-900 placeholder:text-[#BDBDBD] outline-none focus:border-neutral-900"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] text-[#9E9E9E]">원</span>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[12px] text-neutral-400">원</span>
                 </div>
               </div>
             )}
@@ -560,13 +560,13 @@ export default function AiClient() {
             !shippingType ||
             (shippingType === 'separate' && (!shippingFeeType || !shippingFee))
           }
-          className="w-full h-[44px] rounded-[9px] bg-[#181818] text-white text-[14px] font-bold active:scale-[0.98] transition-transform disabled:opacity-40"
+          className="w-full h-[44px] rounded-[9px] bg-neutral-900 text-white text-[14px] font-bold active:scale-[0.98] transition-transform disabled:opacity-40"
         >
           {registering ? '등록 중...' : '상품 등록 완료'}
         </button>
         <button
           onClick={() => router.back()}
-          className="w-full h-[38px] text-[13px] font-medium text-[#9E9E9E]"
+          className="w-full h-[38px] text-[13px] font-medium text-neutral-400"
         >
           사진 다시 찍기
         </button>

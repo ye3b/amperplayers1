@@ -165,14 +165,10 @@ function IntroSlide() {
       <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-8">
         {/* 큰 로고 마크 */}
         <div className="relative">
-          <div className="w-[200px] h-[200px] rounded-[48px] bg-[#181818] flex flex-col items-center justify-center gap-1">
-            <span className="text-[28px] leading-none font-bold text-[#00F5A0] tracking-[-1px] uppercase">Players</span>
-            <div className="flex gap-[3px] mt-1">
-              {['⚽','🏀','🎾','⛷️'].map((e) => (
-                <span key={e} className="text-[20px] leading-none">{e}</span>
-              ))}
-            </div>
-          </div>
+          <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="200" rx="40" fill="#0E0E0E"/>
+            <path d="M83.8878 47.6605C114.733 31.0567 142.859 28.782 154.944 35.5834C161.364 38.6441 171.711 48.5062 166.651 65.5095C160.377 86.5963 133.783 110.398 98.2909 130.122V83.0391C100.942 81.8534 103.632 80.5538 106.331 79.1436C129.083 67.2587 143.959 52.0852 139.559 45.2528C135.157 38.4207 113.144 42.5165 90.3927 54.4015C67.6409 66.2865 52.7649 81.46 57.1661 88.2922C60.3844 93.2879 73.018 92.4397 88.472 86.9771L87.4438 88.1899C44.4791 139.289 71.395 159.199 90.3927 162.77C1.05902 185.827 30.465 126.947 71.6857 97.0769C54.9533 104.577 43.0763 101.872 40.3622 96.2932C33.5548 86.0384 53.0419 64.2646 83.8878 47.6605Z" fill="#00F5A0"/>
+          </svg>
           {/* 떠있는 뱃지들 */}
           <div className="absolute -top-3 -right-3 bg-[#00F5A0] rounded-lg px-2 py-1">
             <span className="text-[10px] font-bold text-[#181818] uppercase tracking-[0.25px]">S급</span>

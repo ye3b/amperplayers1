@@ -50,7 +50,7 @@ const LEVELS = [
     emoji: '🔥',
     activeBg: 'bg-[#FFF0F0]',
     activeText: 'text-[#C03030]',
-    activeBorder: 'border-[#FF4444]',
+    activeBorder: 'border-error',
   },
 ]
 
@@ -94,22 +94,22 @@ export default function LevelSelectClient() {
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className={`h-[3px] rounded-full transition-all ${s === 3 ? 'w-6 bg-[#181818]' : 'w-3 bg-[#E0E0E0]'}`}
+                className={`h-[3px] rounded-full transition-all ${s === 3 ? 'w-6 bg-neutral-900' : 'w-3 bg-neutral-200'}`}
               />
             ))}
           </div>
           <button
             onClick={handleSkip}
-            className="text-[13px] font-medium text-[#9E9E9E]"
+            className="text-[13px] font-medium text-neutral-400"
           >
             건너뛰기
           </button>
         </div>
 
-        <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-[#181818] mb-2">
+        <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-neutral-900 mb-2">
           각 종목의<br />숙련도를 알려주세요
         </h1>
-        <p className="text-[14px] leading-[22px] text-[#9E9E9E] font-medium">
+        <p className="text-[14px] leading-[22px] text-neutral-400 font-medium">
           딱 맞는 상품을 추천해드려요
         </p>
       </div>
@@ -121,11 +121,11 @@ export default function LevelSelectClient() {
           if (!sport) return null
           const selected = levels[id]
           return (
-            <div key={id} className="border border-[#F0F0F0] rounded-2xl px-4 py-4">
+            <div key={id} className="border border-neutral-100 rounded-2xl px-4 py-4">
               {/* 종목 이름 */}
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-[20px] leading-none">{sport.emoji}</span>
-                <span className="text-[15px] font-bold text-[#181818]">{sport.label}</span>
+                <span className="text-[15px] font-bold text-neutral-900">{sport.label}</span>
               </div>
 
               {/* 숙련도 버튼 */}
@@ -141,14 +141,14 @@ export default function LevelSelectClient() {
                         py-3 rounded-xl border-2 transition-all active:scale-[0.96]
                         ${isActive
                           ? `${lv.activeBg} ${lv.activeBorder}`
-                          : 'bg-[#FAFAFA] border-[#F0F0F0]'}
+                          : 'bg-neutral-50 border-neutral-100'}
                       `}
                     >
                       <span className="text-[20px] leading-none">{lv.emoji}</span>
-                      <span className={`text-[12px] font-bold leading-none ${isActive ? lv.activeText : 'text-[#9E9E9E]'}`}>
+                      <span className={`text-[12px] font-bold leading-none ${isActive ? lv.activeText : 'text-neutral-400'}`}>
                         {lv.label}
                       </span>
-                      <span className={`text-[10px] leading-none ${isActive ? lv.activeText : 'text-[#C8C8C8]'}`}>
+                      <span className={`text-[10px] leading-none ${isActive ? lv.activeText : 'text-neutral-300'}`}>
                         {lv.desc}
                       </span>
                     </button>
@@ -161,15 +161,15 @@ export default function LevelSelectClient() {
       </div>
 
       {/* 하단 버튼 */}
-      <div className="px-5 pb-12 pt-4 border-t border-[#F5F5F5]">
+      <div className="px-5 pb-12 pt-4 border-t border-neutral-100">
         <button
           onClick={handleDone}
           disabled={!allSelected || saving}
           className={`
             w-full h-[56px] rounded-xl text-[15px] font-bold tracking-[-0.25px] transition-all active:scale-[0.98]
             ${allSelected && !saving
-              ? 'bg-[#181818] text-[#00F5A0]'
-              : 'bg-[#F0F0F0] text-[#C8C8C8]'}
+              ? 'bg-neutral-900 text-primary'
+              : 'bg-neutral-100 text-neutral-300'}
           `}
         >
           {saving

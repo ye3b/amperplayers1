@@ -191,9 +191,9 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
   return (
     <div className="flex flex-col h-screen bg-white">
       {/* 헤더 */}
-      <div className="flex items-center gap-3 px-4 pt-12 pb-3 border-b border-[#F0F0F0] flex-shrink-0">
+      <div className="flex items-center gap-3 px-4 pt-12 pb-3 border-b border-neutral-100 flex-shrink-0">
         <button onClick={() => router.back()} className="p-1 -ml-1">
-          <Icon name="arrow-left" size={22} className="text-[#181818]" />
+          <Icon name="arrow-left" size={22} className="text-neutral-900" />
         </button>
         <div className="flex items-center gap-2 flex-1 min-w-0">
           {counterpart.image ? (
@@ -204,34 +204,34 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
               className="w-8 h-8 rounded-full object-cover flex-shrink-0"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-[#E8E8E8] flex items-center justify-center flex-shrink-0">
-              <Icon name="user-profile-03" size={18} className="text-[#9E9E9E]" />
+            <div className="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center flex-shrink-0">
+              <Icon name="user-profile-03" size={18} className="text-neutral-400" />
             </div>
           )}
-          <span className="text-[16px] font-semibold text-[#181818] truncate">{counterpartName}</span>
+          <span className="text-[16px] font-semibold text-neutral-900 truncate">{counterpartName}</span>
         </div>
       </div>
 
       {/* 상품 정보 바 */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-[#F0F0F0] bg-[#FAFAFA] flex-shrink-0">
-        <div className="w-10 h-10 rounded-xl bg-[#E8E8E8] overflow-hidden flex-shrink-0">
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-neutral-100 bg-neutral-50 flex-shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-neutral-200 overflow-hidden flex-shrink-0">
           {thumbUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={thumbUrl} alt={chat.product.name} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <Icon name="bag-04" size={18} className="text-[#C8C8C8]" />
+              <Icon name="bag-04" size={18} className="text-neutral-300" />
             </div>
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[12px] text-[#9E9E9E] truncate">{chat.product.name}</p>
-          <p className="text-[13px] font-bold text-[#181818]">
+          <p className="text-[12px] text-neutral-400 truncate">{chat.product.name}</p>
+          <p className="text-[13px] font-bold text-neutral-900">
             {chat.product.price.toLocaleString()}원
           </p>
         </div>
         {chat.product.status === 'sold' && (
-          <span className="text-[11px] font-medium text-[#9E9E9E] bg-[#F0F0F0] px-2 py-1 rounded-full flex-shrink-0">
+          <span className="text-[11px] font-medium text-neutral-400 bg-neutral-100 px-2 py-1 rounded-full flex-shrink-0">
             판매완료
           </span>
         )}
@@ -243,24 +243,24 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
         <div className="bg-white border border-[#EBEBEB] rounded-2xl overflow-hidden mb-2">
           <div className="px-4 pt-4 pb-3">
             {/* 상품 썸네일 */}
-            <div className="w-[72px] h-[72px] rounded-xl bg-[#E8E8E8] overflow-hidden mb-3">
+            <div className="w-[72px] h-[72px] rounded-xl bg-neutral-200 overflow-hidden mb-3">
               {thumbUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={thumbUrl} alt={chat.product.name} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <Icon name="bag-04" size={28} className="text-[#C8C8C8]" />
+                  <Icon name="bag-04" size={28} className="text-neutral-300" />
                 </div>
               )}
             </div>
             {/* 소개 문구 */}
-            <p className="text-[15px] font-bold text-[#181818] leading-[22px] mb-3">
+            <p className="text-[15px] font-bold text-neutral-900 leading-[22px] mb-3">
               {counterpartName}님과 {chat.product.name}에 대한 이야기를 시작해 보세요.
             </p>
             {/* 상품 정보 */}
             <ul className="space-y-1">
               <li className="text-[13px] text-[#444444]">
-                <span className="text-[#9E9E9E]">• 상품금액: </span>
+                <span className="text-neutral-400">• 상품금액: </span>
                 {chat.product.price.toLocaleString()}원
               </li>
             </ul>
@@ -268,7 +268,7 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
           {/* 상품상세 보기 버튼 */}
           <Link
             href={`/products/${chat.product.id}`}
-            className="block w-full text-center py-3 text-[14px] font-medium text-[#444444] bg-[#F5F5F5] hover:bg-[#EBEBEB] transition-colors"
+            className="block w-full text-center py-3 text-[14px] font-medium text-[#444444] bg-neutral-100 hover:bg-[#EBEBEB] transition-colors"
           >
             상품상세 보기
           </Link>
@@ -285,7 +285,7 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
             <div key={msg.id}>
               {showDate && (
                 <div className="flex justify-center my-3">
-                  <span className="text-[11px] text-[#9E9E9E] bg-[#F5F5F5] px-3 py-1 rounded-full">
+                  <span className="text-[11px] text-neutral-400 bg-neutral-100 px-3 py-1 rounded-full">
                     {formatDate(msg.createdAt)}
                   </span>
                 </div>
@@ -300,12 +300,12 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
                 <div className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
                   <div className={`flex items-end gap-1.5 max-w-[75%] ${isMine ? 'flex-row-reverse' : 'flex-row'}`}>
                     {!isMine && (
-                      <div className="w-7 h-7 rounded-full bg-[#E8E8E8] overflow-hidden flex-shrink-0 flex items-center justify-center mb-0.5">
+                      <div className="w-7 h-7 rounded-full bg-neutral-200 overflow-hidden flex-shrink-0 flex items-center justify-center mb-0.5">
                         {counterpart.image ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={counterpart.image} alt="" className="w-full h-full object-cover" />
                         ) : (
-                          <Icon name="user-profile-03" size={14} className="text-[#9E9E9E]" />
+                          <Icon name="user-profile-03" size={14} className="text-neutral-400" />
                         )}
                       </div>
                     )}
@@ -313,13 +313,13 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
                       <div
                         className={`px-3.5 py-2.5 rounded-2xl text-[14px] leading-[20px] ${
                           isMine
-                            ? 'bg-[#181818] text-white rounded-br-sm'
-                            : 'bg-[#F5F5F5] text-[#181818] rounded-bl-sm'
+                            ? 'bg-neutral-900 text-white rounded-br-sm'
+                            : 'bg-neutral-100 text-neutral-900 rounded-bl-sm'
                         }`}
                       >
                         {msg.content}
                       </div>
-                      <span className="text-[10px] text-[#C8C8C8] mt-0.5 px-0.5">
+                      <span className="text-[10px] text-neutral-300 mt-0.5 px-0.5">
                         {formatMsgTime(msg.createdAt)}
                       </span>
                     </div>
@@ -333,7 +333,7 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
       </div>
 
       {/* 입력창 */}
-      <div className="flex-shrink-0 border-t border-[#F0F0F0] px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-white">
+      <div className="flex-shrink-0 border-t border-neutral-100 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] bg-white">
         <div className="flex items-end gap-2">
           <textarea
             value={input}
@@ -341,7 +341,7 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
             onKeyDown={handleKeyDown}
             placeholder="메시지를 입력하세요"
             rows={1}
-            className="flex-1 resize-none bg-[#F7F7F7] rounded-2xl px-4 py-3 text-[14px] text-[#181818] placeholder-[#9E9E9E] outline-none max-h-[100px] leading-[20px]"
+            className="flex-1 resize-none bg-neutral-50 rounded-2xl px-4 py-3 text-[14px] text-neutral-900 placeholder-neutral-400 outline-none max-h-[100px] leading-[20px]"
             style={{ overflowY: input.split('\n').length > 3 ? 'auto' : 'hidden' }}
             onInput={(e) => {
               const el = e.currentTarget
@@ -353,7 +353,7 @@ export default function ChatRoomClient({ chat, currentUserId }: Props) {
             onClick={sendMessage}
             disabled={!input.trim() || sending}
             className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
-              input.trim() && !sending ? 'bg-[#181818]' : 'bg-[#E8E8E8]'
+              input.trim() && !sending ? 'bg-neutral-900' : 'bg-neutral-200'
             }`}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -390,13 +390,13 @@ function SystemMessageCard({
       <div className="border border-[#EBEBEB] rounded-2xl overflow-hidden bg-white">
         <div className="px-4 pt-4 pb-3 space-y-3">
           {/* 상품 썸네일 */}
-          <div className="w-[72px] h-[72px] rounded-xl bg-[#E8E8E8] overflow-hidden">
+          <div className="w-[72px] h-[72px] rounded-xl bg-neutral-200 overflow-hidden">
             {thumbUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={thumbUrl} alt={productName} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <Icon name="bag-04" size={28} className="text-[#C8C8C8]" />
+                <Icon name="bag-04" size={28} className="text-neutral-300" />
               </div>
             )}
           </div>
@@ -414,18 +414,18 @@ function SystemMessageCard({
         </div>
 
         {/* 버튼 영역 */}
-        <div className="border-t border-[#F0F0F0]">
+        <div className="border-t border-neutral-100">
           {msg.type === 'system_shipped' ? (
             <>
               <Link
                 href={`/orders/${orderId}`}
-                className="block w-full text-center py-3 text-[14px] font-medium text-[#444444] hover:bg-[#FAFAFA] transition-colors border-b border-[#F0F0F0]"
+                className="block w-full text-center py-3 text-[14px] font-medium text-[#444444] hover:bg-neutral-50 transition-colors border-b border-neutral-100"
               >
                 거래 정보 확인
               </Link>
               <Link
                 href={`/orders/${orderId}#tracking`}
-                className="block w-full text-center py-3 text-[14px] font-semibold text-[#3DBE6B] hover:bg-[#FAFAFA] transition-colors"
+                className="block w-full text-center py-3 text-[14px] font-semibold text-[#3DBE6B] hover:bg-neutral-50 transition-colors"
               >
                 배송 조회
               </Link>
@@ -433,7 +433,7 @@ function SystemMessageCard({
           ) : (
             <Link
               href={`/orders/${orderId}`}
-              className="block w-full text-center py-3 text-[14px] font-semibold text-[#3DBE6B] hover:bg-[#FAFAFA] transition-colors"
+              className="block w-full text-center py-3 text-[14px] font-semibold text-[#3DBE6B] hover:bg-neutral-50 transition-colors"
             >
               거래 정보 확인
             </Link>
@@ -442,7 +442,7 @@ function SystemMessageCard({
       </div>
       {/* 타임스탬프 */}
       <div className="flex justify-start mt-1 px-1">
-        <span className="text-[10px] text-[#C8C8C8]">{formatMsgTime(msg.createdAt)}</span>
+        <span className="text-[10px] text-neutral-300">{formatMsgTime(msg.createdAt)}</span>
       </div>
     </div>
   )
@@ -454,7 +454,7 @@ function PaymentCardBody({ meta }: { meta: Record<string, string> }) {
     : null
   return (
     <div className="space-y-2">
-      <p className="text-[15px] font-bold text-[#181818]">결제를 완료했어요.</p>
+      <p className="text-[15px] font-bold text-neutral-900">결제를 완료했어요.</p>
       <p className="text-[13px] text-[#444444] leading-[20px]">
         안전한 거래가 시작됐어요.<br />
         결제 금액은 상품을 받으실 때까지 결제대행사에서 안전하게 보호되며,
@@ -463,7 +463,7 @@ function PaymentCardBody({ meta }: { meta: Record<string, string> }) {
       {deadline && (
         <p className="text-[13px] text-[#444444] leading-[20px]">
           ※ 만약 아래 날짜까지 판매자분이 상품 준비를 하지 않으면 자동으로 환불되니 안심하세요.<br />
-          <span className="text-[#181818] font-medium">기한: {deadline}</span>
+          <span className="text-neutral-900 font-medium">기한: {deadline}</span>
         </p>
       )}
       {(meta.shippingMethod || meta.buyerNote) && (
@@ -483,7 +483,7 @@ function PaymentCardBody({ meta }: { meta: Record<string, string> }) {
 function PreparingCardBody() {
   return (
     <div className="space-y-2">
-      <p className="text-[15px] font-bold text-[#181818]">배송이 곧 시작됩니다!</p>
+      <p className="text-[15px] font-bold text-neutral-900">배송이 곧 시작됩니다!</p>
       <p className="text-[13px] text-[#444444] leading-[20px]">
         판매자분이 상품 준비를 시작했어요. 운송장 번호가 등록되면 알려드릴게요.
       </p>
@@ -494,7 +494,7 @@ function PreparingCardBody() {
 function ShippedCardBody() {
   return (
     <div className="space-y-2">
-      <p className="text-[15px] font-bold text-[#181818]">운송장 번호가 등록되었어요.</p>
+      <p className="text-[15px] font-bold text-neutral-900">운송장 번호가 등록되었어요.</p>
       <p className="text-[13px] text-[#444444] leading-[20px]">
         상품의 배송이 시작되면 배송 조회가 가능해요.
       </p>

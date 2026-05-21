@@ -34,10 +34,10 @@ export default function SportSelectClient() {
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* 헤더 */}
       <div className="flex-shrink-0 px-5 pt-6 pb-4">
-        <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-[#181818] mb-2">
+        <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-neutral-900 mb-2">
           어떤 종목의 용품인가요?
         </h1>
-        <p className="text-[14px] leading-[22px] text-[#9E9E9E] font-medium">
+        <p className="text-[14px] leading-[22px] text-neutral-400 font-medium">
           종목에 맞는 구매자에게 추천돼요
         </p>
       </div>
@@ -52,7 +52,7 @@ export default function SportSelectClient() {
                 key={sport.id}
                 onClick={() => setSelected(sport.id)}
                 className={`relative flex flex-col items-center justify-center gap-2 h-[100px] rounded-2xl border-2 transition-all active:scale-[0.96]
-                  ${isSelected ? 'border-[#181818] bg-[#181818]' : 'border-[#F0F0F0] bg-[#FAFAFA]'}`}
+                  ${isSelected ? 'border-neutral-900 bg-neutral-900' : 'border-neutral-100 bg-neutral-50'}`}
               >
                 {isSelected && (
                   <span className="absolute top-2.5 right-2.5">
@@ -63,7 +63,7 @@ export default function SportSelectClient() {
                   </span>
                 )}
                 <span className="text-[28px] leading-none">{sport.emoji}</span>
-                <span className={`text-[13px] font-semibold leading-none ${isSelected ? 'text-white' : 'text-[#757575]'}`}>
+                <span className={`text-[13px] font-semibold leading-none ${isSelected ? 'text-white' : 'text-neutral-500'}`}>
                   {sport.label}
                 </span>
               </button>
@@ -73,12 +73,12 @@ export default function SportSelectClient() {
       </div>
 
       {/* 다음 버튼 */}
-      <div className="flex-shrink-0 px-5 pb-6 pt-3 border-t border-[#F5F5F5]">
+      <div className="flex-shrink-0 px-5 pb-6 pt-3 border-t border-neutral-100">
         <button
           onClick={handleNext}
           disabled={!selected}
           className={`w-full h-[56px] rounded-xl text-[15px] font-bold tracking-[-0.25px] transition-all active:scale-[0.98]
-            ${selected ? 'bg-[#181818] text-[#00F5A0]' : 'bg-[#F0F0F0] text-[#C8C8C8]'}`}
+            ${selected ? 'bg-neutral-900 text-primary' : 'bg-neutral-100 text-neutral-300'}`}
         >
           {selected
             ? `${SPORTS.find((s) => s.id === selected)?.label} 선택 완료`
