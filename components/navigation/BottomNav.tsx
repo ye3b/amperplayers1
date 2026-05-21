@@ -20,13 +20,14 @@ export default function BottomNav() {
       {/* FAB */}
       <Link
         href="/sell"
-        className="fixed bottom-[88px] right-5 w-14 h-14 bg-neutral-900 rounded-full flex items-center justify-center shadow-lg z-50"
+        style={{ right: 'max(20px, calc(50vw - 175px))' }}
+        className="fixed bottom-[88px] w-14 h-14 bg-neutral-900 rounded-full flex items-center justify-center shadow-lg z-50"
       >
         <Icon name="circle-plus" size={24} className="text-white" />
       </Link>
 
       {/* 하단 네비 */}
-      <nav className="fixed bottom-0 left-0 right-0 h-[78px] bg-white border-t border-gray-100 flex items-center justify-around px-8 pb-3 z-50">
+      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] h-[78px] bg-white border-t border-gray-100 flex items-center justify-around pb-3 z-50">
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href
           return (
