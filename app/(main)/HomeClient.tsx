@@ -98,10 +98,13 @@ export default function HomeClient({ userSports, recommendedProducts }: HomeClie
 
       {/* 검색바 */}
       <div className="px-4 pb-4">
-        <div className="flex items-center gap-2 bg-[#F7F7F7] rounded-xl px-4 h-[44px]">
+        <button
+          onClick={() => router.push('/search')}
+          className="w-full flex items-center gap-2 bg-[#F7F7F7] rounded-xl px-4 h-[44px]"
+        >
           <Icon name="search-01" size={18} className="text-[#9E9E9E] flex-shrink-0" />
           <span className="text-[14px] text-[#9E9E9E]">브랜드, 모델명, 종목 검색</span>
-        </div>
+        </button>
       </div>
 
       {/* 종목 탭 */}
