@@ -12,6 +12,16 @@ const SORT_OPTIONS = [
   { value: 'likes',      label: '좋아요순' },
 ]
 
+interface Review {
+  id: string
+  authorName: string | null
+  authorImage: string | null
+  rating: number
+  content: string | null
+  createdAt: Date
+}
+
+
 interface Product {
   id: string; name: string; price: number; sport: string
   grade: string | null; score: number | null; discount: number | null
