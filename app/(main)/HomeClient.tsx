@@ -9,21 +9,12 @@ import SportIcon, { SportKey } from '@/components/ui/SportIcon'
 
 const ALL_SPORTS: { key: SportKey; label: string }[] = [
   { key: 'all',         label: '전체' },
-  { key: 'soccer',      label: '축구' },
-  { key: 'basketball',  label: '농구' },
-  { key: 'baseball',    label: '야구' },
-  { key: 'tennis',      label: '테니스' },
-  { key: 'badminton',   label: '배드민턴' },
-  { key: 'volleyball',  label: '배구' },
-  { key: 'golf',        label: '골프' },
-  { key: 'swimming',    label: '수영' },
-  { key: 'cycling',     label: '자전거' },
-  { key: 'running',     label: '러닝' },
-  { key: 'fitness',     label: '헬스' },
-  { key: 'skiing',      label: '스키' },
-  { key: 'snowboard',   label: '스노보드' },
-  { key: 'tabletennis', label: '탁구' },
-  { key: 'boxing',      label: '복싱' },
+{ key: 'golf',       label: '골프' },
+{ key: 'soccer',     label: '축구' },
+{ key: 'baseball',   label: '야구' },
+{ key: 'running',    label: '러닝' },
+{ key: 'cycling',    label: '자전거' },
+{ key: 'basketball', label: '농구' },
 ]
 
 interface UserSport {

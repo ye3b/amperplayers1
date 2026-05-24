@@ -4,21 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const SPORTS = [
-  { id: 'soccer',      label: '축구',     emoji: '⚽' },
-  { id: 'basketball',  label: '농구',     emoji: '🏀' },
-  { id: 'baseball',    label: '야구',     emoji: '⚾' },
-  { id: 'tennis',      label: '테니스',   emoji: '🎾' },
-  { id: 'badminton',   label: '배드민턴', emoji: '🏸' },
-  { id: 'volleyball',  label: '배구',     emoji: '🏐' },
-  { id: 'golf',        label: '골프',     emoji: '⛳' },
-  { id: 'cycling',     label: '자전거',   emoji: '🚴' },
-  { id: 'swimming',    label: '수영',     emoji: '🏊' },
-  { id: 'running',     label: '러닝',     emoji: '🏃' },
-  { id: 'fitness',     label: '헬스',     emoji: '💪' },
-  { id: 'skiing',      label: '스키',     emoji: '⛷️' },
-  { id: 'snowboard',   label: '스노보드', emoji: '🏂' },
-  { id: 'tabletennis', label: '탁구',     emoji: '🏓' },
-  { id: 'boxing',      label: '복싱',     emoji: '🥊' },
+{ id: 'golf',       label: '골프',   emoji: '⛳' },
+{ id: 'soccer',     label: '축구',   emoji: '⚽' },
+{ id: 'baseball',   label: '야구',   emoji: '⚾' },
+{ id: 'running',    label: '러닝',   emoji: '🏃' },
+{ id: 'cycling',    label: '자전거', emoji: '🚴' },
+{ id: 'basketball', label: '농구',   emoji: '🏀' },
 ]
 
 export default function SportSelectClient() {

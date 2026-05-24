@@ -285,7 +285,7 @@ function FeatureVisual({ id, iconBg, iconColor, icon }: {
       <div className="w-full h-full p-5 flex flex-col justify-center gap-2">
         {/* 카테고리 태그들 */}
         <div className="flex gap-2 flex-wrap">
-          {[{ e: '⚽', l: '축구' }, { e: '🏀', l: '농구' }, { e: '⛷️', l: '스키' }].map(({ e, l }) => (
+          {[{ e: '⛳', l: '골프' }, { e: '⚽', l: '축구' }, { e: '🏀', l: '농구' }].map(({ e, l }) => (
             <div key={l} className="flex items-center gap-1.5 bg-white rounded-lg px-3 py-2 shadow-sm">
               <span className="text-base">{e}</span>
               <span className="text-[12px] font-medium text-[#181818]">{l}</span>

@@ -3,26 +3,16 @@
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
+
 const ALL_SPORTS: Record<string, { label: string; emoji: string }> = {
-  soccer:      { label: '축구',      emoji: '⚽' },
-  futsal:      { label: '풋살',      emoji: '🥅' },
-  basketball:  { label: '농구',      emoji: '🏀' },
-  baseball:    { label: '야구',      emoji: '⚾' },
-  tennis:      { label: '테니스',    emoji: '🎾' },
-  badminton:   { label: '배드민턴',  emoji: '🏸' },
-  volleyball:  { label: '배구',      emoji: '🏐' },
-  golf:        { label: '골프',      emoji: '⛳' },
-  swimming:    { label: '수영',      emoji: '🏊' },
-  cycling:     { label: '자전거',    emoji: '🚴' },
-  running:     { label: '러닝',      emoji: '🏃' },
-  fitness:     { label: '헬스',      emoji: '💪' },
-  climbing:    { label: '클라이밍',  emoji: '🧗' },
-  skiing:      { label: '스키',      emoji: '⛷️' },
-  snowboard:   { label: '스노보드',  emoji: '🏂' },
-  surfing:     { label: '서핑',      emoji: '🏄' },
-  tabletennis: { label: '탁구',      emoji: '🏓' },
-  boxing:      { label: '복싱',      emoji: '🥊' },
+  golf:       { label: '골프',   emoji: '⛳' },
+  soccer:     { label: '축구',   emoji: '⚽' },
+  baseball:   { label: '야구',   emoji: '⚾' },
+  running:    { label: '러닝',   emoji: '🏃' },
+  cycling:    { label: '자전거', emoji: '🚴' },
+  basketball: { label: '농구',   emoji: '🏀' },
 }
+
 
 const LEVELS = [
   {

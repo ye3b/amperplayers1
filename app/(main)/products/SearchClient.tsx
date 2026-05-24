@@ -6,24 +6,12 @@ import Icon from '@/components/ui/Icon'
 import Badge from '@/components/ui/Badge'
 
 const SPORT_LABELS: Record<string, string> = {
-  soccer:      '축구',
-  futsal:      '풋살',
-  basketball:  '농구',
-  baseball:    '야구',
-  tennis:      '테니스',
-  badminton:   '배드민턴',
-  volleyball:  '배구',
-  golf:        '골프',
-  swimming:    '수영',
-  cycling:     '자전거',
-  running:     '러닝',
-  fitness:     '헬스',
-  climbing:    '클라이밍',
-  skiing:      '스키',
-  snowboard:   '스노보드',
-  surfing:     '서핑',
-  tabletennis: '탁구',
-  boxing:      '복싱',
+golf:       '골프',
+soccer:     '축구',
+baseball:   '야구',
+running:    '러닝',
+cycling:    '자전거',
+basketball: '농구',
 }
 
 interface Product {
