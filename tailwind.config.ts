@@ -22,7 +22,6 @@ const config: Config = {
           850: '#1F1F1F',
           900: '#181818',
           950: '#0A0A0A',
-          1000: '#000000',
         },
         primary: {
           DEFAULT: '#00F5A0',
@@ -66,7 +65,7 @@ const config: Config = {
         xl: '16px',
         '2xl': '24px',
         '3xl': '32px',
-        full: '9999px',
+        '4xl': '48px',
       },
       spacing: {
         0: '0px',
