@@ -80,6 +80,21 @@ export const SPORTS_TABS: Record<string, TabDef[]> = {
     },
   ],
 
+  running: [
+    {
+      id: 'shoes', label: '러닝화',
+      fields: [
+        { type: 'text',   id: 'brand',     label: '브랜드',       placeholder: '나이키, 아식스, 호카, 브룩스 등', required: true },
+        { type: 'text',   id: 'model',     label: '모델명',       placeholder: '페가수스 41, 젤카야노 31 등', required: true },
+        { type: 'number', id: 'sizeMM',    label: '사이즈',       unit: 'mm', placeholder: '265', required: true },
+        { type: 'radio',  id: 'usage',     label: '용도',         options: ['데일리/조깅', '레이스/마라톤', '트레일'], required: true },
+        { type: 'radio',  id: 'cushioning', label: '쿠셔닝',     options: ['맥시멀', '미드', '미니멀'], required: true },
+        { type: 'radio',  id: 'widthType', label: '발볼 타입',    options: ['좁음', '보통', '넓음'], required: true },
+        { type: 'radio',  id: 'soleWear',  label: '밑창 마모 상태', options: ['새것 같음', '약간 마모', '보통 마모', '심한 마모'], required: true },
+      ],
+    },
+  ],
+
   cycling: [
     {
       id: 'bicycle', label: '자전거',
