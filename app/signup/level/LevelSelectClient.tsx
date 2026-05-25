@@ -105,7 +105,7 @@ export default function LevelSelectClient() {
       </div>
 
       {/* 종목 목록 */}
-      <div className="flex-1 overflow-y-auto px-5 pb-4 flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto px-5 pb-24 flex flex-col gap-3">
         {sportIds.map((id) => {
           const sport = ALL_SPORTS[id]
           if (!sport) return null
@@ -151,7 +151,7 @@ export default function LevelSelectClient() {
       </div>
 
       {/* 하단 버튼 */}
-      <div className="px-5 pb-12 pt-4 border-t border-neutral-100">
+      <div className="fixed bottom-0 left-0 right-0 px-5 pb-12 pt-4 border-t border-neutral-100 bg-white z-20">
         <button
           onClick={handleDone}
           disabled={!allSelected || saving}

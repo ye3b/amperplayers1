@@ -70,7 +70,7 @@ export default function OnboardingSportsClient() {
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-4">
+      <div className="flex-1 overflow-y-auto px-5 pb-24">
         <div className="grid grid-cols-3 gap-3">
           {SPORTS.map((sport) => {
             const isSelected = selected.has(sport.id)
@@ -99,7 +99,7 @@ export default function OnboardingSportsClient() {
         </div>
       </div>
 
-      <div className="px-5 pb-12 pt-4 border-t border-[#F5F5F5]">
+      <div className="fixed bottom-0 left-0 right-0 px-5 pb-12 pt-4 border-t border-[#F5F5F5] bg-white z-20">
         <button
           onClick={handleNext}
           disabled={selected.size === 0}

@@ -91,7 +91,7 @@ export default function OnboardingLevelClient() {
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-4 flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto px-5 pb-24 flex flex-col gap-3">
         {sportIds.map((id) => {
           const sport = SPORT_META[id]
           if (!sport) return null
@@ -128,7 +128,7 @@ export default function OnboardingLevelClient() {
         })}
       </div>
 
-      <div className="px-5 pb-12 pt-4 border-t border-[#F5F5F5]">
+      <div className="fixed bottom-0 left-0 right-0 px-5 pb-12 pt-4 border-t border-[#F5F5F5] bg-white z-20">
         {error && <p className="text-[13px] text-red-500 text-center mb-3">{error}</p>}
         <button
           onClick={handleSave}
