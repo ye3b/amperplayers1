@@ -9,28 +9,28 @@ interface BadgeProps {
 
 const GRADE_STYLE: Record<Grade, { bg: string; iconClass: string; gradeClass: string; scoreClass: string }> = {
   S: {
-    bg: 'bg-[#00F5A0]',
+    bg: 'bg-primary',
     iconClass: 'text-white',
-    gradeClass: 'text-[#181818]',
+    gradeClass: 'text-neutral-900',
     scoreClass: 'text-[#404040]',
   },
   A: {
-    bg: 'bg-[#181818]',
-    iconClass: 'text-[#00F5A0]',
-    gradeClass: 'text-[#F8F8F8]',
-    scoreClass: 'text-[#F8F8F8]',
+    bg: 'bg-neutral-900',
+    iconClass: 'text-primary',
+    gradeClass: 'text-neutral-50',
+    scoreClass: 'text-neutral-50',
   },
   B: {
-    bg: 'bg-[#9E9E9E]',
+    bg: 'bg-neutral-400',
     iconClass: 'text-white',
     gradeClass: 'text-white',
     scoreClass: 'text-white',
   },
   C: {
-    bg: 'bg-[#F8F8F8]',
-    iconClass: 'text-[#757575]',
-    gradeClass: 'text-[#757575]',
-    scoreClass: 'text-[#757575]',
+    bg: 'bg-neutral-50',
+    iconClass: 'text-neutral-500',
+    gradeClass: 'text-neutral-500',
+    scoreClass: 'text-neutral-500',
   },
 }
 

@@ -1,7 +1,22 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY ?? 'dummy' })
+
+const UT_MOCK_RESULT: AnalysisResult = {
+  grade: 'A',
+  score: 82,
+  wearScore: 85,
+  appearanceScore: 80,
+  functionalScore: 90,
+  usage: '약간',
+  damage: '경미',
+  damageParts: '손잡이 부근 미세 스크래치',
+  functional: '없음',
+  functionalReason: '기능적 이상 없어 보임',
+  appearance: '전체적으로 깨끗하며 사용감이 적습니다. 손잡이 부분에 경미한 스크래치가 있습니다.',
+  comment: '전반적으로 상태가 양호한 A급 상품입니다.\n사용감이 적고 기능에 문제가 없어 구매를 추천합니다.\n가격 대비 만족도가 높을 것으로 예상됩니다.',
+}
 
 export interface AnalysisResult {
   grade: 'S' | 'A' | 'B' | 'C' | 'F'
@@ -57,6 +72,12 @@ export async function POST(req: NextRequest) {
 
     if (images.length === 0) {
       return NextResponse.json({ error: '이미지가 없습니다.' }, { status: 400 })
+    }
+
+    // Anthropic API 키 없으면 UT용 모크 결과 반환
+    if (!process.env.ANTHROPIC_API_KEY) {
+      await new Promise((r) => setTimeout(r, 2000)) // 분석 중 UX 연출
+      return NextResponse.json(UT_MOCK_RESULT)
     }
 
     const imageBlocks: Anthropic.ImageBlockParam[] = images.map((img) => ({

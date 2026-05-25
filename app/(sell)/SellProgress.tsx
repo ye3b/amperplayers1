@@ -32,7 +32,7 @@ export default function SellProgress() {
             <path d="M15 19l-7-7 7-7" stroke="#181818" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
-        <span className="text-[20px] font-bold tracking-[-0.5px] text-[#181818]">상품 등록</span>
+        <span className="text-[20px] font-bold tracking-[-0.5px] text-neutral-900">상품 등록</span>
       </div>
 
       {/* 단계 바 */}
@@ -41,7 +41,7 @@ export default function SellProgress() {
           <div
             key={i}
             className={`flex-1 h-[3px] rounded-full transition-colors
-              ${i <= current ? 'bg-[#181818]' : 'bg-[#E8E8E8]'}`}
+              ${i <= current ? 'bg-neutral-900' : 'bg-neutral-200'}`}
           />
         ))}
       </div>
@@ -52,7 +52,7 @@ export default function SellProgress() {
           <span
             key={step.path}
             className={`flex-1 text-[11px] text-center
-              ${i === current ? 'font-bold text-[#181818]' : 'font-medium text-[#C8C8C8]'}`}
+              ${i === current ? 'font-bold text-neutral-900' : 'font-medium text-neutral-300'}`}
           >
             {step.label}
           </span>

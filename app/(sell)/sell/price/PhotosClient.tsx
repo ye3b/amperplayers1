@@ -60,10 +60,10 @@ export default function PhotosClient() {
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* 헤더 */}
       <div className="flex-shrink-0 px-5 pt-6 pb-5">
-        <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-[#181818] mb-1">
+        <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-neutral-900 mb-1">
           사진을 등록해주세요
         </h1>
-        <p className="text-[14px] text-[#9E9E9E]">
+        <p className="text-[14px] text-neutral-400">
           첫 번째 사진이 대표 이미지로 사용돼요
         </p>
       </div>
@@ -82,21 +82,21 @@ export default function PhotosClient() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={url} alt={`사진 ${i + 1}`} className="absolute inset-0 w-full h-full object-cover" />
                   {isFirst && (
-                    <div className="absolute top-1.5 left-1.5 bg-[#181818]/70 rounded px-1.5 py-0.5">
+                    <div className="absolute top-1.5 left-1.5 bg-neutral-900/70 rounded px-1.5 py-0.5">
                       <span className="text-[8px] font-bold text-white">대표</span>
                     </div>
                   )}
                   {!isFirst && (
                     <button
                       onClick={() => moveToFront(i)}
-                      className="absolute bottom-1 left-1 bg-[#181818]/60 rounded px-1.5 py-0.5"
+                      className="absolute bottom-1 left-1 bg-neutral-900/60 rounded px-1.5 py-0.5"
                     >
                       <span className="text-[8px] text-white font-medium">대표로</span>
                     </button>
                   )}
                   <button
                     onClick={() => removePhoto(i)}
-                    className="absolute top-1 right-1 w-5 h-5 bg-[#181818]/60 rounded-full flex items-center justify-center"
+                    className="absolute top-1 right-1 w-5 h-5 bg-neutral-900/60 rounded-full flex items-center justify-center"
                   >
                     <svg width="8" height="8" viewBox="0 0 24 24" fill="none">
                       <path d="M18 6L6 18M6 6l12 12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
@@ -135,7 +135,7 @@ export default function PhotosClient() {
                       />
                       <circle cx="10.5" cy="11.5" r="2.5" stroke="#181818" strokeWidth="1" />
                     </svg>
-                    <span className="text-[8px] font-bold text-[#181818] leading-[13px]">대표</span>
+                    <span className="text-[8px] font-bold text-neutral-900 leading-[13px]">대표</span>
                   </>
                 ) : (
                   /* 이미지 아이콘 (18×18) */
@@ -173,10 +173,10 @@ export default function PhotosClient() {
             <circle cx="7" cy="4.5" r="0.5" fill="#757575" />
           </svg>
           <div className="flex flex-col gap-[2px]">
-            <span className="text-[10px] font-bold text-[#333333] leading-[15px] tracking-[-0.1px]">
+            <span className="text-[10px] font-bold text-neutral-700 leading-[15px] tracking-[-0.1px]">
               AI 촬영 가이드
             </span>
-            <span className="text-[9px] text-[#757575] leading-[13px]">
+            <span className="text-[9px] text-neutral-500 leading-[13px]">
               밑창, 로고, 전체 모습을 포함하면 정확한 상태 인증이 가능해요
             </span>
           </div>
@@ -195,7 +195,7 @@ export default function PhotosClient() {
       />
 
       {/* AI 상태 인증 시작 버튼 */}
-      <div className="flex-shrink-0 px-[17px] pb-6 pt-3 border-t border-[#F5F5F5]">
+      <div className="flex-shrink-0 px-[17px] pb-6 pt-3 border-t border-neutral-100">
         <button
           onClick={handleNext}
           disabled={photos.length === 0}
@@ -227,7 +227,7 @@ export default function PhotosClient() {
               </svg>
             </>
           ) : (
-            <span className="text-[14px] font-bold text-[#C8C8C8] tracking-[-0.1px]">
+            <span className="text-[14px] font-bold text-neutral-300 tracking-[-0.1px]">
               사진을 1장 이상 등록해주세요
             </span>
           )}

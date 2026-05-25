@@ -194,8 +194,8 @@ export default function SignupVerifyClient() {
           </svg>
         </button>
         <div className="flex gap-2 ml-auto">
-          <div className="h-1 w-8 rounded-full bg-[#181818]" />
-          <div className="h-1 w-8 rounded-full bg-[#181818]" />
+          <div className="h-1 w-8 rounded-full bg-neutral-900" />
+          <div className="h-1 w-8 rounded-full bg-neutral-900" />
         </div>
       </div>
 
@@ -249,10 +249,10 @@ function InfoStep({
 }) {
   return (
     <>
-      <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-[#181818] mt-2 mb-1">
+      <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-neutral-900 mt-2 mb-1">
         본인 인증
       </h1>
-      <p className="text-[14px] leading-[22px] text-[#9E9E9E] font-medium mb-8">
+      <p className="text-[14px] leading-[22px] text-neutral-400 font-medium mb-8">
         실명 확인 후 인증번호를 문자로 발송합니다
       </p>
 
@@ -268,18 +268,18 @@ function InfoStep({
           <input
             type="tel" inputMode="numeric" value={birth}
             onChange={(e) => onBirthChange(e.target.value)} placeholder="생년월일(6자리)"
-            className="flex-1 h-[48px] border-b border-[#E0E0E0] focus:border-[#181818] outline-none text-[15px] font-medium text-[#181818] placeholder:text-[#C8C8C8] bg-transparent transition-colors pb-1"
+            className="flex-1 h-[48px] border-b border-neutral-200 focus:border-neutral-900 outline-none text-[15px] font-medium text-neutral-900 placeholder:text-neutral-300 bg-transparent transition-colors pb-1"
           />
-          <span className="text-[15px] text-[#9E9E9E] mx-3">—</span>
+          <span className="text-[15px] text-neutral-400 mx-3">—</span>
           <input
             type="tel" inputMode="numeric" value={genderDigit}
             onChange={(e) => onGenderDigitChange(e.target.value)}
             maxLength={1} placeholder="0"
-            className="w-[18px] h-[48px] border-b border-[#E0E0E0] focus:border-[#181818] outline-none text-[15px] font-medium text-[#181818] placeholder:text-[#C8C8C8] bg-transparent text-center transition-colors pb-1"
+            className="w-[18px] h-[48px] border-b border-neutral-200 focus:border-neutral-900 outline-none text-[15px] font-medium text-neutral-900 placeholder:text-neutral-300 bg-transparent text-center transition-colors pb-1"
           />
           <div className="flex items-center gap-[6px] ml-2">
             {Array.from({ length: 6 }).map((_, i) => (
-              <span key={i} className="w-[9px] h-[9px] rounded-full bg-[#9E9E9E]" />
+              <span key={i} className="w-[9px] h-[9px] rounded-full bg-neutral-400" />
             ))}
           </div>
         </div>
@@ -291,7 +291,7 @@ function InfoStep({
             <button
               key={c} onClick={() => onCarrierChange(c)}
               className={`h-[44px] rounded-xl text-[13px] font-semibold transition-colors
-                ${carrier === c ? 'bg-[#181818] text-[#00F5A0]' : 'bg-[#F8F8F8] text-[#757575]'}`}
+                ${carrier === c ? 'bg-neutral-900 text-primary' : 'bg-neutral-50 text-neutral-500'}`}
             >
               {c}
             </button>
@@ -319,7 +319,7 @@ function InfoStep({
       <button
         onClick={onSend} disabled={!formValid || sending}
         className={`w-full h-[56px] rounded-xl text-[15px] font-bold tracking-[-0.25px] mb-12 transition-all active:scale-[0.98]
-          ${formValid && !sending ? 'bg-[#181818] text-[#00F5A0]' : 'bg-[#F0F0F0] text-[#C8C8C8]'}`}
+          ${formValid && !sending ? 'bg-neutral-900 text-primary' : 'bg-neutral-100 text-neutral-300'}`}
       >
         {sending
           ? <span className="flex items-center justify-center gap-2"><SpinnerDark />발송 중...</span>
@@ -346,10 +346,10 @@ function OtpStep({
   const otpFull = otp.join('').length === 6
   return (
     <>
-      <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-[#181818] mb-2 mt-2">
+      <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-neutral-900 mb-2 mt-2">
         인증번호를<br />입력해주세요
       </h1>
-      <p className="text-[14px] leading-[22px] text-[#9E9E9E] font-medium mb-10">
+      <p className="text-[14px] leading-[22px] text-neutral-400 font-medium mb-10">
         {phone}로 발송된 6자리 번호
       </p>
 
@@ -360,8 +360,8 @@ function OtpStep({
             type="tel" inputMode="numeric" maxLength={1} value={digit}
             onChange={(e) => onOtpChange(i, e.target.value)}
             onKeyDown={(e) => onOtpKeyDown(i, e)}
-            className={`w-full aspect-square rounded-xl border text-center text-[20px] font-bold text-[#181818] outline-none transition-colors
-              ${digit ? 'border-[#181818] bg-[#F8F8F8]' : 'border-[#E8E8E8]'} focus:border-[#181818]`}
+            className={`w-full aspect-square rounded-xl border text-center text-[20px] font-bold text-neutral-900 outline-none transition-colors
+              ${digit ? 'border-neutral-900 bg-neutral-50' : 'border-neutral-200'} focus:border-neutral-900`}
           />
         ))}
       </div>
@@ -371,10 +371,10 @@ function OtpStep({
           ? <span className={`text-[13px] font-medium tabular-nums ${countdown <= 30 ? 'text-red-500' : 'text-[#00C77A]'}`}>
               {formatCountdown(countdown)}
             </span>
-          : <span className="text-[13px] text-[#9E9E9E]">시간 만료</span>}
+          : <span className="text-[13px] text-neutral-400">시간 만료</span>}
         <button
           onClick={onResend} disabled={verifying}
-          className="flex items-center gap-1 text-[13px] font-semibold text-[#757575] disabled:opacity-50"
+          className="flex items-center gap-1 text-[13px] font-semibold text-neutral-500 disabled:opacity-50"
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
@@ -391,7 +391,7 @@ function OtpStep({
       <button
         onClick={onVerify} disabled={!otpFull || verifying || countdown === 0}
         className={`w-full h-[56px] rounded-xl text-[15px] font-bold tracking-[-0.25px] mb-12 transition-all active:scale-[0.98]
-          ${otpFull && !verifying && countdown > 0 ? 'bg-[#181818] text-[#00F5A0]' : 'bg-[#F0F0F0] text-[#C8C8C8]'}`}
+          ${otpFull && !verifying && countdown > 0 ? 'bg-neutral-900 text-primary' : 'bg-neutral-100 text-neutral-300'}`}
       >
         {verifying
           ? <span className="flex items-center justify-center gap-2"><SpinnerDark />처리 중...</span>
@@ -412,24 +412,24 @@ function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
     <div className="mb-6">
       <button
         onClick={onToggleAll}
-        className="w-full flex items-center gap-3 border border-[#E8E8E8] rounded-xl px-4 py-4 mb-4"
+        className="w-full flex items-center gap-3 border border-neutral-200 rounded-xl px-4 py-4 mb-4"
       >
         <CheckMark checked={allChecked} size="lg" />
-        <span className="text-[16px] font-bold text-[#181818]">전체동의</span>
+        <span className="text-[16px] font-bold text-neutral-900">전체동의</span>
       </button>
 
       <div className="flex flex-col">
         {TERMS_DATA.map((item) => (
           <div key={item.id}>
-            <div className="flex items-center py-3 border-b border-[#F5F5F5]">
+            <div className="flex items-center py-3 border-b border-neutral-100">
               <button
                 onClick={() => onToggleOne(item.id)}
                 className="flex items-center gap-2.5 flex-1 text-left"
               >
                 <CheckMark checked={consents[item.id]} />
-                <span className="text-[14px] text-[#181818] leading-[20px]">
+                <span className="text-[14px] text-neutral-900 leading-[20px]">
                   {item.label}
-                  <span className={`ml-1 text-[12px] ${item.required ? 'text-[#9E9E9E]' : 'text-[#B0B0B0]'}`}>
+                  <span className={`ml-1 text-[12px] ${item.required ? 'text-neutral-400' : 'text-[#B0B0B0]'}`}>
                     ({item.required ? '필수' : '선택'})
                   </span>
                 </span>
@@ -446,9 +446,9 @@ function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
             </div>
 
             {item.sub && consents[item.id] && (
-              <div className="flex gap-4 px-2 py-2.5 border-b border-[#F5F5F5]">
+              <div className="flex gap-4 px-2 py-2.5 border-b border-neutral-100">
                 {item.sub.map((s) => (
-                  <span key={s} className="flex items-center gap-1 text-[12px] text-[#757575]">
+                  <span key={s} className="flex items-center gap-1 text-[12px] text-neutral-500">
                     <CheckMark checked size="sm" />
                     {s}
                   </span>
@@ -484,9 +484,9 @@ function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
 - 소비자 불만 및 분쟁처리 기록: 3년
 - 접속 로그: 3개월`,
         })}
-        className="w-full flex items-center justify-between py-4 border-t border-[#F0F0F0] mt-1"
+        className="w-full flex items-center justify-between py-4 border-t border-neutral-100 mt-1"
       >
-        <span className="text-[13px] text-[#9E9E9E]">개인정보 수집 및 이용 안내</span>
+        <span className="text-[13px] text-neutral-400">개인정보 수집 및 이용 안내</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
           stroke="#B0B0B0" strokeWidth="2" strokeLinecap="round">
           <path d="M9 18l6-6-6-6" />
@@ -515,12 +515,12 @@ function CheckMark({ checked, size = 'md' }: { checked: boolean; size?: 'sm' | '
 }
 
 const inputCls =
-  'w-full h-[52px] rounded-xl border border-[#E8E8E8] px-4 text-[15px] font-medium text-[#181818] placeholder:text-[#C8C8C8] outline-none focus:border-[#181818] transition-colors bg-white'
+  'w-full h-[52px] rounded-xl border border-neutral-200 px-4 text-[15px] font-medium text-neutral-900 placeholder:text-neutral-300 outline-none focus:border-neutral-900 transition-colors bg-white'
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="mb-5">
-      <p className="text-[11px] font-bold text-[#9E9E9E] uppercase tracking-[0.25px] mb-2">{label}</p>
+      <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.25px] mb-2">{label}</p>
       {children}
     </div>
   )

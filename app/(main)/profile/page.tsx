@@ -54,7 +54,7 @@ export default async function ProfilePage() {
 
   const completedOrders = await prisma.order.count({ where: { sellerId: userId, status: 'delivered' } })
   const totalOrders = await prisma.order.count({ where: { sellerId: userId } })
-  const trustScore = totalOrders > 0 ? Math.round((completedOrders / totalOrders) * 100) : 100
+  const trustScore = totalOrders > 0 ? Math.round((completedOrders / totalOrders) * 100) : 50
 
   return (
     <ProfileClient

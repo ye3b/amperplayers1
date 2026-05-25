@@ -1,11 +1,14 @@
 import webpush from 'web-push'
 import { prisma } from './prisma'
 
-webpush.setVapidDetails(
-  process.env.VAPID_SUBJECT!,
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!,
-)
+function initVapid() {
+  const subject = process.env.VAPID_SUBJECT
+  const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+  const privateKey = process.env.VAPID_PRIVATE_KEY
+  if (subject && publicKey && privateKey) {
+    webpush.setVapidDetails(subject, publicKey, privateKey)
+  }
+}
 
 type NotificationKey = 'chat' | 'transaction' | 'wishlist' | 'newProduct' | 'marketing'
 
@@ -25,6 +28,7 @@ export async function sendPushToUser(
   // 설정이 없으면 기본값(true) 적용. false면 발송 안 함
   if (settings && !settings[key]) return
 
+  initVapid()
   const subscriptions = await prisma.pushSubscription.findMany({ where: { userId } })
   if (subscriptions.length === 0) return
 

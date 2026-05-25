@@ -25,12 +25,12 @@ export default function TermsModal({ title, content, onClose }: Props) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full bg-[#E0E0E0]" />
+          <div className="w-10 h-1 rounded-full bg-neutral-200" />
         </div>
 
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#F0F0F0]">
-          <h2 className="text-[17px] font-bold text-[#181818]">{title}</h2>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center text-[#9E9E9E]">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100">
+          <h2 className="text-[17px] font-bold text-neutral-900">{title}</h2>
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center text-neutral-400">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -40,15 +40,15 @@ export default function TermsModal({ title, content, onClose }: Props) {
         </div>
 
         <div className="flex-1 overflow-y-auto px-5 py-5">
-          <p className="text-[13px] leading-[22px] text-[#555555] whitespace-pre-line">
+          <p className="text-[13px] leading-[22px] text-neutral-500 whitespace-pre-line">
             {content}
           </p>
         </div>
 
-        <div className="px-5 py-4 border-t border-[#F0F0F0]">
+        <div className="px-5 py-4 border-t border-neutral-100">
           <button
             onClick={onClose}
-            className="w-full h-[50px] rounded-xl bg-[#181818] text-white text-[15px] font-bold"
+            className="w-full h-[50px] rounded-xl bg-neutral-900 text-white text-[15px] font-bold"
           >
             확인
           </button>
