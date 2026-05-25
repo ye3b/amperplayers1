@@ -99,7 +99,7 @@ export default function HomeClient({ userSports, recommendedProducts }: HomeClie
       </div>
 
       {/* 종목 탭 */}
-      <div className="pb-4 px-4">
+      <div className="pb-4 px-8">
         <div className="grid grid-cols-4 gap-2.5">
           {ALL_SPORTS.map(({ key, label }) => {
             const isSelected = activeTab === key
