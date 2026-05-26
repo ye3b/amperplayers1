@@ -703,7 +703,7 @@ export default function ProductDetailClient({
                   </div>
                 </div>
 
-                {/* 메트릭 바 */}
+                {/* 메트릭 바 + 상세 분석 */}
                 {(() => {
                   const meta = product.metadata ? (() => { try { return JSON.parse(product.metadata) } catch { return {} } })() : {}
                   const wearScore       = typeof meta.wearScore        === 'number' ? meta.wearScore        : product.score
@@ -714,21 +714,106 @@ export default function ProductDetailClient({
                     { label: '외관 상태', score: appearanceScore },
                     { label: '기능 상태', score: functionalScore },
                   ]
+                  const scoreColor = (s: number) => s >= 80 ? '#4ADE80' : s >= 60 ? '#FACC15' : s >= 40 ? '#FB923C' : '#EF4444'
                   return (
-                    <div className="flex flex-col gap-3.5">
-                      {metrics.map(({ label, score }) => (
-                        <div key={label} className="flex items-center gap-3">
-                          <span className="text-[13px] text-[#AAAAAA] w-[60px] flex-shrink-0">{label}</span>
-                          <div className="flex-1 h-[7px] rounded-full overflow-hidden" style={{ backgroundColor: '#3D3D3D' }}>
-                            <div
-                              className="h-full rounded-full"
-                              style={{ width: `${score}%`, backgroundColor: '#4ADE80' }}
-                            />
-                          </div>
-                          <span className="text-[13px] font-bold text-white w-[28px] text-right flex-shrink-0">{score}</span>
+                    <>
+                      {/* 종합 점수 */}
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="relative w-[56px] h-[56px]">
+                          <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#3D3D3D" strokeWidth="3" />
+                            <circle cx="18" cy="18" r="15.9" fill="none" stroke={scoreColor(product.score!)} strokeWidth="3"
+                              strokeDasharray={`${product.score!} ${100 - product.score!}`} strokeLinecap="round" />
+                          </svg>
+                          <span className="absolute inset-0 flex items-center justify-center text-[14px] font-black text-white">{product.score}</span>
                         </div>
-                      ))}
-                    </div>
+                        <div>
+                          <p className="text-[14px] font-bold text-white">종합 점수</p>
+                          <p className="text-[12px] text-[#AAAAAA]">{gradeInfo?.desc}</p>
+                        </div>
+                      </div>
+
+                      {/* 메트릭 바 */}
+                      <div className="flex flex-col gap-3.5">
+                        {metrics.map(({ label, score }) => (
+                          <div key={label} className="flex items-center gap-3">
+                            <span className="text-[13px] text-[#AAAAAA] w-[60px] flex-shrink-0">{label}</span>
+                            <div className="flex-1 h-[7px] rounded-full overflow-hidden" style={{ backgroundColor: '#3D3D3D' }}>
+                              <div
+                                className="h-full rounded-full"
+                                style={{ width: `${score}%`, backgroundColor: scoreColor(score) }}
+                              />
+                            </div>
+                            <span className="text-[13px] font-bold text-white w-[28px] text-right flex-shrink-0">{score}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* 상세 분석 정보 */}
+                      {(meta.usage || meta.damage || meta.functional || meta.appearance || meta.comment) && (
+                        <div className="mt-5 pt-4 border-t border-[#3D3D3D]">
+                          {/* 상태 요약 태그들 */}
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {meta.usage && (
+                              <span className="px-2.5 py-1 rounded-md text-[12px] font-medium" style={{ backgroundColor: '#3D3D3D', color: '#E0E0E0' }}>
+                                사용감 · {meta.usage}
+                              </span>
+                            )}
+                            {meta.damage && (
+                              <span className="px-2.5 py-1 rounded-md text-[12px] font-medium" style={{
+                                backgroundColor: meta.damage === '없음' ? '#1A3A2A' : meta.damage === '경미' ? '#3A3520' : '#3A2020',
+                                color: meta.damage === '없음' ? '#4ADE80' : meta.damage === '경미' ? '#FACC15' : '#EF4444',
+                              }}>
+                                손상 · {meta.damage}
+                              </span>
+                            )}
+                            {meta.functional && (
+                              <span className="px-2.5 py-1 rounded-md text-[12px] font-medium" style={{
+                                backgroundColor: meta.functional === '없음' ? '#1A3A2A' : '#3A2020',
+                                color: meta.functional === '없음' ? '#4ADE80' : '#EF4444',
+                              }}>
+                                기능 이상 · {meta.functional}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* 상세 항목 */}
+                          <div className="flex flex-col gap-3">
+                            {meta.damageParts && (
+                              <div>
+                                <p className="text-[11px] text-[#777] mb-1">손상 부위</p>
+                                <p className="text-[13px] text-[#D0D0D0]">{meta.damageParts}</p>
+                              </div>
+                            )}
+                            {meta.functionalReason && (
+                              <div>
+                                <p className="text-[11px] text-[#777] mb-1">기능 이상 상세</p>
+                                <p className="text-[13px] text-[#D0D0D0]">{meta.functionalReason}</p>
+                              </div>
+                            )}
+                            {meta.appearance && (
+                              <div>
+                                <p className="text-[11px] text-[#777] mb-1">외관 상세</p>
+                                <p className="text-[13px] text-[#D0D0D0]">{meta.appearance}</p>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* AI 종합 코멘트 */}
+                          {meta.comment && (
+                            <div className="mt-4 p-3.5 rounded-xl" style={{ backgroundColor: '#1E1E1E' }}>
+                              <div className="flex items-center gap-1.5 mb-2">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" fill="#4ADE80" />
+                                </svg>
+                                <span className="text-[12px] font-bold text-[#4ADE80]">AI 종합 코멘트</span>
+                              </div>
+                              <p className="text-[13px] text-[#CCCCCC] leading-relaxed whitespace-pre-line">{meta.comment}</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </>
                   )
                 })()}
               </div>
