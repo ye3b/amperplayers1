@@ -102,7 +102,7 @@ export default function OnboardingSportsClient() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] px-4 pb-12 pt-4 border-t border-[#F5F5F5] bg-white z-20">
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] px-4 pb-12 pt-4 bg-white z-20">
         <button
           onClick={handleNext}
           disabled={selected.size === 0}

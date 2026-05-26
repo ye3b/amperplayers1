@@ -170,7 +170,6 @@ export default function OnboardingFlow() {
           }`}
         >
           {isLast ? '시작하기' : '다음'}
-          {!isLast && !isIntro && <Icon name="right" size={16} className="text-[#00F5A0]" />}
         </button>
       </div>
     </div>
@@ -239,12 +238,8 @@ function FeatureSlide({ slide }: { slide: FeatureSlideData }) {
     <div className="flex flex-col flex-1">
       {/* 번호 뱃지 */}
       <div className="inline-flex items-center gap-1.5 mb-6">
-        <span className="text-[10px] font-bold uppercase tracking-[0.25px] text-[#9E9E9E]">
+        <span className="text-[14px] font-bold uppercase tracking-[0.25px] text-[#9E9E9E]">
           {slide.badge}
-        </span>
-        <span className="w-1 h-1 rounded-full bg-[#E0E0E0]" />
-        <span className="text-[10px] font-medium text-[#9E9E9E] tracking-[0.25px]">
-          {slide.label}
         </span>
       </div>
 

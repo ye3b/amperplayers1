@@ -84,6 +84,17 @@ export default function OnboardingLevelClient() {
             <button key={s} className="rounded-full transition-all duration-300 w-6 h-1.5 bg-[#181818]" />
           ))}
         </div>
+        {/* 건너뛰기 */}
+        <button
+          onClick={async () => {
+            await fetch('/api/user/preferences', { method: 'DELETE' })
+            await updateSession()
+            router.replace(from === 'profile' ? '/profile' : '/')
+          }}
+          className="absolute right-4 text-[12px] leading-[16px] font-medium text-[#9E9E9E] tracking-[0.25px]"
+        >
+          건너뛰기
+        </button>
       </div>
 
       <div className="px-4 pt-6 pb-4">
@@ -132,7 +143,7 @@ export default function OnboardingLevelClient() {
         })}
       </div>
 
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] px-4 pb-12 pt-4 border-t border-[#F5F5F5] bg-white z-20">
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] px-4 pb-12 pt-4 bg-white z-20">
         {error && <p className="text-[13px] text-red-500 text-center mb-3">{error}</p>}
         <button
           onClick={handleSave}
