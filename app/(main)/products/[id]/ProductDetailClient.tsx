@@ -749,74 +749,63 @@ export default function ProductDetailClient({
                         ))}
                       </div>
 
-                      {/* 상세 분석 정보 */}
-                      {(meta.usage || meta.damage || meta.functional || meta.appearance || meta.comment) && (
-                        <div className="mt-5 pt-4 border-t border-[#3D3D3D]">
-                          {/* 상태 요약 태그들 */}
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {meta.usage && (
-                              <span className="px-2.5 py-1 rounded-md text-[12px] font-medium" style={{ backgroundColor: '#3D3D3D', color: '#E0E0E0' }}>
-                                사용감 · {meta.usage}
-                              </span>
-                            )}
-                            {meta.damage && (
-                              <span className="px-2.5 py-1 rounded-md text-[12px] font-medium" style={{
-                                backgroundColor: meta.damage === '없음' ? '#1A3A2A' : meta.damage === '경미' ? '#3A3520' : '#3A2020',
-                                color: meta.damage === '없음' ? '#4ADE80' : meta.damage === '경미' ? '#FACC15' : '#EF4444',
-                              }}>
-                                손상 · {meta.damage}
-                              </span>
-                            )}
-                            {meta.functional && (
-                              <span className="px-2.5 py-1 rounded-md text-[12px] font-medium" style={{
-                                backgroundColor: meta.functional === '없음' ? '#1A3A2A' : '#3A2020',
-                                color: meta.functional === '없음' ? '#4ADE80' : '#EF4444',
-                              }}>
-                                기능 이상 · {meta.functional}
-                              </span>
-                            )}
-                          </div>
-
-                          {/* 상세 항목 */}
-                          <div className="flex flex-col gap-3">
-                            {meta.damageParts && (
-                              <div>
-                                <p className="text-[11px] text-[#777] mb-1">손상 부위</p>
-                                <p className="text-[13px] text-[#D0D0D0]">{meta.damageParts}</p>
-                              </div>
-                            )}
-                            {meta.functionalReason && (
-                              <div>
-                                <p className="text-[11px] text-[#777] mb-1">기능 이상 상세</p>
-                                <p className="text-[13px] text-[#D0D0D0]">{meta.functionalReason}</p>
-                              </div>
-                            )}
-                            {meta.appearance && (
-                              <div>
-                                <p className="text-[11px] text-[#777] mb-1">외관 상세</p>
-                                <p className="text-[13px] text-[#D0D0D0]">{meta.appearance}</p>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* AI 종합 코멘트 */}
-                          {meta.comment && (
-                            <div className="mt-4 p-3.5 rounded-xl" style={{ backgroundColor: '#1E1E1E' }}>
-                              <div className="flex items-center gap-1.5 mb-2">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" fill="#4ADE80" />
-                                </svg>
-                                <span className="text-[12px] font-bold text-[#4ADE80]">AI 종합 코멘트</span>
-                              </div>
-                              <p className="text-[13px] text-[#CCCCCC] leading-relaxed whitespace-pre-line">{meta.comment}</p>
-                            </div>
-                          )}
-                        </div>
-                      )}
                     </>
                   )
                 })()}
               </div>
+
+              {/* 상세 분석 카드 (라이트) */}
+              {(() => {
+                const meta = product.metadata ? (() => { try { return JSON.parse(product.metadata) } catch { return {} } })() : {}
+                if (!meta.damageParts && !meta.appearance && !meta.comment) return null
+                return (
+                  <div className="mt-3 rounded-2xl border border-[#EBEBEB] bg-[#FAFAFA] px-5 py-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 12h6M9 16h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="#555" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <span className="text-[14px] font-bold text-[#333]">AI 상세 분석</span>
+                    </div>
+
+                    <div className="flex flex-col gap-4">
+                      {/* 주요 손상 부위 */}
+                      {meta.damageParts && (
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <div className="w-[5px] h-[5px] rounded-full" style={{ backgroundColor: meta.damage === '없음' ? '#22C55E' : meta.damage === '경미' ? '#F59E0B' : '#EF4444' }} />
+                            <p className="text-[12px] font-semibold text-[#888]">주요 손상 부위</p>
+                          </div>
+                          <p className="text-[13px] text-[#333] leading-relaxed pl-3">{meta.damageParts}</p>
+                        </div>
+                      )}
+
+                      {/* 외관 상태 */}
+                      {meta.appearance && (
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <div className="w-[5px] h-[5px] rounded-full bg-[#3B82F6]" />
+                            <p className="text-[12px] font-semibold text-[#888]">외관 상태</p>
+                          </div>
+                          <p className="text-[13px] text-[#333] leading-relaxed pl-3">{meta.appearance}</p>
+                        </div>
+                      )}
+
+                      {/* AI 종합 코멘트 */}
+                      {meta.comment && (
+                        <div className="mt-1 p-3.5 rounded-xl bg-white border border-[#E8E8E8]">
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" fill="#3B82F6" />
+                            </svg>
+                            <span className="text-[12px] font-bold text-[#3B82F6]">AI 종합 코멘트</span>
+                          </div>
+                          <p className="text-[13px] text-[#444] leading-relaxed whitespace-pre-line">{meta.comment}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })()}
             </div>
           </>
         )}
