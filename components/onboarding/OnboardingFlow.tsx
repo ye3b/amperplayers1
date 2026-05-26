@@ -180,7 +180,7 @@ export default function OnboardingFlow() {
 /* ─── 인트로 슬라이드 ─── */
 function IntroSlide() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center -mt-10">
+    <div className="flex flex-col flex-1 items-center justify-center mt-4">
       {/* 타이틀 텍스트 */}
       <div className="text-center mb-14">
         <p className="text-[34px] leading-[46px] font-bold tracking-[-0.5px] text-white">
@@ -193,7 +193,7 @@ function IntroSlide() {
 
       {/* 로고 마크 */}
       <div className="mb-16">
-        <svg width="180" height="180" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="220" height="220" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M83.8878 47.6605C114.733 31.0567 142.859 28.782 154.944 35.5834C161.364 38.6441 171.711 48.5062 166.651 65.5095C160.377 86.5963 133.783 110.398 98.2909 130.122V83.0391C100.942 81.8534 103.632 80.5538 106.331 79.1436C129.083 67.2587 143.959 52.0852 139.559 45.2528C135.157 38.4207 113.144 42.5165 90.3927 54.4015C67.6409 66.2865 52.7649 81.46 57.1661 88.2922C60.3844 93.2879 73.018 92.4397 88.472 86.9771L87.4438 88.1899C44.4791 139.289 71.395 159.199 90.3927 162.77C1.05902 185.827 30.465 126.947 71.6857 97.0769C54.9533 104.577 43.0763 101.872 40.3622 96.2932C33.5548 86.0384 53.0419 64.2646 83.8878 47.6605Z" fill="#00F5A0"/>
         </svg>
       </div>
