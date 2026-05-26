@@ -180,7 +180,7 @@ export default function OnboardingFlow() {
 /* ─── 인트로 슬라이드 ─── */
 function IntroSlide() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center mt-4">
+    <div className="flex flex-col flex-1 items-center justify-center mt-20">
       {/* 타이틀 텍스트 */}
       <div className="text-center mb-14">
         <p className="text-[34px] leading-[46px] font-bold tracking-[-0.5px] text-white">
