@@ -8,7 +8,7 @@ export default function PaymentFailPage() {
   const message = params.get('message') ?? params.get('msg') ?? '결제수단 연결에 실패했습니다.'
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-4">
       <span className="text-[48px]">❌</span>
       <p className="text-[15px] font-bold text-[#181818]">연결 실패</p>
       <p className="text-[13px] text-[#9E9E9E] text-center">{message}</p>

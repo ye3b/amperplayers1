@@ -4,21 +4,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const SPORTS = [
-  { id: 'soccer',      label: '축구',     emoji: '⚽' },
-  { id: 'basketball',  label: '농구',     emoji: '🏀' },
-  { id: 'baseball',    label: '야구',     emoji: '⚾' },
-  { id: 'tennis',      label: '테니스',   emoji: '🎾' },
-  { id: 'badminton',   label: '배드민턴', emoji: '🏸' },
-  { id: 'volleyball',  label: '배구',     emoji: '🏐' },
-  { id: 'golf',        label: '골프',     emoji: '⛳' },
-  { id: 'cycling',     label: '자전거',   emoji: '🚴' },
-  { id: 'swimming',    label: '수영',     emoji: '🏊' },
-  { id: 'running',     label: '러닝',     emoji: '🏃' },
-  { id: 'fitness',     label: '헬스',     emoji: '💪' },
-  { id: 'skiing',      label: '스키',     emoji: '⛷️' },
-  { id: 'snowboard',   label: '스노보드', emoji: '🏂' },
-  { id: 'tabletennis', label: '탁구',     emoji: '🏓' },
-  { id: 'boxing',      label: '복싱',     emoji: '🥊' },
+{ id: 'golf',       label: '골프',   emoji: '⛳' },
+{ id: 'soccer',     label: '축구',   emoji: '⚽' },
+{ id: 'baseball',   label: '야구',   emoji: '⚾' },
+{ id: 'running',    label: '러닝',   emoji: '🏃' },
+{ id: 'cycling',    label: '자전거', emoji: '🚴' },
+{ id: 'basketball', label: '농구',   emoji: '🏀' },
 ]
 
 export default function SportSelectClient() {
@@ -33,7 +24,7 @@ export default function SportSelectClient() {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* 헤더 */}
-      <div className="flex-shrink-0 px-5 pt-6 pb-4">
+      <div className="flex-shrink-0 px-4 pt-6 pb-4">
         <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-neutral-900 mb-2">
           어떤 종목의 용품인가요?
         </h1>
@@ -43,7 +34,7 @@ export default function SportSelectClient() {
       </div>
 
       {/* 종목 그리드 */}
-      <div className="flex-1 overflow-y-auto px-5">
+      <div className="flex-1 overflow-y-auto px-4">
         <div className="grid grid-cols-3 gap-3 pb-4">
           {SPORTS.map((sport) => {
             const isSelected = selected === sport.id
@@ -73,7 +64,7 @@ export default function SportSelectClient() {
       </div>
 
       {/* 다음 버튼 */}
-      <div className="flex-shrink-0 px-5 pb-6 pt-3 border-t border-neutral-100">
+      <div className="flex-shrink-0 px-4 pb-6 pt-3">
         <button
           onClick={handleNext}
           disabled={!selected}

@@ -3,6 +3,46 @@
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import TermsModal from '@/app/signup/verify/TermsModal'
+
+const TERMS_CONTENT = `제1조 (목적)
+이 약관은 Players(이하 "회사")가 제공하는 서비스의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임 사항을 규정함을 목적으로 합니다.
+
+제2조 (정의)
+① "서비스"란 회사가 제공하는 스포츠 중고거래 플랫폼 및 관련 부가 서비스를 말합니다.
+② "이용자"란 이 약관에 따라 서비스를 이용하는 회원 및 비회원을 말합니다.
+③ "회원"이란 회사에 개인정보를 제공하여 회원 등록을 한 자로, 지속적으로 서비스를 이용할 수 있는 자를 말합니다.
+
+제3조 (약관의 효력 및 변경)
+① 이 약관은 서비스를 이용하고자 하는 모든 이용자에게 적용됩니다.
+② 회사는 필요한 경우 약관을 변경할 수 있으며, 변경된 약관은 서비스 내 공지를 통해 고지합니다.
+
+제4조 (회원 가입)
+① 이용자는 회사가 정한 가입 양식에 따라 회원정보를 기입한 후 이 약관에 동의한다는 의사 표시를 함으로써 회원 가입을 신청합니다.
+② 회사는 미성년자(만 14세 미만)의 회원 가입을 제한할 수 있습니다.
+
+제5조 (서비스의 이용)
+① 서비스 이용은 회사의 업무상 또는 기술상 특별한 지장이 없는 한 연중무휴, 1일 24시간 운영을 원칙으로 합니다.
+② 회사는 서비스를 일정 범위로 분할하여 각 범위별로 이용 가능 시간을 별도로 정할 수 있습니다.`
+
+const PRIVACY_CONTENT = `수집 항목
+필수: 이름, 생년월일, 성별, 휴대폰번호, 아이디, 암호화된 비밀번호
+선택: 프로필 사진, 관심 스포츠 종목, 실력 정보
+
+수집 목적
+- 회원 식별 및 서비스 제공
+- 본인확인 및 부정이용 방지
+- 거래 진행 및 정산 처리
+- 고객 문의 응대
+
+보유 기간
+회원 탈퇴 시까지 보관 후 즉시 파기합니다.
+단, 관련 법령에 의해 보존이 필요한 경우 해당 기간 동안 보존합니다.
+
+- 계약 또는 청약철회 기록: 5년
+- 대금결제 및 재화 공급 기록: 5년
+- 소비자 불만 및 분쟁처리 기록: 3년
+- 접속 로그: 3개월`
 
 export default function LoginClient() {
   const router = useRouter()
@@ -13,6 +53,7 @@ export default function LoginClient() {
   const [password, setPassword] = useState('')
   const [credError, setCredError] = useState(errorParam === 'CredentialsSignin' ? '아이디 또는 비밀번호가 올바르지 않습니다.' : '')
   const [loading, setLoading] = useState<string | null>(null)
+  const [modal, setModal] = useState<{ title: string; content: string } | null>(null)
 
   const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,7 +78,7 @@ router.push('/')
 
   return (
     <div className="min-h-screen max-w-[390px] mx-auto flex flex-col bg-white">
-      <div className="flex-1 flex flex-col items-center justify-center px-6 pb-8">
+      <div className="flex-1 flex flex-col items-center justify-start px-4 pt-16 pb-4">
 
         {/* 로고 */}
         <div className="mb-8">
@@ -139,15 +180,29 @@ router.push('/')
         {/* 약관 */}
         <p className="text-[11px] leading-[18px] text-neutral-400 text-center mt-6 px-4">
           계속 진행하면 Players의{' '}
-          <span className="underline text-neutral-500">이용약관</span>과{' '}
-          <span className="underline text-neutral-500">개인정보처리방침</span>에 동의하게 됩니다.
+          <button
+            onClick={() => setModal({ title: 'Players 이용약관', content: TERMS_CONTENT })}
+            className="underline text-[#757575]"
+          >이용약관</button>과{' '}
+          <button
+            onClick={() => setModal({ title: '개인정보처리방침', content: PRIVACY_CONTENT })}
+            className="underline text-[#757575]"
+          >개인정보처리방침</button>에 동의하게 됩니다.
         </p>
       </div>
 
-      <div className="flex items-center justify-center gap-2 pb-10">
-        <div className="h-px w-16 bg-neutral-100" />
-        <span className="text-[11px] text-neutral-300 font-medium">스포츠 용품 중고거래</span>
-        <div className="h-px w-16 bg-neutral-100" />
+      {modal && (
+        <TermsModal
+          title={modal.title}
+          content={modal.content}
+          onClose={() => setModal(null)}
+        />
+      )}
+
+      <div className="flex items-center justify-center gap-2 pb-5">
+        <div className="h-px w-16 bg-[#F0F0F0]" />
+        <span className="text-[11px] text-[#C8C8C8] font-medium">스포츠 용품 중고거래</span>
+        <div className="h-px w-16 bg-[#F0F0F0]" />
       </div>
     </div>
   )

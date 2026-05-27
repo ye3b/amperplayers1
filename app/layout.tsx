@@ -6,6 +6,7 @@ import Providers from '@/components/Providers'
 export const metadata: Metadata = {
   title: 'Players - 스포츠 용품 중고거래',
   description: '스포츠 용품 전문 중고거래 플랫폼',
+  viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

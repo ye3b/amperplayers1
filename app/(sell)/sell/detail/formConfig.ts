@@ -22,7 +22,96 @@ const UNIFORM_FIELDS: FieldDef[] = [
   { type: 'text',   id: 'purchasePlace', label: '구매처',       placeholder: '쿠팡, 공식몰 등' },
 ]
 
+const SHAFT_FLEX: FieldDef = { type: 'radio', id: 'shaftFlex', label: '샤프트 플렉스', options: ['R', 'SR', 'S', 'X'], required: true }
+const SHAFT_MATERIAL: FieldDef = { type: 'radio', id: 'shaftMaterial', label: '샤프트 소재', options: ['카본', '스틸'], required: true }
+
 export const SPORTS_TABS: Record<string, TabDef[]> = {
+  golf: [
+    {
+      id: 'driver', label: '드라이버',
+      fields: [
+        { type: 'text',   id: 'brand',      label: '브랜드',    placeholder: '타이틀리스트, 캘러웨이, 테일러메이드 등', required: true },
+        { type: 'text',   id: 'model',      label: '모델명',    placeholder: 'SIM2 MAX, 파라다임 등', required: true },
+        { type: 'radio',  id: 'loft',       label: '로프트각',   options: ['9.0°', '9.5°', '10.5°', '12.0°'], required: true },
+        { type: 'text',   id: 'headVolume', label: '헤드 체적',  placeholder: '460cc' },
+        SHAFT_FLEX,
+        SHAFT_MATERIAL,
+      ],
+    },
+    {
+      id: 'wood', label: '우드/유틸',
+      fields: [
+        { type: 'text',   id: 'brand',    label: '브랜드',    placeholder: '타이틀리스트, 캘러웨이 등', required: true },
+        { type: 'text',   id: 'model',    label: '모델명',    placeholder: '모델명 입력', required: true },
+        { type: 'radio',  id: 'clubType', label: '종류',      options: ['우드', '유틸리티'], required: true },
+        { type: 'radio',  id: 'number',   label: '번호',      options: ['3W', '5W', '7W', '3U', '4U', '5U', '6U'], required: true },
+        SHAFT_FLEX,
+        SHAFT_MATERIAL,
+      ],
+    },
+    {
+      id: 'iron', label: '아이언',
+      fields: [
+        { type: 'text',   id: 'brand',    label: '브랜드',    placeholder: '타이틀리스트, 미즈노, 핑 등', required: true },
+        { type: 'text',   id: 'model',    label: '모델명',    placeholder: 'T200, JPX925 등', required: true },
+        { type: 'text',   id: 'composition', label: '구성',   placeholder: '5~9, PW', required: true },
+        { type: 'radio',  id: 'headType', label: '헤드 타입',  options: ['캐비티', '머슬백', '중공'], required: true },
+        SHAFT_FLEX,
+        SHAFT_MATERIAL,
+      ],
+    },
+    {
+      id: 'wedge', label: '웨지',
+      fields: [
+        { type: 'text',   id: 'brand',   label: '브랜드',    placeholder: '타이틀리스트, 클리블랜드 등', required: true },
+        { type: 'text',   id: 'model',   label: '모델명',    placeholder: '보키 SM9, RTX6 등', required: true },
+        { type: 'radio',  id: 'loft',    label: '로프트각',   options: ['48°', '50°', '52°', '54°', '56°', '58°', '60°'], required: true },
+        { type: 'radio',  id: 'bounce',  label: '바운스',    options: ['로우', '미드', '하이'] },
+      ],
+    },
+    {
+      id: 'putter', label: '퍼터',
+      fields: [
+        { type: 'text',   id: 'brand',    label: '브랜드',    placeholder: '스카티카메론, 오딧세이, 핑 등', required: true },
+        { type: 'text',   id: 'model',    label: '모델명',    placeholder: '뉴포트 2, 스파이더 등', required: true },
+        { type: 'radio',  id: 'headType', label: '헤드 타입',  options: ['블레이드', '말렛'], required: true },
+        { type: 'number', id: 'length',   label: '길이',      unit: 'inch', placeholder: '34' },
+      ],
+    },
+  ],
+
+  running: [
+    {
+      id: 'shoes', label: '러닝화',
+      fields: [
+        { type: 'text',   id: 'brand',     label: '브랜드',       placeholder: '나이키, 아식스, 호카, 브룩스 등', required: true },
+        { type: 'text',   id: 'model',     label: '모델명',       placeholder: '페가수스 41, 젤카야노 31 등', required: true },
+        { type: 'number', id: 'sizeMM',    label: '사이즈',       unit: 'mm', placeholder: '265', required: true },
+        { type: 'radio',  id: 'usage',     label: '용도',         options: ['데일리/조깅', '레이스/마라톤', '트레일'], required: true },
+        { type: 'radio',  id: 'cushioning', label: '쿠셔닝',     options: ['맥시멀', '미드', '미니멀'], required: true },
+        { type: 'radio',  id: 'widthType', label: '발볼 타입',    options: ['좁음', '보통', '넓음'], required: true },
+        { type: 'radio',  id: 'soleWear',  label: '밑창 마모 상태', options: ['새것 같음', '약간 마모', '보통 마모', '심한 마모'], required: true },
+      ],
+    },
+  ],
+
+  cycling: [
+    {
+      id: 'bicycle', label: '자전거',
+      fields: [
+        { type: 'radio',  id: 'bikeType',     label: '자전거 종류',   options: ['로드', 'MTB', '하이브리드', '미니벨로', '그래블', '픽시'], required: true },
+        { type: 'text',   id: 'brand',        label: '브랜드',       placeholder: '트렉, 자이언트, 스페셜라이즈드 등', required: true },
+        { type: 'text',   id: 'model',        label: '모델명',       placeholder: '에밀리아 SL7, 디파이 등', required: true },
+        { type: 'number', id: 'frameSize',    label: '프레임 사이즈', unit: 'cm', placeholder: '52', required: true },
+        { type: 'radio',  id: 'frameMaterial', label: '프레임 소재',  options: ['카본', '알루미늄', '크로몰리', '티타늄'], required: true },
+        { type: 'number', id: 'wheelSize',    label: '휠 사이즈',    unit: 'inch', placeholder: '27' },
+        { type: 'text',   id: 'groupset',     label: '구동계',       placeholder: '시마노 105, SRAM Rival 등' },
+        { type: 'text',   id: 'gearCount',    label: '변속 단수',    placeholder: '2x11, 1x12 등' },
+        { type: 'text',   id: 'purchaseYear', label: '구매 연도',    placeholder: '2023' },
+      ],
+    },
+  ],
+
   soccer: [
     {
       id: 'shoes', label: '축구화',

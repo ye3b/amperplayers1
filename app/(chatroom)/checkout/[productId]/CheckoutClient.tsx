@@ -44,6 +44,14 @@ const METHOD_ICON: Record<string, string> = {
   kakao: '💛',
   toss: '💙',
   naver: '💚',
+  payapp: '💳',
+}
+
+const PAYAPP_OPTION: PaymentMethod = {
+  id: 'payapp',
+  type: 'payapp',
+  alias: '신용/체크카드 (페이앱)',
+  isDefault: false,
 }
 
 function formatPhone(value: string) {
@@ -90,7 +98,8 @@ export default function CheckoutClient({
       const addrs: Address[] = await r1.json()
       const methods: PaymentMethod[] = await r2.json()
       setAddresses(addrs)
-      setPaymentMethods(methods)
+      // 페이앱 카드 결제 옵션을 항상 마지막에 추가
+      setPaymentMethods([...methods, PAYAPP_OPTION])
       const defAddr = addrs.find((a) => a.isDefault) ?? addrs[0]
       const defMethod = methods.find((m) => m.isDefault) ?? methods[0]
       if (defAddr) setSelectedAddressId(defAddr.id)
@@ -143,6 +152,30 @@ export default function CheckoutClient({
     if (!selectedPaymentId) { setError('결제수단을 선택해주세요.'); return }
     setError('')
     setPaying(true)
+
+    // 페이앱 신용/체크카드 결제 (리다이렉트 방식)
+    if (selectedPaymentId === 'payapp') {
+      try {
+        const res = await fetch('/api/payment/payapp-ready', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productId: product.id,
+            shippingMethod,
+            shippingAddressId: selectedAddressId,
+          }),
+        })
+        const data = await res.json()
+        if (!res.ok) { setError(data.error || '페이앱 결제 준비에 실패했어요.'); setPaying(false); return }
+        window.location.href = data.payurl
+      } catch {
+        setError('페이앱 결제 중 오류가 발생했어요.')
+        setPaying(false)
+      }
+      return
+    }
+
+    // 기존 빌링키 결제 (카카오페이, 토스 등)
     try {
       const res = await fetch('/api/payment/charge', {
         method: 'POST',
@@ -164,16 +197,16 @@ export default function CheckoutClient({
   }
 
   return (
-    <div className="min-h-screen bg-neutral-100 flex flex-col items-center">
-      <div className="w-full max-w-[390px] bg-white shadow-[0_0_40px_rgba(0,0,0,0.10)] flex flex-col min-h-screen">
-        <div className="sticky top-0 z-10 bg-white flex items-center gap-2 px-3 py-3 border-b border-neutral-100">
+    <div className="bg-white">
+      <div className="w-full max-w-[390px] mx-auto bg-white flex flex-col min-h-screen">
+        <div className="sticky top-0 z-10 bg-white flex items-center gap-2 px-3 py-3 border-b border-[#F0F0F0]">
           <button onClick={() => router.back()} className="w-10 h-10 flex items-center justify-center -ml-1">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="#181818" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
           <span className="text-[16px] font-bold text-neutral-900 tracking-[-0.3px]">주문/결제</span>
         </div>
 
-        <div className="flex-1">
+        <div className="pb-[88px]">
 
         {/* 상품 정보 */}
         <section className="px-4 py-4 border-b border-neutral-100">
@@ -361,15 +394,18 @@ export default function CheckoutClient({
         </div>
 
         {/* 결제하기 버튼 */}
-        <div className="sticky bottom-0 bg-white border-t border-neutral-100 px-4 py-4">
-          {error && <p className="text-[12px] text-error text-center mb-2">{error}</p>}
-          <button
-            onClick={handlePay}
-            disabled={paying || loadingData}
-            className="w-full h-[52px] bg-neutral-900 text-white rounded-2xl text-[15px] font-bold disabled:opacity-40 transition-opacity"
-          >
-            {paying ? '결제 중...' : `${totalAmount.toLocaleString()}원 결제하기`}
-          </button>
+        {/* 결제하기 버튼 - 화면 하단 고정 */}
+        <div className="fixed bottom-0 left-0 right-0 z-20 bg-white border-t border-[#F0F0F0] flex justify-center">
+          <div className="w-full max-w-[390px] px-4 pt-3 pb-8">
+            {error && <p className="text-[12px] text-[#FF4444] text-center mb-2">{error}</p>}
+            <button
+              onClick={handlePay}
+              disabled={paying || loadingData}
+              className="w-full h-[52px] bg-[#181818] text-white rounded-2xl text-[15px] font-bold disabled:opacity-40 transition-opacity"
+            >
+              {paying ? '결제 중...' : `${totalAmount.toLocaleString()}원 결제하기`}
+            </button>
+          </div>
         </div>
       </div>
 

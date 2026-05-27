@@ -4,48 +4,6 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import ProductDetailClient from './ProductDetailClient'
 
-const MOCK_PRODUCTS = [
-  {
-    id: 'mock-1',
-    name: '나이키 머큐리얼 축구화 270mm',
-    price: 85000,
-    sport: 'soccer',
-    productType: 'shoes',
-    grade: 'A',
-    level: 'amateur',
-    score: 85,
-    discount: 0,
-    location: '서울 강남구',
-    images: '["https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800"]',
-    likes: 12,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    status: 'active',
-    description: '나이키 머큐리얼 슈퍼플라이 시리즈 축구화입니다.\n\n270mm 착용, 실외 천연잔디용 FG 스터드 타입이에요.\n구입 후 3회 정도 착용했고 상태 매우 좋습니다.\n박스 있어요.\n\n직거래 강남구 우선, 택배 가능합니다.',
-    metadata: JSON.stringify({
-      brand: '나이키',
-      model: '머큐리얼 슈퍼플라이 9 FG',
-      sizeMM: '270',
-      studType: 'FG',
-      widthType: '보통',
-      soleWear: '약간 마모',
-    }),
-    userId: 'mock-user',
-  },
-]
-
-const MOCK_SELLER = {
-  id: 'mock-user',
-  name: '김스포츠',
-  username: 'kim_sports',
-  image: null,
-  createdAt: new Date('2024-03-15'),
-  _count: { products: 8 },
-  rating: 4.8,
-  reviewCount: 23,
-  dealCount: 31,
-}
-
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
@@ -86,13 +44,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     }
   } catch {}
 
-  // DB에 없으면 Mock에서 조회
-  if (!product) {
-    const mock = MOCK_PRODUCTS.find((p) => p.id === id)
-    if (!mock) notFound()
-    product = mock as any
-    seller = MOCK_SELLER
-  }
+  if (!product) notFound()
 
   // 추가 상품 조회 (DB 상품일 때만)
   const productId = (product as any).id

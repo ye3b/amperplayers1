@@ -9,21 +9,12 @@ import SportIcon, { SportKey } from '@/components/ui/SportIcon'
 
 const ALL_SPORTS: { key: SportKey; label: string }[] = [
   { key: 'all',         label: '전체' },
-  { key: 'soccer',      label: '축구' },
-  { key: 'basketball',  label: '농구' },
-  { key: 'baseball',    label: '야구' },
-  { key: 'tennis',      label: '테니스' },
-  { key: 'badminton',   label: '배드민턴' },
-  { key: 'volleyball',  label: '배구' },
-  { key: 'golf',        label: '골프' },
-  { key: 'swimming',    label: '수영' },
-  { key: 'cycling',     label: '자전거' },
-  { key: 'running',     label: '러닝' },
-  { key: 'fitness',     label: '헬스' },
-  { key: 'skiing',      label: '스키' },
-  { key: 'snowboard',   label: '스노보드' },
-  { key: 'tabletennis', label: '탁구' },
-  { key: 'boxing',      label: '복싱' },
+{ key: 'golf',       label: '골프' },
+{ key: 'soccer',     label: '축구' },
+{ key: 'baseball',   label: '야구' },
+{ key: 'running',    label: '러닝' },
+{ key: 'cycling',    label: '자전거' },
+{ key: 'basketball', label: '농구' },
 ]
 
 interface UserSport {
@@ -71,7 +62,7 @@ export default function HomeClient({ userSports, recommendedProducts }: HomeClie
   return (
     <div className="min-h-screen bg-white">
       {/* 헤더 */}
-      <div className="px-4 pt-12 pb-3">
+      <div className="px-4 pt-6 pb-3">
         <div className="flex items-center justify-between">
           <svg width="112" height="20" viewBox="0 0 201 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14.1613 5.11501C21.5098 1.02755 28.2104 0.467579 31.0895 2.14191C32.6189 2.89538 35.0839 5.3232 33.8785 9.50902C32.3837 14.7001 26.0482 20.5595 17.5926 25.4151V13.8244C18.2241 13.5325 18.865 13.2126 19.5082 12.8654C24.9284 9.93962 28.4724 6.20426 27.4241 4.52229C26.3755 2.84038 21.1313 3.84869 15.711 6.77448C10.2907 9.7003 6.74675 13.4357 7.79526 15.1176C8.56198 16.3474 11.5717 16.1386 15.2534 14.7938L15.0085 15.0924C4.77276 27.6719 11.1851 32.5732 15.711 33.4522C-5.57143 39.1284 1.43411 24.6334 11.2543 17.2802C7.2681 19.1266 4.43858 18.4606 3.79197 17.0872C2.17022 14.5627 6.81273 9.20255 14.1613 5.11501Z" fill="#0E0E0E"/>
@@ -108,28 +99,28 @@ export default function HomeClient({ userSports, recommendedProducts }: HomeClie
       </div>
 
       {/* 종목 탭 */}
-      <div className="pb-4">
-        <div className="grid grid-rows-2 grid-flow-col overflow-x-auto scrollbar-hide px-4 gap-y-3 gap-x-1 pb-1">
+      <div className="pb-4 px-4">
+        <div className="grid grid-cols-4 gap-4">
           {ALL_SPORTS.map(({ key, label }) => {
             const isSelected = activeTab === key
             return (
               <button
                 key={key}
                 onClick={() => handleSportClick(key)}
-                className="flex flex-col items-center gap-1.5 px-1 py-1"
+                className="flex flex-col items-center gap-1"
               >
                 <div
-                  className={`w-[56px] h-[56px] rounded-2xl flex items-center justify-center transition-colors
+                  className={`w-[52px] h-[52px] rounded-xl flex items-center justify-center transition-colors mx-auto
                     ${isSelected ? 'bg-[#181818]' : 'bg-[#F5F5F5]'}`}
                 >
                   <SportIcon
                     sport={key}
-                    size={26}
+                    size={24}
                     className={isSelected ? 'text-white' : 'text-[#383838]'}
                   />
                 </div>
                 <span
-                  className={`text-[10px] leading-[14px] tracking-[-0.2px] whitespace-nowrap
+                  className={`text-[11px] leading-[14px] tracking-[-0.2px] whitespace-nowrap
                     ${isSelected ? 'font-bold text-[#181818]' : 'font-medium text-[#9E9E9E]'}`}
                 >
                   {label}
@@ -137,6 +128,15 @@ export default function HomeClient({ userSports, recommendedProducts }: HomeClie
               </button>
             )
           })}
+          {/* 준비 중 */}
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-[52px] h-[52px] rounded-xl flex items-center justify-center bg-[#F5F5F5] mx-auto">
+              <span className="text-[16px] text-[#C8C8C8]">⋯</span>
+            </div>
+            <span className="text-[11px] leading-[14px] tracking-[-0.2px] whitespace-nowrap font-medium text-[#C8C8C8]">
+              준비 중
+            </span>
+          </div>
         </div>
       </div>
 
@@ -187,7 +187,7 @@ function ProductCard({ product }: { product: Product }) {
       {/* 상품 이미지 영역 */}
       <div className="relative rounded-2xl bg-[#F7F7F7] aspect-square mb-2 overflow-hidden">
         {product.grade && product.score != null && (
-          <div className="absolute top-2 left-2">
+          <div className="absolute top-2 left-2 z-10">
             <Badge grade={product.grade as 'S' | 'A' | 'B' | 'C'} score={product.score} />
           </div>
         )}

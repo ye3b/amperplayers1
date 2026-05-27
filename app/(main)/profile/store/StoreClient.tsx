@@ -60,7 +60,7 @@ export default function StoreClient({ user, activeProducts, soldProducts, hidden
   return (
     <div className="min-h-screen bg-white">
       {/* 헤더 */}
-      <div className="flex items-center gap-2 px-[14px] pt-[52px] pb-[12px]">
+      <div className="flex items-center gap-2 px-4 pt-[52px] pb-[12px]">
         <button onClick={() => router.back()} className="w-[40px] h-[40px] flex items-center justify-center -ml-2">
           <Icon name="arrow-left" size={24} className="text-[#181818]" />
         </button>
@@ -68,7 +68,7 @@ export default function StoreClient({ user, activeProducts, soldProducts, hidden
       </div>
 
       {/* 프로필 */}
-      <div className="px-5 pb-5">
+      <div className="px-4 pb-5">
         <div className="flex items-center gap-4">
           <div className="w-[64px] h-[64px] rounded-full bg-[#E8E8E8] flex items-center justify-center flex-shrink-0 overflow-hidden">
             {profileImage ? (
@@ -172,7 +172,7 @@ export default function StoreClient({ user, activeProducts, soldProducts, hidden
 
       {/* 상점후기 */}
       {tab === 'reviews' && (
-        <div className="px-5 pt-6 pb-24">
+        <div className="px-4 pt-6 pb-24">
           <div className="flex items-center justify-between mb-4">
             <div>
               <span className="text-[28px] font-bold text-[#181818]">4.8</span>
@@ -195,7 +195,7 @@ export default function StoreClient({ user, activeProducts, soldProducts, hidden
 
       {/* 상점정보 */}
       {tab === 'info' && (
-        <div className="px-5 pt-5 pb-24 space-y-5">
+        <div className="px-4 pt-5 pb-24 space-y-5">
           <InfoRow label="가입일" value={`${joinedYear}년 ${joinedMonth}월`} />
           <InfoRow label="신뢰도" value={`${trustScore}%`} />
           <InfoRow label="거래완료" value={`${soldCount}건`} />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Icon from '@/components/ui/Icon'
@@ -285,7 +285,9 @@ export default function ProductDetailClient({
   const [inCart, setInCart] = useState(initialInCart)
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null)
   const [chatLoading, setChatLoading] = useState(false)
-  const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  const [dragStartX, setDragStartX] = useState<number | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const wheelCooldown = useRef(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [offerOpen, setOfferOpen] = useState(false)
   const [buyOpen, setBuyOpen] = useState(false)
@@ -367,19 +369,25 @@ export default function ProductDetailClient({
     ? (SPORTS_TABS[product.sport]?.find((t) => t.id === product.productType)?.fields ?? [])
     : []
 
+  // AI 분석 전용 키 (상품 정보 박스에서 제외)
+  const SCORE_KEYS = new Set(['wearScore', 'appearanceScore', 'functionalScore', 'usage', 'damage', 'damageParts', 'functional', 'functionalReason', 'appearance', 'comment'])
+
   // metadata 키를 formConfig 필드 순서대로 정렬해서 표시
   const metaRows: { label: string; value: string }[] = tabFields
-    .filter((f) => metadata[f.id] !== undefined && metadata[f.id] !== '')
+    .filter((f) => metadata[f.id] !== undefined && metadata[f.id] !== '' && !SCORE_KEYS.has(f.id))
     .map((f) => {
       const raw = metadata[f.id]
       const unit = getFieldUnit(tabFields, f.id)
-      const value = parseMetaValue(raw) + (unit ? ` ${unit}` : '')
+      let value = parseMetaValue(raw) + (unit ? ` ${unit}` : '')
+      // 슬라이더 타입은 점수/최대값 형식으로 표시 (예: 75/100)
+      if (f.type === 'slider') {
+        value = `${parseMetaValue(raw)}/${f.max}`
+      }
       return { label: f.label, value }
     })
 
   // formConfig에 없는 추가 키도 표시 (미래 호환)
   const definedIds = new Set(tabFields.map((f) => f.id))
-  const SCORE_KEYS = new Set(['wearScore', 'appearanceScore', 'functionalScore'])
   Object.entries(metadata).forEach(([k, v]) => {
     if (!definedIds.has(k) && v && !SCORE_KEYS.has(k)) {
       metaRows.push({ label: k, value: parseMetaValue(v) })
@@ -528,7 +536,7 @@ export default function ProductDetailClient({
       {/* 상단 헤더 */}
       <div className="fixed top-0 left-0 right-0 z-30 flex justify-center pointer-events-none">
       <div className="w-full max-w-[390px] flex items-center justify-between px-4 pt-safe-top py-3 bg-white/80 backdrop-blur-sm pointer-events-auto">
-        <button onClick={() => router.back()} className="p-1">
+        <button onClick={() => router.push('/')} className="p-1">
           <Icon name="arrow-left" size={24} className="text-[#181818]" />
         </button>
         <button className="p-1" onClick={() => setShareOpen(true)}>
@@ -539,19 +547,37 @@ export default function ProductDetailClient({
 
       {/* 이미지 슬라이더 */}
       <div
-  className="relative w-full aspect-square bg-[#F7F7F7] mt-[52px]"
-  onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
-  onTouchEnd={(e) => {
-    if (touchStartX === null) return
-    const diff = touchStartX - e.changedTouches[0].clientX
+  className="relative w-full aspect-square bg-[#F7F7F7] mt-[52px] select-none"
+  onPointerDown={(e) => {
+    setDragStartX(e.clientX)
+    setIsDragging(true)
+    ;(e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId)
+  }}
+  onPointerUp={(e) => {
+    if (!isDragging || dragStartX === null) return
+    const diff = dragStartX - e.clientX
     if (diff > 50) {
-      // 왼쪽으로 스와이프 → 다음 이미지
       setCurrentImg((i) => Math.min(images.length - 1, i + 1))
     } else if (diff < -50) {
-      // 오른쪽으로 스와이프 → 이전 이미지
       setCurrentImg((i) => Math.max(0, i - 1))
     }
-    setTouchStartX(null)
+    setDragStartX(null)
+    setIsDragging(false)
+  }}
+  onPointerCancel={() => {
+    setDragStartX(null)
+    setIsDragging(false)
+  }}
+  onWheel={(e) => {
+    if (Math.abs(e.deltaX) < Math.abs(e.deltaY)) return
+    if (wheelCooldown.current) return
+    if (e.deltaX > 30) {
+      setCurrentImg((i) => Math.min(images.length - 1, i + 1))
+    } else if (e.deltaX < -30) {
+      setCurrentImg((i) => Math.max(0, i - 1))
+    }
+    wheelCooldown.current = true
+    setTimeout(() => { wheelCooldown.current = false }, 500)
   }}
 >
         {images.length > 0 ? (
@@ -639,7 +665,7 @@ export default function ProductDetailClient({
           가격 제안하기
         </button>
 
-        <div className="h-px bg-[#F0F0F0] mb-5" />
+  
 
         {/* 상품 정보 (formConfig 기반) */}
         {metaRows.length > 0 && (
@@ -683,7 +709,7 @@ export default function ProductDetailClient({
                   </div>
                 </div>
 
-                {/* 메트릭 바 */}
+                {/* 메트릭 바 + 상세 분석 */}
                 {(() => {
                   const meta = product.metadata ? (() => { try { return JSON.parse(product.metadata) } catch { return {} } })() : {}
                   const wearScore       = typeof meta.wearScore        === 'number' ? meta.wearScore        : product.score
@@ -694,24 +720,98 @@ export default function ProductDetailClient({
                     { label: '외관 상태', score: appearanceScore },
                     { label: '기능 상태', score: functionalScore },
                   ]
+                  const scoreColor = (s: number) => s >= 80 ? '#4ADE80' : s >= 60 ? '#FACC15' : s >= 40 ? '#FB923C' : '#EF4444'
                   return (
-                    <div className="flex flex-col gap-3.5">
-                      {metrics.map(({ label, score }) => (
-                        <div key={label} className="flex items-center gap-3">
-                          <span className="text-[13px] text-[#AAAAAA] w-[60px] flex-shrink-0">{label}</span>
-                          <div className="flex-1 h-[7px] rounded-full overflow-hidden" style={{ backgroundColor: '#3D3D3D' }}>
-                            <div
-                              className="h-full rounded-full"
-                              style={{ width: `${score}%`, backgroundColor: '#4ADE80' }}
-                            />
-                          </div>
-                          <span className="text-[13px] font-bold text-white w-[28px] text-right flex-shrink-0">{score}</span>
+                    <>
+                      {/* 종합 점수 */}
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="relative w-[56px] h-[56px]">
+                          <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#3D3D3D" strokeWidth="3" />
+                            <circle cx="18" cy="18" r="15.9" fill="none" stroke={scoreColor(product.score!)} strokeWidth="3"
+                              strokeDasharray={`${product.score!} ${100 - product.score!}`} strokeLinecap="round" />
+                          </svg>
+                          <span className="absolute inset-0 flex items-center justify-center text-[14px] font-black text-white">{product.score}</span>
                         </div>
-                      ))}
-                    </div>
+                        <div>
+                          <p className="text-[14px] font-bold text-white">종합 점수</p>
+                          <p className="text-[12px] text-[#AAAAAA]">{gradeInfo?.desc}</p>
+                        </div>
+                      </div>
+
+                      {/* 메트릭 바 */}
+                      <div className="flex flex-col gap-3.5">
+                        {metrics.map(({ label, score }) => (
+                          <div key={label} className="flex items-center gap-3">
+                            <span className="text-[13px] text-[#AAAAAA] w-[60px] flex-shrink-0">{label}</span>
+                            <div className="flex-1 h-[7px] rounded-full overflow-hidden" style={{ backgroundColor: '#3D3D3D' }}>
+                              <div
+                                className="h-full rounded-full"
+                                style={{ width: `${score}%`, backgroundColor: scoreColor(score) }}
+                              />
+                            </div>
+                            <span className="text-[13px] font-bold text-white w-[28px] text-right flex-shrink-0">{score}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                    </>
                   )
                 })()}
               </div>
+
+              {/* 상세 분석 카드 (라이트) */}
+              {(() => {
+                const meta = product.metadata ? (() => { try { return JSON.parse(product.metadata) } catch { return {} } })() : {}
+                if (!meta.damageParts && !meta.appearance && !meta.comment) return null
+                return (
+                  <div className="mt-3 rounded-2xl border border-[#EBEBEB] bg-[#FAFAFA] px-5 py-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 12h6M9 16h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="#555" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <span className="text-[14px] font-bold text-[#333]">AI 상세 분석</span>
+                    </div>
+
+                    <div className="flex flex-col gap-4">
+                      {/* 주요 손상 부위 */}
+                      {meta.damageParts && (
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <div className="w-[5px] h-[5px] rounded-full" style={{ backgroundColor: meta.damage === '없음' ? '#22C55E' : meta.damage === '경미' ? '#F59E0B' : '#EF4444' }} />
+                            <p className="text-[12px] font-semibold text-[#888]">주요 손상 부위</p>
+                          </div>
+                          <p className="text-[13px] text-[#333] leading-relaxed pl-3">{meta.damageParts}</p>
+                        </div>
+                      )}
+
+                      {/* 외관 상태 */}
+                      {meta.appearance && (
+                        <div>
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <div className="w-[5px] h-[5px] rounded-full bg-[#3B82F6]" />
+                            <p className="text-[12px] font-semibold text-[#888]">외관 상태</p>
+                          </div>
+                          <p className="text-[13px] text-[#333] leading-relaxed pl-3">{meta.appearance}</p>
+                        </div>
+                      )}
+
+                      {/* AI 종합 코멘트 */}
+                      {meta.comment && (
+                        <div className="mt-1 p-3.5 rounded-xl bg-white border border-[#E8E8E8]">
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" fill="#3B82F6" />
+                            </svg>
+                            <span className="text-[12px] font-bold text-[#3B82F6]">AI 종합 코멘트</span>
+                          </div>
+                          <p className="text-[13px] text-[#444] leading-relaxed whitespace-pre-line">{meta.comment}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })()}
             </div>
           </>
         )}
@@ -868,13 +968,13 @@ function MiniProductSection({ title, products }: { title: string; products: Mini
           <p className="text-[12px] text-[#C8C8C8]">상품이 없어요</p>
         </div>
       ) : (
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-1">
+      <div className="grid grid-cols-2 gap-3 px-4 pb-1">
         {products.map((p) => {
           const images: string[] = (() => { try { return JSON.parse(p.images) } catch { return [] } })()
           const thumb = images[0] ?? null
           return (
-            <Link key={p.id} href={`/products/${p.id}`} className="flex-shrink-0 w-[140px]">
-              <div className="relative rounded-xl bg-[#F7F7F7] w-[140px] h-[140px] mb-2 overflow-hidden">
+            <Link key={p.id} href={`/products/${p.id}`} className="flex flex-col">
+              <div className="relative rounded-xl bg-[#F7F7F7] aspect-square mb-2 overflow-hidden">
                 {p.grade && p.score != null && (
                   <div className="absolute top-1.5 left-1.5">
                     <Badge grade={p.grade as 'S' | 'A' | 'B' | 'C'} score={p.score} />

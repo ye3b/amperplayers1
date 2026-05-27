@@ -15,12 +15,11 @@ const NAV_ITEMS = [
 export default function BottomNav() {
   const pathname = usePathname()
 
-  // 상품 상세 페이지는 자체 footer 사용
   if (/^\/products\/[^/]+$/.test(pathname)) return null
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-[78px] bg-white border-t border-gray-100 flex items-center justify-center px-2 pb-3 gap-7 z-50">
-      {NAV_ITEMS.map((item, i) => {
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] h-[78px] bg-white border-t border-gray-100 flex items-center justify-around pb-3 z-50">
+      {NAV_ITEMS.map((item) => {
         // 가운데 + 버튼
         if (item.icon === null) {
           return (

@@ -32,7 +32,7 @@ export default function KakaoSuccessPage() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-6">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-4">
       {status === 'loading' && (
         <>
           <div className="w-8 h-8 border-2 border-[#181818] border-t-transparent rounded-full animate-spin" />

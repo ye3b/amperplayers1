@@ -87,7 +87,7 @@ router.push('/signup/sports')
 
   return (
     <div className="h-dvh max-w-[390px] mx-auto flex flex-col bg-white">
-      <div className="flex flex-col px-6 pt-12 pb-8 flex-1">
+      <div className="flex flex-col px-4 pt-12 pb-8 flex-1">
 
         <button
           onClick={() => router.push('/login')}

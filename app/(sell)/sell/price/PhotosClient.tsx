@@ -54,12 +54,10 @@ export default function PhotosClient() {
     router.push(`/sell/ai?sport=${sport}&tab=${tab}`)
   }
 
-  const slots = Array.from({ length: MAX_PHOTOS }, (_, i) => photos[i]?.url ?? null)
-
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* 헤더 */}
-      <div className="flex-shrink-0 px-5 pt-6 pb-5">
+      <div className="flex-shrink-0 px-4 pt-6 pb-5">
         <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-neutral-900 mb-1">
           사진을 등록해주세요
         </h1>
@@ -69,90 +67,77 @@ export default function PhotosClient() {
       </div>
 
       {/* 사진 영역 */}
-      <div className="flex-1 overflow-y-auto px-[14px]">
+      <div className="flex-1 overflow-y-auto px-4">
 
-        {/* 3×2 사진 그리드 */}
-        <div className="grid grid-cols-3 gap-[9px] mb-3">
-          {slots.map((url, i) => {
-            const isFirst = i === 0
-
-            if (url) {
-              return (
-                <div key={i} className="relative aspect-square rounded-[9px] overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt={`사진 ${i + 1}`} className="absolute inset-0 w-full h-full object-cover" />
-                  {isFirst && (
-                    <div className="absolute top-1.5 left-1.5 bg-neutral-900/70 rounded px-1.5 py-0.5">
-                      <span className="text-[8px] font-bold text-white">대표</span>
-                    </div>
-                  )}
-                  {!isFirst && (
-                    <button
-                      onClick={() => moveToFront(i)}
-                      className="absolute bottom-1 left-1 bg-neutral-900/60 rounded px-1.5 py-0.5"
-                    >
-                      <span className="text-[8px] text-white font-medium">대표로</span>
-                    </button>
-                  )}
-                  <button
-                    onClick={() => removePhoto(i)}
-                    className="absolute top-1 right-1 w-5 h-5 bg-neutral-900/60 rounded-full flex items-center justify-center"
-                  >
-                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none">
-                      <path d="M18 6L6 18M6 6l12 12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                    </svg>
-                  </button>
+        {/* 가로 스크롤 사진 목록 */}
+        <div className="flex gap-[9px] mb-3 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+          {/* 업로드된 사진들 */}
+          {photos.map((photo, i) => (
+            <div
+              key={i}
+              className="relative flex-shrink-0 rounded-[9px] overflow-hidden"
+              style={{ width: '100px', height: '100px' }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={photo.url} alt={`사진 ${i + 1}`} className="absolute inset-0 w-full h-full object-cover" />
+              {i === 0 && (
+                <div className="absolute top-1.5 left-1.5 bg-neutral-900/70 rounded px-1.5 py-0.5">
+                  <span className="text-[8px] font-bold text-white">대표</span>
                 </div>
-              )
-            }
-
-            return (
+              )}
+              {i !== 0 && (
+                <button
+                  onClick={() => moveToFront(i)}
+                  className="absolute bottom-1 left-1 bg-neutral-900/60 rounded px-1.5 py-0.5"
+                >
+                  <span className="text-[8px] text-white font-medium">대표로</span>
+                </button>
+              )}
               <button
-                key={i}
-                onClick={() => inputRef.current?.click()}
-                style={{
-                  aspectRatio: '1',
-                  borderRadius: '9px',
-                  border: `2px dashed ${isFirst ? '#181818' : '#EEEEEE'}`,
-                  backgroundColor: isFirst ? '#F8F8F8' : 'transparent',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: isFirst ? '4px' : '0px',
-                }}
+                onClick={() => removePhoto(i)}
+                className="absolute top-1 right-1 w-5 h-5 bg-neutral-900/60 rounded-full flex items-center justify-center"
               >
-                {isFirst ? (
-                  <>
-                    {/* 카메라 아이콘 (21×21) */}
-                    <svg width="21" height="21" viewBox="0 0 21 21" fill="none">
-                      <path
-                        d="M7.5 4.5H13.5L15 6.5H18C18.55 6.5 19 6.95 19 7.5V16C19 16.55 18.55 17 18 17H3C2.45 17 2 16.55 2 16V7.5C2 6.95 2.45 6.5 3 6.5H6L7.5 4.5Z"
-                        stroke="#181818"
-                        strokeWidth="1"
-                        strokeLinejoin="round"
-                        strokeLinecap="round"
-                      />
-                      <circle cx="10.5" cy="11.5" r="2.5" stroke="#181818" strokeWidth="1" />
-                    </svg>
-                    <span className="text-[8px] font-bold text-neutral-900 leading-[13px]">대표</span>
-                  </>
-                ) : (
-                  /* 이미지 아이콘 (18×18) */
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+          ))}
+
+          {/* 추가 버튼 (최대 6장 미만일 때만) */}
+          {photos.length < MAX_PHOTOS && (
+            <button
+              onClick={() => inputRef.current?.click()}
+              className="flex-shrink-0 flex flex-col items-center justify-center gap-1"
+              style={{
+                width: '100px',
+                height: '100px',
+                borderRadius: '9px',
+                border: `2px dashed ${photos.length === 0 ? '#181818' : '#EEEEEE'}`,
+                backgroundColor: photos.length === 0 ? '#F8F8F8' : 'transparent',
+              }}
+            >
+              {photos.length === 0 ? (
+                <>
+                  <svg width="21" height="21" viewBox="0 0 21 21" fill="none">
                     <path
-                      d="M6.5 3.5H11.5L13 5.5H15.5C16.05 5.5 16.5 5.95 16.5 6.5V14C16.5 14.55 16.05 15 15.5 15H2.5C1.95 15 1.5 14.55 1.5 14V6.5C1.5 5.95 1.95 5.5 2.5 5.5H5L6.5 3.5Z"
-                      stroke="#D9D9D9"
+                      d="M7.5 4.5H13.5L15 6.5H18C18.55 6.5 19 6.95 19 7.5V16C19 16.55 18.55 17 18 17H3C2.45 17 2 16.55 2 16V7.5C2 6.95 2.45 6.5 3 6.5H6L7.5 4.5Z"
+                      stroke="#181818"
                       strokeWidth="1"
                       strokeLinejoin="round"
                       strokeLinecap="round"
                     />
-                    <circle cx="9" cy="10" r="2" stroke="#D9D9D9" strokeWidth="1" />
+                    <circle cx="10.5" cy="11.5" r="2.5" stroke="#181818" strokeWidth="1" />
                   </svg>
-                )}
-              </button>
-            )
-          })}
+                  <span className="text-[8px] font-bold text-neutral-900 leading-[13px]">사진 추가</span>
+                </>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M5 12h14" stroke="#D9D9D9" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              )}
+            </button>
+          )}
         </div>
 
         {/* AI 촬영 가이드 */}
@@ -189,13 +174,12 @@ export default function PhotosClient() {
         ref={inputRef}
         type="file"
         accept="image/*"
-        multiple
         className="hidden"
         onChange={(e) => { handleFiles(e.target.files); e.target.value = '' }}
       />
 
       {/* AI 상태 인증 시작 버튼 */}
-      <div className="flex-shrink-0 px-[17px] pb-6 pt-3 border-t border-neutral-100">
+      <div className="flex-shrink-0 px-4 pb-6 pt-3">
         <button
           onClick={handleNext}
           disabled={photos.length === 0}

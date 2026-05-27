@@ -7,11 +7,8 @@ import Icon from '@/components/ui/Icon'
 import Badge from '@/components/ui/Badge'
 
 const SPORT_LABELS: Record<string, string> = {
-  soccer: '축구', basketball: '농구', baseball: '야구', tennis: '테니스',
-  badminton: '배드민턴', volleyball: '배구', golf: '골프', swimming: '수영',
-  cycling: '자전거', running: '러닝', fitness: '헬스', skiing: '스키',
-  snowboard: '스노보드', tabletennis: '탁구', boxing: '복싱',
-}
+  golf: '골프', soccer: '축구', baseball: '야구',
+ running: '러닝', cycling: '자전거', basketball: '농구',}
 const LEVEL_LABELS: Record<string, string> = {
   beginner: '초급자', amateur: '중급자', pro: '고수',
 }
@@ -56,7 +53,7 @@ export default function StoreClient({ user, activeProducts, soldCount, trustScor
   return (
     <div className="min-h-screen bg-white">
       {/* 헤더 */}
-      <div className="flex items-center gap-2 px-[14px] pt-[52px] pb-[12px]">
+      <div className="flex items-center gap-2 px-4 pt-[52px] pb-[12px]">
         <button onClick={() => router.back()} className="w-[40px] h-[40px] flex items-center justify-center -ml-2">
           <Icon name="arrow-left" size={24} className="text-[#181818]" />
         </button>
@@ -64,7 +61,7 @@ export default function StoreClient({ user, activeProducts, soldCount, trustScor
       </div>
 
       {/* 프로필 */}
-      <div className="px-5 pb-5">
+      <div className="px-4 pb-5">
         <div className="flex items-center gap-4">
           <div className="w-[64px] h-[64px] rounded-full bg-[#E8E8E8] flex items-center justify-center flex-shrink-0 overflow-hidden">
             {profileImage ? (
@@ -140,7 +137,7 @@ export default function StoreClient({ user, activeProducts, soldCount, trustScor
 
       {/* 상점후기 */}
       {tab === 'reviews' && (
-        <div className="px-5 pt-6 pb-24">
+        <div className="px-4 pt-6 pb-24">
           <div className="flex items-center justify-between mb-4">
             <div>
               <span className="text-[28px] font-bold text-[#181818]">4.8</span>
@@ -163,7 +160,7 @@ export default function StoreClient({ user, activeProducts, soldCount, trustScor
 
       {/* 상점정보 */}
       {tab === 'info' && (
-        <div className="px-5 pt-5 pb-24 space-y-5">
+        <div className="px-4 pt-5 pb-24 space-y-5">
           <InfoRow label="가입일" value={`${joinedYear}년 ${joinedMonth}월`} />
           <InfoRow label="신뢰도" value={`${trustScore}%`} />
           <InfoRow label="거래완료" value={`${soldCount}건`} />

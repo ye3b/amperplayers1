@@ -26,12 +26,42 @@ const LEVELS = [
   { value: 'pro',     label: '프로' },
 ]
 
-const PRICE_RANGES = [
+const DEFAULT_PRICE_RANGES = [
   { label: '1만원 이하',  min: 0,      max: 10000  },
   { label: '1~5만원',    min: 10000,  max: 50000  },
   { label: '5~10만원',   min: 50000,  max: 100000 },
   { label: '10만원 이상', min: 100000, max: undefined },
 ]
+
+const SPORT_PRICE_RANGES: Record<string, typeof DEFAULT_PRICE_RANGES> = {
+  cycling: [
+    { label: '30만원 이하',    min: 0,       max: 300000  },
+    { label: '30~70만원',     min: 300000,  max: 700000  },
+    { label: '70~150만원',    min: 700000,  max: 1500000 },
+    { label: '150~300만원',   min: 1500000, max: 3000000 },
+    { label: '300만원 이상',   min: 3000000, max: undefined },
+  ],
+  golf: [
+    { label: '10만원 이하',   min: 0,       max: 100000  },
+    { label: '10~30만원',    min: 100000,  max: 300000  },
+    { label: '30~50만원',    min: 300000,  max: 500000  },
+    { label: '50~100만원',   min: 500000,  max: 1000000 },
+    { label: '100만원 이상',  min: 1000000, max: undefined },
+  ],
+  running: [
+    { label: '10만원 이하',  min: 0,      max: 100000 },
+    { label: '10~15만원',   min: 100000, max: 150000 },
+    { label: '15~20만원',   min: 150000, max: 200000 },
+    { label: '20만원 이상',  min: 200000, max: undefined },
+  ],
+  baseball: [
+    { label: '10만원 이하',   min: 0,      max: 100000 },
+    { label: '10~20만원',    min: 100000, max: 200000 },
+    { label: '20~40만원',    min: 200000, max: 400000 },
+    { label: '40~50만원',    min: 400000, max: 500000 },
+    { label: '50만원 이상',   min: 500000, max: undefined },
+  ],
+}
 
 const SORT_OPTIONS = [
   { value: 'newest',     label: '최신순' },
@@ -252,6 +282,7 @@ function FilterSheet({
     onDraftChange({ [key]: cur.includes(value) ? cur.filter((v) => v !== value) : [...cur, value] })
   }
 
+  const PRICE_RANGES = SPORT_PRICE_RANGES[sport] ?? DEFAULT_PRICE_RANGES
   const activePriceIdx = PRICE_RANGES.findIndex(
     (r) => r.min === (draft.minPrice ?? 0) && r.max === draft.maxPrice
   )
@@ -449,14 +480,17 @@ function FilterSheet({
 // 활성 필터 칩 (상단 스크롤)
 // ─────────────────────────────────────────────
 function ActiveChips({
+  sport,
   activeFilters,
   metaFilters,
   onRemove,
 }: {
+  sport: string
   activeFilters: ActiveFilters
   metaFilters: MetaFilters
   onRemove: (type: 'basic' | 'meta', key: string, value: string) => void
 }) {
+  const PRICE_RANGES = SPORT_PRICE_RANGES[sport] ?? DEFAULT_PRICE_RANGES
   const chips: { label: string; type: 'basic' | 'meta'; key: string; value: string }[] = [
     ...activeFilters.grade.map((g) => ({ label: `${g}급`, type: 'basic' as const, key: 'grade', value: g })),
     ...activeFilters.productType.map((t) => ({
@@ -664,6 +698,7 @@ export default function CategoryClient({
 
       {/* 활성 필터 칩 */}
       <ActiveChips
+        sport={sport}
         activeFilters={activeFilters}
         metaFilters={metaFilters}
         onRemove={handleRemove}

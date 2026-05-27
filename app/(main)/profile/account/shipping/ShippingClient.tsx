@@ -116,7 +116,7 @@ export default function ShippingClient() {
       </div>
 
       {/* 추가 버튼 */}
-      <div className="fixed bottom-[88px] left-1/2 -translate-x-1/2 w-full max-w-[390px] px-[14px] py-[12px]">
+      <div className="fixed bottom-[88px] left-1/2 -translate-x-1/2 w-full max-w-[390px] px-4 py-[12px]">
         <button
           onClick={openAdd}
           className="w-full h-[52px] rounded-[12px] bg-[#181818] text-[14px] font-bold text-[#00F5A0]"

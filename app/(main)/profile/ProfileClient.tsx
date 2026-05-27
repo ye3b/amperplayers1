@@ -6,10 +6,8 @@ import Link from 'next/link'
 import Icon from '@/components/ui/Icon'
 
 const SPORT_LABELS: Record<string, string> = {
-  soccer: '축구', basketball: '농구', baseball: '야구', tennis: '테니스',
-  badminton: '배드민턴', volleyball: '배구', golf: '골프', swimming: '수영',
-  cycling: '자전거', running: '러닝', fitness: '헬스', skiing: '스키',
-  snowboard: '스노보드', tabletennis: '탁구', boxing: '복싱',
+ golf: '골프', soccer: '축구', baseball: '야구',
+running: '러닝', cycling: '자전거', basketball: '농구',
 }
 
 const LEVEL_LABELS: Record<string, string> = {
@@ -152,7 +150,7 @@ export default function ProfileClient({
     <div className="min-h-screen bg-white">
 
       {/* ── 헤더 ─────────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-[14px] pt-[52px] pb-[12px]">
+      <div className="flex items-center justify-between px-4 pt-[24px] pb-[12px]">
         <span className="text-[20px] font-bold text-[#181818] tracking-[-0.5px]">마이페이지</span>
       </div>
 

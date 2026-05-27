@@ -135,7 +135,7 @@ export default function NotificationsClient() {
     <div className="min-h-screen bg-white">
 
       <BackHeader title="알림 설정" />
-      {saving && <p className="px-[14px] -mt-[8px] mb-[4px] text-[11px] text-[#9E9E9E]">저장 중…</p>}
+      {saving && <p className="px-4 -mt-[8px] mb-[4px] text-[11px] text-[#9E9E9E]">저장 중…</p>}
 
       {/* 권한 배너 */}
       {mounted && !notSupported && permission !== 'granted' && (
@@ -162,7 +162,7 @@ export default function NotificationsClient() {
       )}
 
       {/* 설정 그룹 */}
-      <div className="px-[14px] flex flex-col gap-[24px] mt-[8px]">
+      <div className="px-4 flex flex-col gap-[24px] mt-[8px]">
         {GROUPS.map((group) => (
           <div key={group.title}>
             <p className="text-[11px] font-semibold text-[#9E9E9E] uppercase tracking-[0.5px] mb-[8px]">
@@ -203,7 +203,7 @@ export default function NotificationsClient() {
         ))}
       </div>
 
-      <p className="px-[14px] mt-[28px] text-[11px] text-[#C8C8C8] leading-[18px]">
+      <p className="px-4 mt-[28px] text-[11px] text-[#C8C8C8] leading-[18px]">
         {notSupported
           ? '이 브라우저는 푸시 알림을 지원하지 않아요.'
           : '기기의 알림 권한이 허용되어 있어야 푸시 알림을 받을 수 있어요.'}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 const SPORT_META: Record<string, { label: string; emoji: string }> = {
   soccer:      { label: '축구',      emoji: '⚽' },
@@ -25,14 +26,15 @@ const SPORT_META: Record<string, { label: string; emoji: string }> = {
 }
 
 const LEVELS = [
-  { id: 'beginner', label: '입문',      desc: '이제 막 시작했어요', emoji: '🌱', activeBg: 'bg-[#E8F8F1]', activeText: 'text-[#00A65A]', activeBorder: 'border-[#00C77A]' },
-  { id: 'amateur',  label: '아마추어',  desc: '취미로 즐겨요',      emoji: '⚡', activeBg: 'bg-[#FFF8E8]', activeText: 'text-[#B07800]', activeBorder: 'border-[#FFB800]' },
-  { id: 'pro',      label: '고수',      desc: '실력이 뛰어나요',    emoji: '🔥', activeBg: 'bg-[#FFF0F0]', activeText: 'text-[#C03030]', activeBorder: 'border-[#FF4444]' },
+  { id: 'beginner', label: '입문',      desc: '이제 막 시작했어요', activeBg: 'bg-[#E8F8F1]', activeText: 'text-[#00A65A]', activeBorder: 'border-[#00C77A]' },
+  { id: 'amateur',  label: '아마추어',  desc: '취미로 즐겨요',      activeBg: 'bg-[#FFF8E8]', activeText: 'text-[#B07800]', activeBorder: 'border-[#FFB800]' },
+  { id: 'pro',      label: '고수',      desc: '실력이 뛰어나요',    activeBg: 'bg-[#FFF0F0]', activeText: 'text-[#C03030]', activeBorder: 'border-[#FF4444]' },
 ]
 
 export default function OnboardingLevelClient() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { update: updateSession } = useSession()
   const sportIds = (searchParams.get('sports') ?? '').split(',').filter(Boolean)
   const from = searchParams.get('from') ?? ''
 
@@ -62,22 +64,40 @@ export default function OnboardingLevelClient() {
       return
     }
 
+    // JWT 토큰 갱신 (onboardingCompleted 반영)
+    await updateSession()
     router.replace(from === 'profile' ? '/profile' : '/')
   }
 
   return (
     <div className="min-h-screen max-w-[390px] mx-auto flex flex-col bg-white">
-      <div className="px-5 pt-14 pb-4">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex gap-1.5">
-            {[1, 2].map((s) => (
-              <div key={s} className="h-[3px] w-6 rounded-full bg-[#181818]" />
-            ))}
-          </div>
-          <button onClick={() => router.back()} className="text-[13px] font-medium text-[#9E9E9E]">
-            이전
-          </button>
+      <div className="relative flex items-center justify-center px-4 pt-14 pb-2">
+        {/* 뒤로가기 */}
+        <button onClick={() => router.back()} className="absolute left-4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#181818" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+        </button>
+        {/* 진행 표시 점 */}
+        <div className="flex gap-1.5">
+          {[1, 2].map((s) => (
+            <button key={s} className="rounded-full transition-all duration-300 w-6 h-1.5 bg-[#181818]" />
+          ))}
         </div>
+        {/* 건너뛰기 */}
+        <button
+          onClick={async () => {
+            await fetch('/api/user/preferences', { method: 'DELETE' })
+            await updateSession()
+            router.replace(from === 'profile' ? '/profile' : '/')
+          }}
+          className="absolute right-4 text-[12px] leading-[16px] font-medium text-[#9E9E9E] tracking-[0.25px]"
+        >
+          건너뛰기
+        </button>
+      </div>
+
+      <div className="px-4 pt-6 pb-4">
 
         <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-[#181818] mb-2">
           각 종목의<br />숙련도를 알려주세요
@@ -87,7 +107,7 @@ export default function OnboardingLevelClient() {
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-4 flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto px-4 pb-24 flex flex-col gap-3">
         {sportIds.map((id) => {
           const sport = SPORT_META[id]
           if (!sport) return null
@@ -108,7 +128,6 @@ export default function OnboardingLevelClient() {
                       className={`flex flex-col items-center justify-center gap-1 py-3 rounded-xl border-2 transition-all active:scale-[0.96]
                         ${isActive ? `${lv.activeBg} ${lv.activeBorder}` : 'bg-[#FAFAFA] border-[#F0F0F0]'}`}
                     >
-                      <span className="text-[20px] leading-none">{lv.emoji}</span>
                       <span className={`text-[12px] font-bold leading-none ${isActive ? lv.activeText : 'text-[#9E9E9E]'}`}>
                         {lv.label}
                       </span>
@@ -124,7 +143,7 @@ export default function OnboardingLevelClient() {
         })}
       </div>
 
-      <div className="px-5 pb-12 pt-4 border-t border-[#F5F5F5]">
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] px-4 pb-12 pt-4 bg-white z-20">
         {error && <p className="text-[13px] text-red-500 text-center mb-3">{error}</p>}
         <button
           onClick={handleSave}

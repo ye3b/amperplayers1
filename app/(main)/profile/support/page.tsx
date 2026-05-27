@@ -82,7 +82,7 @@ export default function SupportPage() {
   return (
     <div className="min-h-screen bg-[#F8F8F8]">
       {/* 헤더 */}
-      <div className="bg-white flex items-center gap-2 px-[14px] pt-[52px] pb-[12px]">
+      <div className="bg-white flex items-center gap-2 px-4 pt-[52px] pb-[12px]">
         <button onClick={() => router.back()} className="w-[40px] h-[40px] flex items-center justify-center -ml-2">
           <Icon name="arrow-left" size={24} className="text-[#181818]" />
         </button>
@@ -90,7 +90,7 @@ export default function SupportPage() {
       </div>
 
       {/* 문의 수단 */}
-      <div className="bg-white mt-2 px-5 py-4">
+      <div className="bg-white mt-2 px-4 py-4">
         <p className="text-[13px] font-bold text-[#181818] mb-3">문의하기</p>
         <div className="flex gap-3">
           {CONTACT_ITEMS.map((item) => (
@@ -112,7 +112,7 @@ export default function SupportPage() {
       </div>
 
       {/* 공지 */}
-      <div className="bg-white mt-2 px-5 py-4">
+      <div className="bg-white mt-2 px-4 py-4">
         <div className="flex items-center justify-between">
           <p className="text-[13px] font-bold text-[#181818]">공지사항</p>
           <span className="text-[11px] text-[#9E9E9E]">준비 중</span>
@@ -122,7 +122,7 @@ export default function SupportPage() {
 
       {/* FAQ */}
       <div className="mt-2">
-        <div className="bg-white px-5 pt-4 pb-2">
+        <div className="bg-white px-4 pt-4 pb-2">
           <p className="text-[13px] font-bold text-[#181818]">자주 묻는 질문</p>
         </div>
         {FAQS.map((section) => (
@@ -161,7 +161,7 @@ export default function SupportPage() {
       </div>
 
       {/* 버전 */}
-      <div className="px-5 py-6 text-center">
+      <div className="px-4 py-6 text-center">
         <p className="text-[11px] text-[#C8C8C8]">Players v1.0.0</p>
       </div>
     </div>

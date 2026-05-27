@@ -8,10 +8,14 @@ export const sellStore: {
   productType: string
   formData: Record<string, string>  // fieldId → value
   level: string
+  analysisResult: Record<string, unknown> | null
+  compressedImages: { data: string; mediaType: string }[]
 } = {
   files: [],
   sport: '',
   productType: '',
   formData: {},
   level: '',
+  analysisResult: null,
+  compressedImages: [],
 }

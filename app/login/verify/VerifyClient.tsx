@@ -136,7 +136,7 @@ export default function VerifyClient() {
   return (
     <div className="min-h-screen max-w-[390px] mx-auto flex flex-col bg-white">
       {/* 상단 바 */}
-      <div className="flex items-center px-5 pt-14 pb-2">
+      <div className="flex items-center px-4 pt-14 pb-2">
         <button
           onClick={() => (step === 'otp' ? setStep('info') : router.back())}
           className="w-10 h-10 flex items-center justify-center -ml-2"
@@ -147,7 +147,7 @@ export default function VerifyClient() {
         </button>
       </div>
 
-      <div className="flex-1 flex flex-col px-5 overflow-y-auto">
+      <div className="flex-1 flex flex-col px-4 overflow-y-auto">
         {step === 'info' ? (
           <InfoStep
             name={name} birth={birth} genderDigit={genderDigit}

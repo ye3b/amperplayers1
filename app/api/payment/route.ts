@@ -9,7 +9,7 @@ export async function GET() {
   const userId = (session.user as { id: string }).id
 
   const methods = await prisma.paymentMethod.findMany({
-    where: { userId },
+    where: { userId, NOT: { type: 'payapp_pending' } },
     orderBy: [{ isDefault: 'desc' }, { createdAt: 'desc' }],
   })
   return NextResponse.json(methods)

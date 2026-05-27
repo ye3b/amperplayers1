@@ -60,9 +60,17 @@ export const authOptions: NextAuthOptions = {
     error: '/login',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       // user는 최초 로그인 시에만 전달됨 (credentials + OAuth 모두)
       if (user?.id) token.id = user.id
+      // 로그인 시 또는 세션 업데이트 시 onboardingCompleted 조회
+      if (user?.id || trigger === 'update') {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: (token.id as string) },
+          select: { onboardingCompleted: true },
+        })
+        token.onboardingCompleted = dbUser?.onboardingCompleted ?? false
+      }
       return token
     },
     async session({ session, token }) {
@@ -74,4 +82,5 @@ export const authOptions: NextAuthOptions = {
   },
   session: { strategy: 'jwt' },
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === 'development',
 }

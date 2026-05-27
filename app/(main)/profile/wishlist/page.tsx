@@ -21,7 +21,7 @@ export default async function WishlistPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* 헤더 */}
-      <div className="flex items-center gap-2 px-[14px] pt-[52px] pb-[12px]">
+      <div className="flex items-center gap-2 px-4 pt-[52px] pb-[12px]">
         <Link href="/profile" className="w-[40px] h-[40px] flex items-center justify-center -ml-2">
           <Icon name="arrow-left" size={24} className="text-[#181818]" />
         </Link>

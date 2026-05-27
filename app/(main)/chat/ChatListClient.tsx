@@ -28,7 +28,7 @@ export default function ChatListClient({ chats, currentUserId }: Props) {
   return (
     <div className="min-h-screen bg-white">
       {/* 헤더 */}
-      <div className="px-4 pt-12 pb-4 border-b border-[#F0F0F0]">
+      <div className="px-4 pt-6 pb-4 border-b border-[#F0F0F0]">
         <h1 className="text-[20px] font-bold text-[#181818] tracking-[-0.5px]">채팅</h1>
       </div>
 

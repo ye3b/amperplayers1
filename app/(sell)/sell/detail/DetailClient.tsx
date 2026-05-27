@@ -6,11 +6,8 @@ import { SPORTS_TABS, FieldDef } from './formConfig'
 import { sellStore } from '@/lib/sellStore'
 
 const SPORT_LABELS: Record<string, string> = {
-  soccer: '축구', basketball: '농구', baseball: '야구',
-  tennis: '테니스', badminton: '배드민턴', volleyball: '배구',
-  golf: '골프', cycling: '자전거', swimming: '수영',
-  running: '러닝', fitness: '헬스', skiing: '스키',
-  snowboard: '스노보드', tabletennis: '탁구', boxing: '복싱',
+  golf: '골프', soccer: '축구', baseball: '야구',
+running: '러닝', cycling: '자전거', basketball: '농구',
 }
 
 export default function DetailClient() {
@@ -54,7 +51,7 @@ export default function DetailClient() {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* 헤더 */}
-      <div className="flex-shrink-0 px-5 pt-2 pb-4">
+      <div className="flex-shrink-0 px-4 pt-2 pb-4">
         <h1 className="text-[24px] font-bold tracking-[-0.5px] text-neutral-900 mb-1">
           {SPORT_LABELS[sport] ?? sport} 용품 정보
         </h1>
@@ -62,8 +59,8 @@ export default function DetailClient() {
       </div>
 
       {/* 탭 바 */}
-      <div className="flex-shrink-0 border-b border-neutral-100">
-        <div className="flex overflow-x-auto scrollbar-hide px-5 gap-1">
+      <div className="flex-shrink-0">
+        <div className="flex overflow-x-auto scrollbar-hide px-4 gap-1">
           {tabs.map((tab) => {
             const isActive = tab.id === activeTabId
             return (
@@ -81,7 +78,7 @@ export default function DetailClient() {
       </div>
 
       {/* 폼 */}
-      <div className="flex-1 overflow-y-auto px-5 py-6 space-y-7">
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-7">
         {activeTab?.fields.map((field) => (
           <FieldRenderer
             key={`${activeTabId}-${field.id}`}
@@ -95,7 +92,7 @@ export default function DetailClient() {
       </div>
 
       {/* 다음 버튼 */}
-      <div className="flex-shrink-0 px-5 pb-12 pt-4 border-t border-neutral-100">
+      <div className="flex-shrink-0 px-4 pb-12 pt-4">
         <button
           onClick={handleNext}
           className="w-full h-[56px] rounded-xl bg-neutral-900 text-primary text-[15px] font-bold tracking-[-0.25px] active:scale-[0.98] transition-all"

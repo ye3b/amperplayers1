@@ -3,26 +3,16 @@
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
+
 const ALL_SPORTS: Record<string, { label: string; emoji: string }> = {
-  soccer:      { label: '축구',      emoji: '⚽' },
-  futsal:      { label: '풋살',      emoji: '🥅' },
-  basketball:  { label: '농구',      emoji: '🏀' },
-  baseball:    { label: '야구',      emoji: '⚾' },
-  tennis:      { label: '테니스',    emoji: '🎾' },
-  badminton:   { label: '배드민턴',  emoji: '🏸' },
-  volleyball:  { label: '배구',      emoji: '🏐' },
-  golf:        { label: '골프',      emoji: '⛳' },
-  swimming:    { label: '수영',      emoji: '🏊' },
-  cycling:     { label: '자전거',    emoji: '🚴' },
-  running:     { label: '러닝',      emoji: '🏃' },
-  fitness:     { label: '헬스',      emoji: '💪' },
-  climbing:    { label: '클라이밍',  emoji: '🧗' },
-  skiing:      { label: '스키',      emoji: '⛷️' },
-  snowboard:   { label: '스노보드',  emoji: '🏂' },
-  surfing:     { label: '서핑',      emoji: '🏄' },
-  tabletennis: { label: '탁구',      emoji: '🏓' },
-  boxing:      { label: '복싱',      emoji: '🥊' },
+  golf:       { label: '골프',   emoji: '⛳' },
+  soccer:     { label: '축구',   emoji: '⚽' },
+  baseball:   { label: '야구',   emoji: '⚾' },
+  running:    { label: '러닝',   emoji: '🏃' },
+  cycling:    { label: '자전거', emoji: '🚴' },
+  basketball: { label: '농구',   emoji: '🏀' },
 }
+
 
 const LEVELS = [
   {
@@ -88,7 +78,7 @@ export default function LevelSelectClient() {
   return (
     <div className="min-h-screen max-w-[390px] mx-auto flex flex-col bg-white">
       {/* 헤더 */}
-      <div className="px-5 pt-14 pb-4">
+      <div className="px-4 pt-14 pb-4">
         <div className="flex items-center justify-between mb-6">
           <div className="flex gap-1.5">
             {[1, 2, 3].map((s) => (
@@ -115,7 +105,7 @@ export default function LevelSelectClient() {
       </div>
 
       {/* 종목 목록 */}
-      <div className="flex-1 overflow-y-auto px-5 pb-4 flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto px-4 pb-24 flex flex-col gap-3">
         {sportIds.map((id) => {
           const sport = ALL_SPORTS[id]
           if (!sport) return null
@@ -161,7 +151,7 @@ export default function LevelSelectClient() {
       </div>
 
       {/* 하단 버튼 */}
-      <div className="px-5 pb-12 pt-4 border-t border-neutral-100">
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] px-4 pb-12 pt-4 border-t border-neutral-100 bg-white z-20">
         <button
           onClick={handleDone}
           disabled={!allSelected || saving}

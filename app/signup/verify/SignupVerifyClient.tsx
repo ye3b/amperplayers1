@@ -1,8 +1,6 @@
 'use client'
 
-import TermsModal from './TermsModal'
 import { TERMS_DATA } from './terms-data'
-import type { TermsItem } from './terms-data'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
@@ -184,7 +182,7 @@ export default function SignupVerifyClient() {
 
   return (
     <div className="min-h-screen max-w-[390px] mx-auto flex flex-col bg-white">
-      <div className="flex items-center px-5 pt-14 pb-2">
+      <div className="flex items-center px-4 pt-14 pb-2">
         <button
           onClick={() => step === 'otp' ? setStep('info') : router.back()}
           className="w-10 h-10 flex items-center justify-center -ml-2"
@@ -199,7 +197,7 @@ export default function SignupVerifyClient() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col px-5 overflow-y-auto">
+      <div className="flex-1 flex flex-col px-4 overflow-y-auto">
         {step === 'info' ? (
           <InfoStep
             name={name} birth={birth} genderDigit={genderDigit}
@@ -264,22 +262,22 @@ function InfoStep({
       </Field>
 
       <Field label="생년월일 / 주민번호">
-        <div className="flex items-center">
+        <div className="flex items-center gap-3">
           <input
             type="tel" inputMode="numeric" value={birth}
             onChange={(e) => onBirthChange(e.target.value)} placeholder="생년월일(6자리)"
-            className="flex-1 h-[48px] border-b border-neutral-200 focus:border-neutral-900 outline-none text-[15px] font-medium text-neutral-900 placeholder:text-neutral-300 bg-transparent transition-colors pb-1"
+            className="w-0 flex-1 h-[48px] border-b border-[#E0E0E0] focus:border-[#181818] outline-none text-[15px] font-medium text-[#181818] placeholder:text-[#C8C8C8] bg-transparent transition-colors pb-1"
           />
-          <span className="text-[15px] text-neutral-400 mx-3">—</span>
-          <input
-            type="tel" inputMode="numeric" value={genderDigit}
-            onChange={(e) => onGenderDigitChange(e.target.value)}
-            maxLength={1} placeholder="0"
-            className="w-[18px] h-[48px] border-b border-neutral-200 focus:border-neutral-900 outline-none text-[15px] font-medium text-neutral-900 placeholder:text-neutral-300 bg-transparent text-center transition-colors pb-1"
-          />
-          <div className="flex items-center gap-[6px] ml-2">
+          <span className="text-[15px] text-[#9E9E9E]">—</span>
+          <div className="w-0 flex-1 flex items-center gap-[6px] h-[48px] border-b border-[#E0E0E0]">
+            <input
+              type="tel" inputMode="numeric" value={genderDigit}
+              onChange={(e) => onGenderDigitChange(e.target.value)}
+              maxLength={1} placeholder="0"
+              className="w-[20px] h-full outline-none text-[15px] font-medium text-[#181818] placeholder:text-[#C8C8C8] bg-transparent text-center pb-1"
+            />
             {Array.from({ length: 6 }).map((_, i) => (
-              <span key={i} className="w-[9px] h-[9px] rounded-full bg-neutral-400" />
+              <span key={i} className="w-[8px] h-[8px] rounded-full bg-[#C8C8C8]" />
             ))}
           </div>
         </div>
@@ -401,12 +399,35 @@ function OtpStep({
   )
 }
 
+const PRIVACY_INFO_CONTENT = `수집 항목
+필수: 이름, 생년월일, 성별, 휴대폰번호, 아이디, 암호화된 비밀번호
+선택: 프로필 사진, 관심 스포츠 종목, 실력 정보
+
+수집 목적
+- 회원 식별 및 서비스 제공
+- 본인확인 및 부정이용 방지
+- 거래 진행 및 정산 처리
+- 고객 문의 응대
+
+보유 기간
+회원 탈퇴 시까지 보관 후 즉시 파기합니다.
+단, 관련 법령에 의해 보존이 필요한 경우 해당 기간 동안 보존합니다.
+
+- 계약 또는 청약철회 기록: 5년
+- 대금결제 및 재화 공급 기록: 5년
+- 소비자 불만 및 분쟁처리 기록: 3년
+- 접속 로그: 3개월`
+
 /* ─── 약관 동의 섹션 ─── */
 function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
   consents: ConsentMap; allChecked: boolean
   onToggleAll: () => void; onToggleOne: (id: string) => void
 }) {
-  const [openItem, setOpenItem] = useState<TermsItem | null>(null)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+
+  const toggleExpand = (id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id))
+  }
 
   return (
     <div className="mb-6">
@@ -435,15 +456,25 @@ function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
                 </span>
               </button>
               <button
-                onClick={() => setOpenItem(item)}
+                onClick={() => toggleExpand(item.id)}
                 className="w-8 h-8 flex items-center justify-center text-[#B0B0B0] ml-1"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                  className={`transition-transform duration-200 ${expandedId === item.id ? 'rotate-90' : ''}`}
+                >
                   <path d="M9 18l6-6-6-6" />
                 </svg>
               </button>
             </div>
+
+            {expandedId === item.id && (
+              <div className="px-3 py-3 bg-[#FAFAFA] border-b border-[#F5F5F5]">
+                <p className="text-[12px] leading-[20px] text-[#555555] whitespace-pre-line">
+                  {item.content}
+                </p>
+              </div>
+            )}
 
             {item.sub && consents[item.id] && (
               <div className="flex gap-4 px-2 py-2.5 border-b border-neutral-100">
@@ -460,45 +491,24 @@ function ConsentSection({ consents, allChecked, onToggleAll, onToggleOne }: {
       </div>
 
       <button
-        onClick={() => setOpenItem({
-          id: 'privacy_info',
-          label: '',
-          title: '개인정보 수집 및 이용 안내',
-          required: false,
-          content: `수집 항목
-필수: 이름, 생년월일, 성별, 휴대폰번호, 아이디, 암호화된 비밀번호
-선택: 프로필 사진, 관심 스포츠 종목, 실력 정보
-
-수집 목적
-- 회원 식별 및 서비스 제공
-- 본인확인 및 부정이용 방지
-- 거래 진행 및 정산 처리
-- 고객 문의 응대
-
-보유 기간
-회원 탈퇴 시까지 보관 후 즉시 파기합니다.
-단, 관련 법령에 의해 보존이 필요한 경우 해당 기간 동안 보존합니다.
-
-- 계약 또는 청약철회 기록: 5년
-- 대금결제 및 재화 공급 기록: 5년
-- 소비자 불만 및 분쟁처리 기록: 3년
-- 접속 로그: 3개월`,
-        })}
-        className="w-full flex items-center justify-between py-4 border-t border-neutral-100 mt-1"
+        onClick={() => toggleExpand('privacy_info')}
+        className="w-full flex items-center justify-between py-4 border-t border-[#F0F0F0] mt-1"
       >
         <span className="text-[13px] text-neutral-400">개인정보 수집 및 이용 안내</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-          stroke="#B0B0B0" strokeWidth="2" strokeLinecap="round">
+          stroke="#B0B0B0" strokeWidth="2" strokeLinecap="round"
+          className={`transition-transform duration-200 ${expandedId === 'privacy_info' ? 'rotate-90' : ''}`}
+        >
           <path d="M9 18l6-6-6-6" />
         </svg>
       </button>
 
-      {openItem && (
-        <TermsModal
-          title={openItem.title}
-          content={openItem.content}
-          onClose={() => setOpenItem(null)}
-        />
+      {expandedId === 'privacy_info' && (
+        <div className="px-3 py-3 bg-[#FAFAFA] border-t border-[#F5F5F5]">
+          <p className="text-[12px] leading-[20px] text-[#555555] whitespace-pre-line">
+            {PRIVACY_INFO_CONTENT}
+          </p>
+        </div>
       )}
     </div>
   )

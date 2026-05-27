@@ -2,28 +2,21 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 const SPORTS = [
-  { id: 'soccer',      label: '축구',      emoji: '⚽' },
-  { id: 'basketball',  label: '농구',      emoji: '🏀' },
-  { id: 'baseball',    label: '야구',      emoji: '⚾' },
-  { id: 'tennis',      label: '테니스',    emoji: '🎾' },
-  { id: 'badminton',   label: '배드민턴',  emoji: '🏸' },
-  { id: 'volleyball',  label: '배구',      emoji: '🏐' },
-  { id: 'golf',        label: '골프',      emoji: '⛳' },
-  { id: 'swimming',    label: '수영',      emoji: '🏊' },
-  { id: 'cycling',     label: '자전거',    emoji: '🚴' },
-  { id: 'running',     label: '러닝',      emoji: '🏃' },
-  { id: 'fitness',     label: '헬스',      emoji: '💪' },
-  { id: 'skiing',      label: '스키',      emoji: '⛷️' },
-  { id: 'snowboard',   label: '스노보드',  emoji: '🏂' },
-  { id: 'tabletennis', label: '탁구',      emoji: '🏓' },
-  { id: 'boxing',      label: '복싱',      emoji: '🥊' },
+  { id: 'golf',       label: '골프',   emoji: '⛳' },
+{ id: 'soccer',     label: '축구',   emoji: '⚽' },
+{ id: 'baseball',   label: '야구',   emoji: '⚾' },
+{ id: 'running',    label: '러닝',   emoji: '🏃' },
+{ id: 'cycling',    label: '자전거', emoji: '🚴' },
+{ id: 'basketball', label: '농구',   emoji: '🏀' },
 ]
 
 export default function OnboardingSportsClient() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { update: updateSession } = useSession()
   const from = searchParams.get('from') ?? ''
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [skipping, setSkipping] = useState(false)
@@ -45,25 +38,29 @@ export default function OnboardingSportsClient() {
   const handleSkip = async () => {
     setSkipping(true)
     await fetch('/api/user/preferences', { method: 'DELETE' })
+    await updateSession()
     router.replace(from === 'profile' ? '/profile' : '/')
   }
 
   return (
     <div className="min-h-screen max-w-[390px] mx-auto flex flex-col bg-white">
-      <div className="px-5 pt-14 pb-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex gap-1.5">
-            {[1, 2].map((s) => (
-              <div key={s} className={`h-[3px] rounded-full transition-all ${s === 1 ? 'w-6 bg-[#181818]' : 'w-3 bg-[#E0E0E0]'}`} />
-            ))}
-          </div>
-          <button
-            onClick={handleSkip} disabled={skipping}
-            className="text-[13px] font-medium text-[#9E9E9E] disabled:opacity-50"
-          >
-            {from === 'profile' ? '뒤로' : '건너뛰기'}
-          </button>
+      <div className="relative flex items-center justify-center px-4 pt-14 pb-2">
+        {/* 진행 표시 점 */}
+        <div className="flex gap-1.5">
+          {[1, 2].map((s) => (
+            <button key={s} className={`rounded-full transition-all duration-300 ${s === 1 ? 'w-6 h-1.5 bg-[#181818]' : 'w-1.5 h-1.5 bg-[#E0E0E0]'}`} />
+          ))}
         </div>
+        {/* 건너뛰기 */}
+        <button
+          onClick={handleSkip} disabled={skipping}
+          className="absolute right-4 text-[12px] leading-[16px] font-medium text-[#9E9E9E] tracking-[0.25px] disabled:opacity-50"
+        >
+          {from === 'profile' ? '뒤로' : '건너뛰기'}
+        </button>
+      </div>
+
+      <div className="px-4 pt-6 pb-4">
 
         <h1 className="text-[28px] leading-[36px] font-bold tracking-[-0.5px] text-[#181818] mb-2">
           관심 종목을<br />선택해주세요
@@ -76,7 +73,7 @@ export default function OnboardingSportsClient() {
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-4">
+      <div className="flex-1 overflow-y-auto px-4 pb-24">
         <div className="grid grid-cols-3 gap-3">
           {SPORTS.map((sport) => {
             const isSelected = selected.has(sport.id)
@@ -105,7 +102,7 @@ export default function OnboardingSportsClient() {
         </div>
       </div>
 
-      <div className="px-5 pb-12 pt-4 border-t border-[#F5F5F5]">
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] px-4 pb-12 pt-4 bg-white z-20">
         <button
           onClick={handleNext}
           disabled={selected.size === 0}

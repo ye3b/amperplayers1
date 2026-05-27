@@ -94,63 +94,82 @@ export default function OnboardingFlow() {
   const slide = SLIDES[current]
   const isLast = current === SLIDES.length - 1
 
+  const isIntro = slide.isIntro
+
   return (
     <div
-      className="relative flex flex-col min-h-screen max-w-[390px] mx-auto bg-white overflow-hidden select-none"
+      className={`relative flex flex-col min-h-screen max-w-[390px] mx-auto overflow-hidden select-none transition-colors duration-300 ${
+        isIntro ? 'bg-[#0E0E0E]' : 'bg-white'
+      }`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* 상단 영역 */}
-      <div className="flex items-center justify-between px-5 pt-14 pb-2">
-        {/* 진행 표시 점 */}
-        <div className="flex gap-1.5">
-          {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              className={`rounded-full transition-all duration-300 ${
-                i === current
-                  ? 'w-6 h-1.5 bg-[#181818]'
-                  : 'w-1.5 h-1.5 bg-[#E0E0E0]'
-              }`}
-            />
-          ))}
-        </div>
-
-        {/* 건너뛰기 */}
-        {!isLast && (
+      {/* 인트로일 때 페이지 전체 배경을 다크로 */}
+      {isIntro && <div className="fixed inset-0 bg-[#0E0E0E] -z-10" />}
+      {/* 상단 영역 (인트로에서는 숨김) */}
+      {!isIntro && (
+        <div className="relative flex items-center justify-center px-4 pt-14 pb-2">
+          {/* 뒤로가기 */}
           <button
-            onClick={() => router.push('/login')}
-            className="text-[12px] leading-[16px] font-medium text-[#9E9E9E] tracking-[0.25px]"
+            onClick={() => current > 0 ? goTo(current - 1) : undefined}
+            className={`absolute left-4 ${current === 0 ? 'invisible' : ''}`}
           >
-            건너뛰기
+            <Icon name="arrow-left" size={20} className="text-[#181818]" />
           </button>
-        )}
-      </div>
+
+          {/* 진행 표시 점 */}
+          <div className="flex gap-1.5">
+            {SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`rounded-full transition-all duration-300 ${
+                  i === current
+                    ? 'w-6 h-1.5 bg-[#181818]'
+                    : 'w-1.5 h-1.5 bg-[#E0E0E0]'
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* 건너뛰기 */}
+          {!isLast && (
+            <button
+              onClick={() => router.push('/login')}
+              className="absolute right-4 text-[12px] leading-[16px] font-medium text-[#9E9E9E] tracking-[0.25px]"
+            >
+              건너뛰기
+            </button>
+          )}
+        </div>
+      )}
 
       {/* 메인 콘텐츠 */}
       <div
-        className={`flex-1 flex flex-col px-5 pt-8 transition-opacity duration-150 ${
+        className={`flex-1 flex flex-col px-4 pb-24 ${isIntro ? 'pt-0' : 'pt-8'} transition-opacity duration-150 ${
           exiting ? 'opacity-0' : 'opacity-100'
         }`}
       >
-        {slide.isIntro ? (
-          /* 인트로 슬라이드 */
+        {isIntro ? (
           <IntroSlide />
         ) : (
-          /* 기능 슬라이드 */
           <FeatureSlide slide={slide as FeatureSlideData} />
         )}
       </div>
 
-      {/* 하단 버튼 */}
-      <div className="px-5 pb-12 pt-6">
+      {/* 하단 버튼 (화면 하단 고정) */}
+      <div className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] px-4 pb-10 pt-4 z-10 ${
+        isIntro ? 'bg-[#0E0E0E]' : 'bg-white'
+      }`}>
         <button
           onClick={goNext}
-          className="w-full h-14 bg-[#181818] text-[#00F5A0] text-[14px] leading-[16px] font-bold tracking-[1.5px] uppercase rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+          className={`w-full h-14 text-[14px] leading-[16px] font-bold tracking-[1.5px] uppercase rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform ${
+            isIntro
+              ? 'bg-[#00F5A0] text-[#0E0E0E]'
+              : 'bg-[#181818] text-[#00F5A0]'
+          }`}
         >
           {isLast ? '시작하기' : '다음'}
-          {!isLast && <Icon name="right" size={16} className="text-[#00F5A0]" />}
         </button>
       </div>
     </div>
@@ -160,43 +179,28 @@ export default function OnboardingFlow() {
 /* ─── 인트로 슬라이드 ─── */
 function IntroSlide() {
   return (
-    <div className="flex flex-col flex-1">
-      {/* 비주얼 */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-8">
-        {/* 큰 로고 마크 */}
-        <div className="relative">
-          <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="200" height="200" rx="40" fill="#0E0E0E"/>
-            <path d="M83.8878 47.6605C114.733 31.0567 142.859 28.782 154.944 35.5834C161.364 38.6441 171.711 48.5062 166.651 65.5095C160.377 86.5963 133.783 110.398 98.2909 130.122V83.0391C100.942 81.8534 103.632 80.5538 106.331 79.1436C129.083 67.2587 143.959 52.0852 139.559 45.2528C135.157 38.4207 113.144 42.5165 90.3927 54.4015C67.6409 66.2865 52.7649 81.46 57.1661 88.2922C60.3844 93.2879 73.018 92.4397 88.472 86.9771L87.4438 88.1899C44.4791 139.289 71.395 159.199 90.3927 162.77C1.05902 185.827 30.465 126.947 71.6857 97.0769C54.9533 104.577 43.0763 101.872 40.3622 96.2932C33.5548 86.0384 53.0419 64.2646 83.8878 47.6605Z" fill="#00F5A0"/>
-          </svg>
-          {/* 떠있는 뱃지들 */}
-          <div className="absolute -top-3 -right-3 bg-[#00F5A0] rounded-lg px-2 py-1">
-            <span className="text-[10px] font-bold text-[#181818] uppercase tracking-[0.25px]">S급</span>
-          </div>
-          <div className="absolute -bottom-3 -left-3 bg-white border border-[#E8E8E8] rounded-lg px-2 py-1 shadow-sm">
-            <span className="text-[10px] font-medium text-[#757575]">⚽ 축구</span>
-          </div>
-        </div>
+    <div className="flex flex-col flex-1 items-center justify-center mt-4">
+      {/* 타이틀 텍스트 */}
+      <div className="text-center mb-14">
+        <p className="text-[34px] leading-[46px] font-bold tracking-[-0.5px] text-white">
+          스포츠 용품<br />중고거래 플랫폼
+        </p>
+        <p className="text-[34px] leading-[46px] font-bold tracking-[-0.5px] text-[#00F5A0] mt-2">
+          Players
+        </p>
+      </div>
 
-        {/* 텍스트 */}
-        <div className="text-center">
-          <p className="text-[18px] leading-[26px] font-bold tracking-[-0.25px] text-[#181818]">
-            스포츠 용품<br />중고거래 플랫폼
-          </p>
-        </div>
-
-        {/* 스포츠 이모지 행 */}
-        <div className="flex gap-3 text-2xl">
-          {['⚽', '🏀', '🎾', '⛷️', '🏋️', '🏊'].map((e) => (
-            <span key={e}>{e}</span>
-          ))}
-        </div>
+      {/* 로고 마크 */}
+      <div className="mb-16">
+        <svg width="220" height="220" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M83.8878 47.6605C114.733 31.0567 142.859 28.782 154.944 35.5834C161.364 38.6441 171.711 48.5062 166.651 65.5095C160.377 86.5963 133.783 110.398 98.2909 130.122V83.0391C100.942 81.8534 103.632 80.5538 106.331 79.1436C129.083 67.2587 143.959 52.0852 139.559 45.2528C135.157 38.4207 113.144 42.5165 90.3927 54.4015C67.6409 66.2865 52.7649 81.46 57.1661 88.2922C60.3844 93.2879 73.018 92.4397 88.472 86.9771L87.4438 88.1899C44.4791 139.289 71.395 159.199 90.3927 162.77C1.05902 185.827 30.465 126.947 71.6857 97.0769C54.9533 104.577 43.0763 101.872 40.3622 96.2932C33.5548 86.0384 53.0419 64.2646 83.8878 47.6605Z" fill="#00F5A0"/>
+        </svg>
       </div>
 
       {/* 설명 */}
-      <p className="text-[16px] leading-[26px] font-medium text-[#757575] text-center pb-2">
+      <p className="text-[16px] leading-[26px] font-medium text-[#757575] text-center">
         내가 쓰던 장비, 다음 선수에게.<br />
-        종목별 전문 거래 플랫폼.
+        종목별 전문 거래 플랫폼
       </p>
     </div>
   )
@@ -234,12 +238,8 @@ function FeatureSlide({ slide }: { slide: FeatureSlideData }) {
     <div className="flex flex-col flex-1">
       {/* 번호 뱃지 */}
       <div className="inline-flex items-center gap-1.5 mb-6">
-        <span className="text-[10px] font-bold uppercase tracking-[0.25px] text-[#9E9E9E]">
+        <span className="text-[14px] font-bold uppercase tracking-[0.25px] text-[#9E9E9E]">
           {slide.badge}
-        </span>
-        <span className="w-1 h-1 rounded-full bg-[#E0E0E0]" />
-        <span className="text-[10px] font-medium text-[#9E9E9E] tracking-[0.25px]">
-          {slide.label}
         </span>
       </div>
 
@@ -285,7 +285,7 @@ function FeatureVisual({ id, iconBg, iconColor, icon }: {
       <div className="w-full h-full p-5 flex flex-col justify-center gap-2">
         {/* 카테고리 태그들 */}
         <div className="flex gap-2 flex-wrap">
-          {[{ e: '⚽', l: '축구' }, { e: '🏀', l: '농구' }, { e: '⛷️', l: '스키' }].map(({ e, l }) => (
+          {[{ e: '⛳', l: '골프' }, { e: '⚽', l: '축구' }, { e: '🏀', l: '농구' }].map(({ e, l }) => (
             <div key={l} className="flex items-center gap-1.5 bg-white rounded-lg px-3 py-2 shadow-sm">
               <span className="text-base">{e}</span>
               <span className="text-[12px] font-medium text-[#181818]">{l}</span>
