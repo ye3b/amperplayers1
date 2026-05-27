@@ -42,8 +42,9 @@ const GRADE_ICON: Record<Grade, 'stars' | 'star-02'> = {
 }
 
 export default function Badge({ grade, score }: BadgeProps) {
-  const { bg, iconClass, gradeClass, scoreClass } = GRADE_STYLE[grade]
-  const icon = GRADE_ICON[grade]
+  const style = GRADE_STYLE[grade] ?? GRADE_STYLE['C']
+  const { bg, iconClass, gradeClass, scoreClass } = style
+  const icon = GRADE_ICON[grade] ?? GRADE_ICON['C']
 
   return (
     <div className={`inline-flex items-center gap-1 px-2 py-1 rounded h-6 ${bg}`}>
